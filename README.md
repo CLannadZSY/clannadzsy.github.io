@@ -1,125 +1,162 @@
-<p align="center">
-  <a href="https://getdoks.org/">
-    <img alt="Doks" src="https://doks.netlify.app/doks.svg" width="60">
-  </a>
-</p>
+### 使用 Hugo + Github + Doks 搭建个人网站
 
-<h1 align="center">
-  Doks
-</h1>
+##### 1. 安装 [Hugo](https://gohugo.io/getting-started/installing/), 参阅官方文档
 
-<h3 align="center">
-  Modern documentation theme
-</h3>
+##### 2. 选择合适的[主题](https://themes.gohugo.io/)
 
-<p align="center">
-  Doks is a Hugo theme helping you build modern documentation websites that are secure, fast, and SEO-ready — by default.
-</p>
+##### 3. 安装主题,二选一即可
 
-<p align="center">
-  <a href="https://github.com/h-enk/doks/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/h-enk/doks?style=flat-square" alt="GitHub">
-  </a>
-  <a href="https://github.com/h-enk/doks/releases">
-    <img src="https://img.shields.io/github/v/release/h-enk/doks?include_prereleases&style=flat-square"alt="GitHub release (latest SemVer including pre-releases)">
-  </a>
-  <a href="https://github.com/h-enk/doks/actions?query=workflow%3A%22Hyas+CI%22">
-    <img src="https://img.shields.io/github/workflow/status/h-enk/doks/Hyas%20CI/master?style=flat-square" alt="GitHub Workflow Status (branch)">
-  </a>
-  <a href="https://app.netlify.com/sites/doks/deploys">
-    <img src="https://img.shields.io/netlify/895a161c-86be-48a2-8c57-a8c5d68cd1a4?style=flat-square" alt="Netlify">
-  </a>
-</p>
+1. Hugo网站的Doks主题: [Huog-Doks-Theme](https://themes.gohugo.io/doks/)
 
-![Doks — Modern Documentation Theme](https://raw.githubusercontent.com/h-enk/doks/master/images/tn.png)
+2. Doks官网: [Doks](https://getdoks.org/)
 
-## Demo
+3. ```bash
+   # Doks child theme
+   git clone https://github.com/h-enk/doks-child-theme.git my-doks-site && cd my-doks-site
+   ```
 
-- [doks.netlify.app](https://doks.netlify.app/)
+4. ```bash
+   # Doks starter theme
+   git clone https://github.com/h-enk/doks.git my-doks-site && cd my-doks-site
+   ```
 
-## Why Doks?
+5. ```bash
+   # Install dependencies
+   npm install
+   ```
 
-Nine reasons why you should use Doks:
+6. ```bash
+   # Start development server
+   # 下载安装主题之后, 无需任何修改, 即可预览主题效果
+   npm run start
+   ```
 
-1. __Security aware__. Get A+ scores on [Mozilla Observatory](https://observatory.mozilla.org/analyze/doks.netlify.app) out of the box. Easily change the default Security Headers to suit your needs.
+##### 4. 参照所选主题的文档, 自定义修改样式
 
-2. __Fast by default__. Get 100 scores on [Google Lighthouse](https://googlechrome.github.io/lighthouse/viewer/?gist=7731347bb8ce999eff7428a8e763b637) by default. Doks removes unused css, prefetches links, and lazy loads images.
+##### 5. 以 Doks 为例
 
-3. __SEO-ready__. Use sensible defaults for structured data, open graph, and Twitter cards. Or easily change the SEO settings to your liking.
+1. 添加 `blog` 文章
 
-4. __Development tools__. Code with confidence. Check styles, scripts, and markdown for errors and fix automatically or manually.
+      ```bash
+   # 两种方式均可
+   1. npm run create blog/{文件夹名称}/{文件名}.md
+   2. hugo new "blog/{文件夹名称}/{文件名}.md"
+   ```
 
-5. __Bootstrap framework__. Build robust, flexible, and intuitive websites with Bootstrap 5. Easily customize your Doks site with the source Sass files.
+2. 编写博客文件, 完成之后, 注意事项
 
-6. __Netlify-ready__. Deploy to Netlify with sensible defaults. Easily use Netlify Functions, Netlify Redirects, and Netlify Headers.
+   ```bash
+   # 取消草稿形式
+   # draft: true
+   draft: false
+   ```
 
-7. __Full text search__. Search your Doks site with FlexSearch. Easily customize index settings and search options to your liking.
+3. 预览效果
 
-8. __Page layouts__. Build pages with a landing page, blog, or documentation layout. Add custom sections and components to suit your needs.
+      ```bash
+      npm run start
+      ```
 
-9. __Dark mode__. Switch to a low-light UI with the click of a button. Change colors with variables to match your branding.
+4. 发布到Github
 
-## Requirements
+      1. Add `.github/workflows/deploy-github.yml`
 
-Doks uses npm to centralize dependency management, making it [easy to update](https://getdoks.org/docs/help/how-to-update/) resources, build tooling, plugins, and build scripts:
+         ```bash
+         # Deploy your Hyas site to GitHub Pages
+         
+         name: GitHub Pages
+         
+         on:
+           push:
+             branches:
+               - master
+         
+         jobs:
+           deploy:
+             runs-on: ubuntu-18.04
+             steps:
+               - uses: actions/checkout@v2
+               - uses: actions/setup-node@v2
+                 with:
+                   node-version: '15' # node版本, 更改为你服务器环境的版本
+         
+               - name: Install dependencies
+                 run: npm ci
+         
+               - name: Check for linting errors
+                 run: npm test
+         
+               - name: Build production website
+                 run: npm run build
+         
+               - name: Deploy to GitHub Pages
+                 uses: peaceiris/actions-gh-pages@v3
+                 with:
+                   github_token: ${{ secrets.GITHUB_TOKEN }} # 如果为私人项目则需要添加授权访问token
+                   publish_dir: ./public
+         ```
 
-- Download and install [Node.js](https://nodejs.org/) (it includes npm) for your platform.
+      2. GitHub 上建立一个 `{username}.github.io` 的项目, 注意: `username` 为自己 Github 的用户名
 
-## Get started
+      3. 推送到 Github
 
-Start a new Doks project in three steps:
+          ```bash
+          cd {项目文件夹根目录}
+          npm run init
+          git add .
+          git commit -m "First Commit"
+          git remote add origin <remote repository URL>
+          git remote -v
+          git push origin main
+          ```
 
-### 1. Create a new site
+5. 打开 `https://{username}.github.io` 尽情欣赏吧
+##### 6. 个人修改项, 仅供参考
 
-Doks is available as a child theme, and a starter theme:
+1. 修改博客默认生成的模板, `archetypes/blog.md`
 
-- Use the Doks child theme, if you do __not__ plan to customize a lot, and/or need future Doks updates.
-- Use the Doks starter theme, if you plan to customize a lot, and/or do __not__ need future Doks updates.
+   ```bash
+   # 原始模板
+   ---
+   title: "{{ replace .Name "-" " " | title }}"
+   description: ""
+   lead: ""
+   date: {{ .Date }}
+   lastmod: {{ .Date }}
+   draft: true
+   weight: 50
+   images: ["{{ .Name | urlize }}.jpg"]
+   contributors: []
+   ---
+   
+   {{< img src="{{ .Name | urlize }}.jpg" alt="{{ replace .Name "-" " " | title }}" caption="{{ replace .Name "-" " " | title }}" class="wide" >}}
+   
+   # 修改之后
+   # 修改之后
+   ---
+   title: "{{ replace .Name "-" " " | title }}"
+   description: ""
+   lead: ""
+   date: {{ .Date }}
+   lastmod: {{ .Date }}
+   draft: false
+   weight: 50
+   contributors: [作者名字]
+   ---
+   ```
+##### 7. 问题记录
 
-Not quite sure? Use the Doks child theme.
+1. ```bash
+   # rimraf not found
+   npm install rimraf --save-dev
+   ```
 
-#### Doks child theme
+2. ```bash
+   # POSTCSS: failed to transform "main.css"
+   npm install -g postcss-cli
+   npm install autoprefixer
+   npm audit fix
+   ```
 
-```bash
-git clone https://github.com/h-enk/doks-child-theme.git my-doks-site && cd my-doks-site
-```
 
-#### Doks starter theme
 
-```bash
-git clone https://github.com/h-enk/doks.git my-doks-site && cd my-doks-site
-```
-
-### 2. Install dependencies
-
-```bash
-npm install
-```
-
-### 3. Start development server
-
-```bash
-npm run start
-```
-
-## Other commands
-
-Doks comes with [commands](https://getdoks.org/docs/prologue/commands/) for common tasks.
-
-## Documentation
-
-- [Netlify](https://docs.netlify.com/)
-- [Hugo](https://gohugo.io/documentation/)
-- [Doks](https://getdoks.org/)
-
-## Communities
-
-- [Netlify Community](https://community.netlify.com/)
-- [Hugo Forums](https://discourse.gohugo.io/)
-- [Doks Discussions](https://github.com/h-enk/doks/discussions)
-
-## Blog
-<!--START_SECTION:feed-->
-* [Doks v0.2](https:&#x2F;&#x2F;getdoks.org&#x2F;blog&#x2F;doks-v0.2&#x2F;)
-* [Say hello to Doks 👋](https:&#x2F;&#x2F;getdoks.org&#x2F;blog&#x2F;say-hello-to-doks&#x2F;)
-<!--END_SECTION:feed-->
