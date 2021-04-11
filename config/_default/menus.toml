@@ -3,13 +3,13 @@
 #  weight = 10
 #  identifier = "prologue"
 #  url = "/docs/prologue/"
-
+#
 #[[docs]]
 #  name = "Help"
 #  weight = 60
 #  identifier = "help"
 #  url = "/docs/help/"
-
+#
 #[[main]]
 #  name = "Docs"
 #  url = "/docs/prologue/introduction/"
@@ -33,7 +33,7 @@
   post = "v0.1.0"
   weight = 20
 
-# [[footer]]
-#   name = "Privacy"
-#   url = "/privacy-policy/"
-#   weight = 10
+#[[footer]]
+# name = "Privacy"
+# url = "/privacy-policy/"
+# weight = 10

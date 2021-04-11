@@ -181,6 +181,14 @@
 4. Github: `Settings` -> `Pages` -> `Custom domain`
 
    ```bash
-   www.clannad.icu
+   clannad.icu
    ```
 
+5. `config/production/config.toml` 修改如下
+
+   ```bash
+   baseurl = "https://clannad.icu/"
+   canonifyURLs = true
+   ```
+
+   

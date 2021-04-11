@@ -1,5 +1,5 @@
 .footer {
-  border-top: 1px solid $gray-200;
+  border-top: 2px solid $gray-200;
   padding-top: 1.125rem;
   padding-bottom: 1.125rem;
 }
@@ -19,6 +19,7 @@
   }
 }
 
-.home .footer {
-  border-top: 0;
-}
+// 取消底部的分割线
+//.home .footer {
+//  border-top: 0;
+//}
