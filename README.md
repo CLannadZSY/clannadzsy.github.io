@@ -165,8 +165,8 @@
 2. ```bash
    # A Record的ip, dig 可进行查看
    Type					Host			Value					TTL
-   A Record				@				185.199.108.153			30min
-   A Record				@				185.199.108.153			Automatic
+   A Record				@				xxx.xxx.xxx.xxx			30min
+   A Record				@				xxx.xxx.xxx.xxx			Automatic
    CNAME Record			www				clannadzsy.github.io	Automatic
    CNAME Record			www				clannad.icu				Automatic
    URL Redirect Record		@				http://clannad.icu		Automatic
@@ -178,4 +178,9 @@
    clannad.icu
    ```
 
-   
+4. Github: `Settings` -> `Pages` -> `Custom domain`
+
+   ```bash
+   www.clannad.icu
+   ```
+
