@@ -63,14 +63,14 @@
 
          ```bash
          # Deploy your Hyas site to GitHub Pages
-         
+
          name: GitHub Pages
-         
+
          on:
            push:
              branches:
                - master
-         
+
          jobs:
            deploy:
              runs-on: ubuntu-18.04
@@ -79,16 +79,20 @@
                - uses: actions/setup-node@v2
                  with:
                    node-version: '15' # node版本, 更改为你服务器环境的版本
-         
+
                - name: Install dependencies
                  run: npm ci
-         
+
                - name: Check for linting errors
                  run: npm test
-         
+
                - name: Build production website
                  run: npm run build
-         
+
+                 # 修复: 就算在项目根目录创建了CNAME文件, 正确的配置了, 打包时依旧无法打包到
+               - name: Copy CNAME file to public
+                 run: cp ./CNAME ./public
+
                - name: Deploy to GitHub Pages
                  uses: peaceiris/actions-gh-pages@v3
                  with:
@@ -116,22 +120,6 @@
 1. 修改博客默认生成的模板, `archetypes/blog.md`
 
    ```bash
-   # 原始模板
-   ---
-   title: "{{ replace .Name "-" " " | title }}"
-   description: ""
-   lead: ""
-   date: {{ .Date }}
-   lastmod: {{ .Date }}
-   draft: true
-   weight: 50
-   images: ["{{ .Name | urlize }}.jpg"]
-   contributors: []
-   ---
-   
-   {{< img src="{{ .Name | urlize }}.jpg" alt="{{ replace .Name "-" " " | title }}" caption="{{ replace .Name "-" " " | title }}" class="wide" >}}
-   
-   # 修改之后
    # 修改之后
    ---
    title: "{{ replace .Name "-" " " | title }}"
@@ -142,6 +130,7 @@
    draft: false
    weight: 50
    contributors: [作者名字]
+   url: url: "/blog/{{ .Date | md5 }}" # 根据当前时间, 生成md5的自定义url路径
    ---
    ```
 ##### 7. 问题记录
@@ -191,4 +180,3 @@
    canonifyURLs = true
    ```
 
-   
