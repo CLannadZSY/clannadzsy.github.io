@@ -7,6 +7,7 @@ lastmod: 2021-04-10T17:09:32+08:00
 draft: false
 weight: 50
 contributors: [clannadzsy]
+url: "blog/5b4f8302ad3022c7c9618a72e4d2eec5"
 ---
 
 ### 使用 Hugo + Github + Doks 搭建个人网站
