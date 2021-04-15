@@ -89,3 +89,9 @@ rel  = "sitemap"
   [[module.mounts]]
     source = "node_modules/katex"
     target = "assets/js/vendor/katex"
+
+[params.utteranc]
+  enable = true
+  repo = "CLannadZSY/CLannadZSY.github.io"
+  issueTerm = "title"
+  theme = "github-light"
