@@ -153,12 +153,12 @@
 
 2. ```bash
    # A Record的ip, dig 可进行查看
-   Type					Host			Value					TTL
-   A Record				@				xxx.xxx.xxx.xxx			30min
-   A Record				@				xxx.xxx.xxx.xxx			Automatic
-   CNAME Record			www				clannadzsy.github.io	Automatic
-   CNAME Record			www				clannad.icu				Automatic
-   URL Redirect Record		@				http://clannad.icu		Automatic
+   Type					          Host			Value					          TTL
+   A Record				         @				xxx.xxx.xxx.xxx			    30min
+   A Record				         @				xxx.xxx.xxx.xxx			    Automatic
+   CNAME Record			      www				clannadzsy.github.io	  Automatic
+   CNAME Record			      www				clannad.icu				      Automatic
+   URL Redirect Record		 @				http://clannad.icu		  Automatic
    ```
 
 3. Github 项目根目录添加文件, `CNAME`
