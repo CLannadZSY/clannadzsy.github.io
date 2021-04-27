@@ -7,5 +7,5 @@ lastmod: {{ .Date }}
 draft: false
 weight: 50
 contributors: [clannadzsy]
-url: "/blog/{{.Date | md5}}"
+url: "/blog/"
 ---
