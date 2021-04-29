@@ -7,7 +7,7 @@ description: "Python List, Tuple, += 问题记录"
 lead: ""
 weight: 50
 contributors: [clannadzsy]
-url: "/blog/2414890336"
+url: "/blog/2414890336/"
 ---
 
 

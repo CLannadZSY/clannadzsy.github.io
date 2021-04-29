@@ -23,7 +23,7 @@ class BlogAuto:
         创建博客文件
         """
         blog_path = f'{self._blog_folder_command}/{self.blog_path}'
-        create_blog_article_command = f'npm run create {blog_path}'
+        create_blog_article_command = f'npm run create "{blog_path}"'
         os.system(create_blog_article_command)
 
     def modify_blog_file(self):
