@@ -92,6 +92,6 @@ rel  = "sitemap"
 
 [params.utteranc]
   enable = true
-  repo = "CLannadZSY/CLannadZSY.github.io"
+  repo = "CLannadZSY/clannadzsy.github.io"
   issueTerm = "title"
   theme = "github-light"
