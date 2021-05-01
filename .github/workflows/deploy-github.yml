@@ -28,6 +28,9 @@ jobs:
       - name: Copy CNAME file to public
         run: cp ./CNAME ./public
 
+      - name: Copy ads txt to public
+        run: cp .ads.txt ./public
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
