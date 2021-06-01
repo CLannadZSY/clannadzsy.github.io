@@ -98,7 +98,7 @@ class TestSpider(RedisSpider):
             raise DontCloseSpider
         else:
             # 队列为空, 等待一小时, 每分钟检测一次, 是否有新的任务添加, 如果没有才退出
-            if self.wait_count &lt; 30:
+            if self.wait_count &lt; 60:
                 time.sleep(60)
                 self.wait_count += 1
                 raise DontCloseSpider
