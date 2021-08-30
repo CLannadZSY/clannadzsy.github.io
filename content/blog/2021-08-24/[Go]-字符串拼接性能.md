@@ -9,8 +9,6 @@ weight: 50
 contributors: [clannadzsy]
 url: "/blog/3239669741/"
 ---
-## [Go]-字符串拼接性能
-
 
 #### 1. 字符串高效拼接
 

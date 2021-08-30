@@ -1,5 +1,5 @@
 ---
-title: "Interface"
+title: "[Go] Interface"
 description: ""
 lead: ""
 date: 2021-08-30T01:59:22Z

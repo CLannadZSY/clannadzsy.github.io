@@ -1,5 +1,5 @@
 ---
-title: "Method"
+title: "[Go] Method"
 description: ""
 lead: ""
 date: 2021-08-30T01:57:38Z
