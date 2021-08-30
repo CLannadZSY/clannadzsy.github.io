@@ -1,0 +1,215 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=google-site-verification content="M1Cw9Od63LZv4K4V_iX8zomHSDnAy0-cWtfnSSas5YY"><meta name=referrer content="no-referrer-when-downgrade"><link rel=preload as=font href=https://clannad.icu/fonts/vendor/jost/jost-v4-latin-regular.woff2 type=font/woff2 crossorigin><link rel=preload as=font href=https://clannad.icu/fonts/vendor/jost/jost-v4-latin-700.woff2 type=font/woff2 crossorigin><link rel=stylesheet href=https://clannad.icu/main.212cf3f61bfb9c3e34d31cbe630007f640e3a8b6da7208ca6980d98f126b5f72bc45046ff0ea28fcdaf3211c8086b33045fec49b34596e6f3b1e7b02f164b4d4.css integrity="sha512-ISzz9hv7nD400xy+YwAH9kDjqLbacgjKaYDZjxJrX3K8RQRv8Ooo/NrzIRyAhrMwRf7EmzRZbm87HnsC8WS01A==" crossorigin=anonymous><noscript><style>img.lazyload{display:none}</style></noscript><meta name=robots content="index, follow"><meta name=googlebot content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"><meta name=bingbot content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"><title>[Go] Interface - CL</title><meta name=description content="CLを書いて、人生を読みます。"><link rel=canonical href=https://clannad.icu/blog/4229706688/><meta name=twitter:card content="summary"><meta name=twitter:title content="[Go] Interface"><meta name=twitter:description content="interface类型 interface类型定义了一组方法，如果某个对象实现了某个接口的所有方法，则此对象就实现了此接口
+package main import &#34;fmt&#34; type Human struct { name string age int phone string } type Student struct { Human school string loan float32 } type Employee struct { Human company string money float32 } func (h *Human) SayHi() { fmt.Printf(&#34;Hi, I am %s you can call me on %s\n&#34;, h.name, h.phone) } func (h *Human) Sing(lyrics string) { fmt.Println(&#34;La la, la la la, la la la la la."><meta name=twitter:site content="@"><meta name=twitter:creator content="@"><meta property="og:title" content="[Go] Interface"><meta property="og:description" content="interface类型 interface类型定义了一组方法，如果某个对象实现了某个接口的所有方法，则此对象就实现了此接口
+package main import &#34;fmt&#34; type Human struct { name string age int phone string } type Student struct { Human school string loan float32 } type Employee struct { Human company string money float32 } func (h *Human) SayHi() { fmt.Printf(&#34;Hi, I am %s you can call me on %s\n&#34;, h.name, h.phone) } func (h *Human) Sing(lyrics string) { fmt.Println(&#34;La la, la la la, la la la la la."><meta property="og:type" content="article"><meta property="og:url" content="/blog/4229706688/"><meta property="article:published_time" content="2021-08-30T01:59:22+00:00"><meta property="article:modified_time" content="2021-08-30T01:59:22+00:00"><meta property="og:site_name" content="CL"><meta property="article:publisher" content="https://www.facebook.com/"><meta property="article:author" content="https://www.facebook.com/"><meta property="og:locale" content><script type=application/ld+json>{"@context":"https://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"\/blog\/4229706688\/"},"headline":"[Go] Interface","image":[],"datePublished":"2021-08-30T01:59:22CET","dateModified":"2021-08-30T01:59:22CET","author":{"@type":"Organization","name":"CL"},"publisher":{"@type":"Organization","name":"CL","logo":{"@type":"ImageObject","url":"\/logo-doks.png"}},"description":""}</script><script type=application/ld+json>{"@context":"http://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https:\/\/clannad.icu\/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https:\/\/clannad.icu\/\/blog\/"},{"@type":"ListItem","position":4,"name":"4229706688th","item":"https:\/\/clannad.icu\/\/blog\/4229706688\/"}]}</script><meta name=theme-color content="#fff"><link rel=apple-touch-icon sizes=180x180 href=https://clannad.icu/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=https://clannad.icu/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=https://clannad.icu/favicon-16x16.png><link rel=manifest href=https://clannad.icu/site.webmanifest></head><body class="blog single"><div class="header-bar fixed-top"></div><header class="navbar fixed-top navbar-expand-md navbar-light"><div class=container><input class="menu-btn order-0" type=checkbox id=menu-btn>
+<label class="menu-icon d-md-none" for=menu-btn><span class=navicon></span></label><a class="navbar-brand order-1 order-md-0 me-auto" href=https://clannad.icu/>CL</a>
+<button id=mode class="btn btn-link order-2 order-md-4" type=button aria-label="Toggle mode">
+<span class=toggle-dark><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-moon"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></span><span class=toggle-light><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span></button><ul class="navbar-nav social-nav order-3 order-md-5"><li class=nav-item><a class=nav-link href=https://github.com/CLannadZSY><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37.0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44.0 0020 4.77 5.07 5.07.0 0019.91 1S18.73.65 16 2.48a13.38 13.38.0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07.0 005 4.77 5.44 5.44.0 003.5 8.55c0 5.42 3.3 6.61 6.44 7A3.37 3.37.0 009 18.13V22"/></svg><span class="ms-2 visually-hidden">GitHub</span></a></li></ul><div class="collapse navbar-collapse order-4 order-md-1"><ul class="navbar-nav main-nav me-auto order-5 order-md-2"><li class="nav-item active"><a class=nav-link href=https://clannad.icu/blog/>Blog</a></li></ul><div class="break order-6 d-md-none"></div><form class="navbar-form flex-grow-1 order-7 order-md-3"><input id=userinput class="form-control is-search" type=search placeholder="Search docs..." aria-label="Search docs..." autocomplete=off><div id=suggestions class="shadow bg-white rounded"></div></form></div></div></header><div class="wrap container" role=document><div class=content><div class="row justify-content-center"><div class="col-md-12 col-lg-10 col-xl-8"><article><div class=blog-header><h1>[Go] Interface</h1><p><small>Posted August 30, 2021 by
+<a class="stretched-link position-relative" href=https://clannad.icu/contributors/clannadzsy/>clannadzsy</a>
+&nbsp;&dash;&nbsp;
+<strong>3&nbsp;min read</strong></small><p></div><p class=lead></p><h4 id=interface类型>interface类型</h4><p>interface类型定义了一组方法，如果某个对象实现了某个接口的所有方法，则此对象就实现了此接口</p><pre><code class=language-go>package main
+
+import &quot;fmt&quot;
+
+type Human struct {
+	name  string
+	age   int
+	phone string
+}
+
+type Student struct {
+	Human
+	school string
+	loan   float32
+}
+
+type Employee struct {
+	Human
+	company string
+	money   float32
+}
+
+func (h *Human) SayHi() {
+	fmt.Printf(&quot;Hi, I am %s you can call me on %s\n&quot;, h.name, h.phone)
+}
+
+func (h *Human) Sing(lyrics string) {
+	fmt.Println(&quot;La la, la la la, la la la la la...&quot;, lyrics)
+}
+
+func (h *Human) Guzzle(beerStein string) {
+	fmt.Println(&quot;Guzzle Guzzle Guzzle...&quot;, beerStein)
+}
+
+func (e *Employee) SayHi() {
+	fmt.Printf(&quot;Hi, I am %s, I work at %s. Call me on %s\n&quot;, e.name, e.company, e.phone)
+}
+
+func (s *Student) BorrowMoney(amount float32) {
+	s.loan += amount
+}
+
+func (e *Employee) SpendSalary(amount float32) {
+	e.money -= amount
+}
+
+type Men interface {
+	SayHi()
+	Sing(lyrics string)
+	Guzzle(beerStein string)
+}
+
+type Tom interface {
+	SayHi()
+	Sing(song string)
+	BorrowMoney(amount float32)
+}
+
+type Jerry interface {
+	SayHi()
+	Sing(song string)
+	SpendSalary(amount float32)
+}
+</code></pre><h4 id=interface值>interface值</h4><pre><code class=language-go>package main
+
+import &quot;fmt&quot;
+
+type Human struct {
+	name  string
+	age   int
+	phone string
+}
+
+type Student struct {
+	Human
+	school string
+	loan   float32
+}
+
+type Employee struct {
+	Human
+	company string
+	money   float32
+}
+
+func (h Human) SayHi() {
+	fmt.Printf(&quot;Hi, I am %s you can call me on %s\n&quot;, h.name, h.phone)
+}
+
+func (h Human) Sing(lyrics string) {
+	fmt.Println(&quot;La la, la la la, la la la la la...&quot;, lyrics)
+}
+
+func (e Employee) SayHi() {
+	fmt.Printf(&quot;Hi, I am %s, I work at %s. Call me on %s\n&quot;, e.name, e.company, e.phone)
+}
+
+type Men interface {
+	SayHi()
+	Sing(lyrics string)
+}
+
+func main() {
+	mike := Student{Human{&quot;Mike&quot;, 25, &quot;222-222-XXX&quot;}, &quot;MIT&quot;, 0.00}
+	paul := Student{Human{&quot;Paul&quot;, 26, &quot;111-222-XXX&quot;}, &quot;Harvard&quot;, 100}
+	sam := Employee{Human{&quot;Sam&quot;, 36, &quot;444-222-XXX&quot;}, &quot;Golang Inc.&quot;, 1000}
+	tom := Employee{Human{&quot;Tom&quot;, 37, &quot;222-444-XXX&quot;}, &quot;Things Ltd.&quot;, 5000}
+
+	var i Men
+	i = mike
+	fmt.Println(&quot;This is Mike, a Student:&quot;)
+	i.SayHi()
+	i.Sing(&quot;November rain&quot;)
+
+	i = tom
+	fmt.Println(&quot;This is tom, an Employee&quot;)
+	i.SayHi()
+	i.Sing(&quot;born to be wild&quot;)
+
+	fmt.Println(&quot;Let's use a slice of Men and see what happens&quot;)
+	x := make([]Men, 3)
+	x[0], x[1], x[2] = paul, sam, mike
+	for _, value := range x {
+		value.SayHi()
+	}
+}
+</code></pre><h4 id=interface函数参数>interface函数参数</h4><pre><code class=language-go>package main
+
+import (
+	&quot;fmt&quot;
+	&quot;strconv&quot;
+)
+
+type Human struct {
+	name  string
+	age   int
+	phone string
+}
+
+// 通过这个方法 Human 实现了 fmt.Stringer
+func (h Human) String() string {
+	return &quot;❰&quot; + h.name + &quot; - &quot; + strconv.Itoa(h.age) + &quot; years -  ✆ &quot; + h.phone + &quot;❱&quot;
+}
+
+func main() {
+	Bob := Human{&quot;Bob&quot;, 39, &quot;000-7777-XXX&quot;}
+	fmt.Println(&quot;This Human is : &quot;, Bob)
+}
+</code></pre><h4 id=interface变量存储的类型>interface变量存储的类型</h4><pre><code class=language-go>
+	package main
+
+	import (
+		&quot;fmt&quot;
+		&quot;strconv&quot;
+	)
+
+	type Element interface{}
+	type List [] Element
+
+	type Person struct {
+		name string
+		age int
+	}
+
+	func (p Person) String() string {
+		return &quot;(name: &quot; + p.name + &quot; - age: &quot;+strconv.Itoa(p.age)+ &quot; years)&quot;
+	}
+
+	func main() {
+		list := make(List, 3)
+		list[0] = 1
+		list[1] = &quot;Hello&quot;
+		list[2] = Person{&quot;Dennis&quot;, 70}
+
+		for index, element := range list{
+			switch value := element.(type) {
+				case int:
+					fmt.Printf(&quot;list[%d] is an int and its value is %d\n&quot;, index, value)
+				case string:
+					fmt.Printf(&quot;list[%d] is a string and its value is %s\n&quot;, index, value)
+				case Person:
+					fmt.Printf(&quot;list[%d] is a Person and its value is %s\n&quot;, index, value)
+				default:
+					fmt.Println(&quot;list[%d] is of a different type&quot;, index)
+			}
+		}
+	}
+</code></pre><h4 id=嵌入interface>嵌入interface</h4><p>我们可以看到源码包container/heap里面有这样的一个定义</p><pre><code class=language-go>type Interface interface {
+	sort.Interface //嵌入字段sort.Interface
+	Push(x interface{}) //a Push method to push elements into the heap
+	Pop() interface{} //a Pop elements that pops elements from the heap
+}
+</code></pre><p>我们看到sort.Interface其实就是嵌入字段，把sort.Interface的所有method给隐式的包含进来了。也就是下面三个方法：</p><pre><code class=language-go>type Interface interface {
+	// Len is the number of elements in the collection.
+	Len() int
+	// Less returns whether the element with index i should sort
+	// before the element with index j.
+	Less(i, j int) bool
+	// Swap swaps the elements with indexes i and j.
+	Swap(i, j int)
+}
+</code></pre><p>另一个例子就是io包下面的 io.ReadWriter ，它包含了io包下面的Reader和Writer两个interface：</p><pre><code class=language-go>// io.ReadWriter
+type ReadWriter interface {
+	Reader
+	Writer
+}
+</code></pre></article></div></div><script src=https://utteranc.es/client.js repo=CLannadZSY/clannadzsy.github.io issue-term=title theme=github-light crossorigin=anonymous async></script></div></div><footer class="footer text-muted"><div class=container><div class=row><div class="col-lg-8 order-last order-lg-first"><ul class=list-inline><li class=list-inline-item>Copyright © 2020-present <a href=https://github.com/CLannadZSY/>clannadzsy</a></li></ul></div><div class="col-lg-8 order-first order-lg-last text-lg-end"><ul class=list-inline></ul></div></div></div></footer><script src=https://clannad.icu/js/highlight.min.2c793eb7599ae4975966407f455873eca25c0dd1146f2ba6a8ca933c3ee5a244f8e3a48c5b73694a76709db65ff3e7eedf2a55fc3b0c03510b2eca2b8635c8da.js integrity="sha512-LHk+t1ma5JdZZkB/RVhz7KJcDdEUbyumqMqTPD7lokT446SMW3NpSnZwnbZf8+fu3ypV/DsMA1ELLsorhjXI2g==" crossorigin=anonymous defer></script><script src=https://clannad.icu/main.min.7ab523108435955765bcb88a0ee704f412ba01646b5478e84f3b9feb24f0ce750a14c3f7bd9a62408fe21e41996d361a9eb29f77e85dfe77b7e17f7623bd3a97.js integrity="sha512-erUjEIQ1lVdlvLiKDucE9BK6AWRrVHjoTzuf6yTwznUKFMP3vZpiQI/iHkGZbTYanrKfd+hd/ne34X92I706lw==" crossorigin=anonymous defer></script><script src=https://clannad.icu/index.min.2ab4b3ba0de0d49f020a532eda219cbbae89f190caed914c8e9e8d0b0022a730fed8c6d6fbb9ad71f5a0ffab295a9fa0dd4410e342625571c9a7be78084cc899.js integrity="sha512-KrSzug3g1J8CClMu2iGcu66J8ZDK7ZFMjp6NCwAipzD+2MbW+7mtcfWg/6spWp+g3UQQ40JiVXHJp754CEzImQ==" crossorigin=anonymous defer></script></body></html>
