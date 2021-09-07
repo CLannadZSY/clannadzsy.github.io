@@ -1,5 +1,5 @@
 ---
-title: "Goroutines 和 Channels 练习"
+title: "[Go] Goroutines 和 Channels 练习"
 description: ""
 lead: ""
 date: 2021-09-07T07:00:14Z
