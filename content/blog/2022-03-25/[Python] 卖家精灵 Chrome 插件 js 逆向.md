@@ -33,8 +33,6 @@ url: "/blog/2494707647/"
 
    1. URL分析
 
-      https://www.sellersprite.com/v2/extension/competitor-lookup/US?asins=B00DQFGJR4&tk=58497.291017&version=3.1.4&language=zh_CN&extension=lnbmbgocenenhhhdojdielgnmeflbnfb&source=chrome
-
       ![image-20220325102753803](image-20220325102753803.png)
 
    2. `tk` 参数分析
