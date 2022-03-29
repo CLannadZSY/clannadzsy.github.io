@@ -3,7 +3,6 @@ C:\Users\用户名\AppData\Local\Google\Chrome\User Data\Default\Extensions    c
 ID：lnbmbgocenenhhhdojdielgnmeflbnfb    根据插件ID, 寻找对应的文件夹并使用编辑器打开
   卖家精灵产品查询分析流程
   URL分析
-https://www.sellersprite.com/v2/extension/competitor-lookup/US?asins=B00DQFGJR4&tk=58497.291017&version=3.1.4&language=zh_CN&extension=lnbmbgocenenhhhdojdielgnmeflbnfb&source=chrome
   tk 参数分析
   B00DQFGJR4 不变, 更改 tk 的值, 提示无法使用此功能, 因此, tk 参数并不是随机生成的, 而是与 asin 有关
   使用编辑器, 全局搜索 tk , 发现 tk 参数, 都是由 N.a.s2Tkk(t) 方法生成
@@ -12,7 +11,6 @@ C:\Users\用户名\AppData\Local\Google\Chrome\User Data\Default\Extensions    c
 ID：lnbmbgocenenhhhdojdielgnmeflbnfb    根据插件ID, 寻找对应的文件夹并使用编辑器打开
   卖家精灵产品查询分析流程
   URL分析
-https://www.sellersprite.com/v2/extension/competitor-lookup/US?asins=B00DQFGJR4&tk=58497.291017&version=3.1.4&language=zh_CN&extension=lnbmbgocenenhhhdojdielgnmeflbnfb&source=chrome
   tk 参数分析
   B00DQFGJR4 不变, 更改 tk 的值, 提示无法使用此功能, 因此, tk 参数并不是随机生成的, 而是与 asin 有关
   使用编辑器, 全局搜索 tk , 发现 tk 参数, 都是由 N.a.s2Tkk(t) 方法生成
@@ -25,7 +23,7 @@ static asins(e, t) { return ve(this, void 0, void 0, (function*() { const a = yi
 <strong>5&nbsp;min read</strong></small><p></div><p class=lead></p><ol><li>chrome://version, 查看 <code>个人资料路径</code></li></ol><pre><code class=language-bash>C:\Users\用户名\AppData\Local\Google\Chrome\User Data\Default
 </code></pre><ol start=2><li><p>打开插件所在文件夹: <code>Extensions</code>, 目录如下:</p><pre><code class=language-bash>C:\Users\用户名\AppData\Local\Google\Chrome\User Data\Default\Extensions
 </code></pre></li><li><p><code>chrome://extensions/</code> 查看卖家精灵插件 ID</p><pre><code class=language-bash>ID：lnbmbgocenenhhhdojdielgnmeflbnfb
-</code></pre></li><li><p>根据插件ID, 寻找对应的文件夹并使用编辑器打开</p></li><li><p>卖家精灵产品查询分析流程</p><ol><li><p>URL分析</p><p>https://www.sellersprite.com/v2/extension/competitor-lookup/US?asins=B00DQFGJR4&tk=58497.291017&version=3.1.4&language=zh_CN&extension=lnbmbgocenenhhhdojdielgnmeflbnfb&source=chrome</p><p><img src=image-20220325102753803.png alt=image-20220325102753803></p></li><li><p><code>tk</code> 参数分析</p><ol><li><p>B00DQFGJR4 不变, 更改 tk 的值, 提示无法使用此功能, 因此, tk 参数并不是随机生成的, 而是与 asin 有关</p><p><img src=image-20220325103055076.png alt=image-20220325103055076></p></li><li><p>使用编辑器, 全局搜索 <code>tk</code> , 发现 tk 参数, 都是由 <code>N.a.s2Tkk(t)</code> 方法生成</p><pre><code class=language-js>      static asins(e, t) {
+</code></pre></li><li><p>根据插件ID, 寻找对应的文件夹并使用编辑器打开</p></li><li><p>卖家精灵产品查询分析流程</p><ol><li><p>URL分析</p><p><img src=image-20220325102753803.png alt=image-20220325102753803></p></li><li><p><code>tk</code> 参数分析</p><ol><li><p>B00DQFGJR4 不变, 更改 tk 的值, 提示无法使用此功能, 因此, tk 参数并不是随机生成的, 而是与 asin 有关</p><p><img src=image-20220325103055076.png alt=image-20220325103055076></p></li><li><p>使用编辑器, 全局搜索 <code>tk</code> , 发现 tk 参数, 都是由 <code>N.a.s2Tkk(t)</code> 方法生成</p><pre><code class=language-js>      static asins(e, t) {
                 return ve(this, void 0, void 0, (function*() {
               const a =
                         yield n.a.get(`${this.ASINS_URL}/${e.code}`, {

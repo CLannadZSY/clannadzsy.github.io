@@ -3,7 +3,6 @@ C:\Users\用户名\AppData\Local\Google\Chrome\User Data\Default\Extensions chro
 ID：lnbmbgocenenhhhdojdielgnmeflbnfb 根据插件ID, 寻找对应的文件夹并使用编辑器打开
 卖家精灵产品查询分析流程
 URL分析
-https://www.sellersprite.com/v2/extension/competitor-lookup/US?asins=B00DQFGJR4&amp;amp;tk=58497.291017&amp;amp;version=3.1.4&amp;amp;language=zh_CN&amp;amp;extension=lnbmbgocenenhhhdojdielgnmeflbnfb&amp;amp;source=chrome
 tk 参数分析
 B00DQFGJR4 不变, 更改 tk 的值, 提示无法使用此功能, 因此, tk 参数并不是随机生成的, 而是与 asin 有关
 使用编辑器, 全局搜索 tk , 发现 tk 参数, 都是由 N.a.s2Tkk(t) 方法生成
