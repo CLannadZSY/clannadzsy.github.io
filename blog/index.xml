@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Blogs on</title><link>https://clannad.icu/blog/</link><description>Recent content in Blogs on</description><generator>Hugo -- gohugo.io</generator><language>en-US</language><lastBuildDate>Fri, 25 Aug 2023 02:53:11 +0000</lastBuildDate><atom:link href="https://clannad.icu/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>The Golang Chronicles From Ai</title><link>https://clannad.icu/blog/3231606058/</link><pubDate>Fri, 25 Aug 2023 02:53:11 +0000</pubDate><guid>https://clannad.icu/blog/3231606058/</guid><description>Title: &amp;ldquo;The Golang Chronicles&amp;rdquo;
 Chapter 1: The Mysterious Codex
 In the bustling city of Devoria, where the clatter of steam-powered machines filled the air, lived a young prodigy named Alaric. He was known throughout the city as the most brilliant programmer, his skills unmatched in the world of technology. Alaric had an insatiable hunger for knowledge and was always seeking the next great challenge.
+One fateful day, Alaric received a cryptic message on his antique computer, a relic from a bygone era.</description></item><item><title>The Golang Chronicles From Ai</title><link>https://clannad.icu/blog/3231606058/</link><pubDate>Fri, 25 Aug 2023 02:53:11 +0000</pubDate><guid>https://clannad.icu/blog/3231606058/</guid><description>Title: &amp;ldquo;The Golang Chronicles&amp;rdquo;
+Chapter 1: The Mysterious Codex
+In the bustling city of Devoria, where the clatter of steam-powered machines filled the air, lived a young prodigy named Alaric. He was known throughout the city as the most brilliant programmer, his skills unmatched in the world of technology. Alaric had an insatiable hunger for knowledge and was always seeking the next great challenge.
 One fateful day, Alaric received a cryptic message on his antique computer, a relic from a bygone era.</description></item><item><title>提高 Golang 并发编程能力的必备利器：深入学习 sync.Cond 类型</title><link>https://clannad.icu/blog/1539748842/</link><pubDate>Sat, 06 May 2023 03:02:01 +0000</pubDate><guid>https://clannad.icu/blog/1539748842/</guid><description>Go 语言的 sync 包提供了一系列同步原语，其中 sync.Cond 就是其中之一。sync.Cond 的作用是在多个 goroutine 之间进行条件变量的同步。本文将深入探讨 sync.Cond 的实现原理和使用方法，帮助大家更好地理解和应用 sync.Cond。
 sync.Cond 的基本概念 1.1 条件变量 条件变量是一种同步机制，用于在多个 goroutine 之间进行同步。条件变量通常是和互斥锁一起使用的，用于等待某个条件的出现。 在 Go 语言中，条件变量由 sync.Cond 类型实现。它提供了两个主要的方法：Wait 和 Signal/Broadcast。Wait 方法用于等待条件变量的出现，Signal/Broadcast 方法用于通知等待中的 goroutine。 1.2 互斥锁 互斥锁是一种用于控制对共享资源访问的同步机制。它能够保证同一时刻只有一个 goroutine 能够访问共享资源。 在 Go 语言中，互斥锁由 sync.Mutex 类型实现。它提供了两个主要的方法：Lock 和 Unlock。Lock 方法用于加锁，保证同一时刻只有一个 goroutine 能够访问共享资源；Unlock 方法用于解锁，允许其他 goroutine 访问共享资源。 1.3 条件变量的实现原理 条件变量的实现原理基于互斥锁和 goroutine 队列。 假设有一个条件变量 cond，初始时它没有被触发。当一个 goroutine 调用 cond.Wait() 方法时，它会加锁并将自己加入到 cond 的 goroutine 队列中。接着，它会解锁并进入睡眠状态，等待被唤醒。 当另一个 goroutine 调用 cond.Signal() 或者 cond.Broadcast() 方法时，它会重新加锁，并从 cond 的 goroutine 队列中选择一个 goroutine 唤醒。被唤醒的 goroutine 会重新加锁，然后继续执行。 需要注意的是，被唤醒的 goroutine 并不会立即执行，它会等待重新获得锁之后才会继续执行。 sync.</description></item><item><title>解决 Android 7 及以上的安卓系统模拟器, 无法抓包 https 请求</title><link>https://clannad.icu/blog/3640029440/</link><pubDate>Sat, 06 May 2023 02:09:38 +0000</pubDate><guid>https://clannad.icu/blog/3640029440/</guid><description>在Android 7及以上版本中，由于系统对证书的限制，使用抓包软件（如Fiddler、Charles）进行HTTPS抓包会遇到困难。下面介绍一种解决方案。
 生成证书 首先需要将证书生成在本地电脑上，可使用cer或pem格式。然后通过openssl计算证书hash值：
@@ -33,27 +36,4 @@ Being enthusiastic is worth 25 IQ points.
 Always demand a deadline. A deadline weeds out the extraneous and the ordinary. It prevents you from trying to make it perfect, so you have to make it different. Different is better.
 总是要求有一个最后期限, 一个最后期限可以剔除不相干和普通的东西. 它阻止你试图让它变得完美，所以你必须让它变得不同. 不同就是更好.
 Don’t be afraid to ask a question that may sound stupid because 99% of the time everyone else is thinking of the same question and is too embarrassed to ask it.</description></item><item><title>[Go] Goroutines 和 Channels 练习</title><link>https://clannad.icu/blog/1624364114/</link><pubDate>Tue, 07 Sep 2021 07:00:14 +0000</pubDate><guid>https://clannad.icu/blog/1624364114/</guid><description>查找奇数和偶数
-/* 查找奇数和偶数 下面的程序启动了两个 Goroutine。这两个 Goroutine 现在并发运行。我们创建了两个无缓冲通道，并将它们作为参数传递给 goroutines，其中包含通道接收到的值。 */ package main func main() { nums := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 0} chOdd := make(chan int) chEven := make(chan int) go odd(chOdd) go even(chEven) for _, v := range nums { if v%2 == 0 { chEven &amp;lt;- v } else { chOdd &amp;lt;- v } } } func even(ch chan int) { for v := range ch { println(&amp;quot;偶数: &amp;quot;, v) } } func odd(ch chan int) { for v := range ch { println(&amp;quot;奇数: &amp;quot;, v) } } 启动多个 Goroutines，每个 Goroutine 将值添加到 Channel</description></item><item><title>[Go] defer 理解</title><link>https://clannad.icu/blog/218469985/</link><pubDate>Thu, 02 Sep 2021 06:22:13 +0000</pubDate><guid>https://clannad.icu/blog/218469985/</guid><description>什么是 defer defer 是 Go 语言提供的一种用于注册延迟调用的机智, 每一次 defer 都会把函数压入栈中, 当前函数返回前再把延迟函数取出并执行
-defer 语句并不会马上执行，而是会进入一个栈，函数 return 前，会按先进后出（FILO）的顺序执行
-先进后出的原因是后面定义的函数可能会依赖前面的资源，自然要先执行；否则，如果前面先执行，那后面函数的依赖就没有了。
-踩坑点 使用 defer 最容易采坑的地方是和带命名返回参数的函数一起使用时。
-defer 语句定义时, 对外部变量的引用有两种方式
-函数参数: 在 defer 定义时就把值传递给 defer, 并缓存起来 闭包引用: 在 defer 函数被取出调用时根据整个上下文确定当前值 理解 return 语句 return 语句不是原子操作，而是被拆成了两步
-val = xxx
-return
-而 defer 语句就是在这两条语句之间执行，也就是
-val = xxx
-deferFunc
-return
-实践检验 package main
-import &amp;quot;fmt&amp;quot;
-func f1() (r int) {
-defer func() {
-r++
-}()
-return 0
-}
-// 拆分 f1
-//func f1() (r int) {
-//
-// // 1.</description></item></channel></rss>
+/* 查找奇数和偶数 下面的程序启动了两个 Goroutine。这两个 Goroutine 现在并发运行。我们创建了两个无缓冲通道，并将它们作为参数传递给 goroutines，其中包含通道接收到的值。 */ package main func main() { nums := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 0} chOdd := make(chan int) chEven := make(chan int) go odd(chOdd) go even(chEven) for _, v := range nums { if v%2 == 0 { chEven &amp;lt;- v } else { chOdd &amp;lt;- v } } } func even(ch chan int) { for v := range ch { println(&amp;quot;偶数: &amp;quot;, v) } } func odd(ch chan int) { for v := range ch { println(&amp;quot;奇数: &amp;quot;, v) } } 启动多个 Goroutines，每个 Goroutine 将值添加到 Channel</description></item></channel></rss>
