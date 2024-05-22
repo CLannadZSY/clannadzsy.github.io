@@ -1,4 +1,10 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>clannadzsy on</title><link>https://clannad.icu/contributors/clannadzsy/</link><description>Recent content in clannadzsy on</description><generator>Hugo -- gohugo.io</generator><language>en-US</language><lastBuildDate>Tue, 30 Apr 2024 08:51:56 +0000</lastBuildDate><atom:link href="https://clannad.icu/contributors/clannadzsy/index.xml" rel="self" type="application/rss+xml"/><item><title>MySQL8 InnoDB 数据恢复</title><link>https://clannad.icu/blog/429417542/</link><pubDate>Tue, 30 Apr 2024 08:51:56 +0000</pubDate><guid>https://clannad.icu/blog/429417542/</guid><description>MySQL8 InnoDB 数据恢复 ~~ 硬盘突然损坏, 数据侥幸得以导出 ~~
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>clannadzsy on</title><link>https://clannad.icu/contributors/clannadzsy/</link><description>Recent content in clannadzsy on</description><generator>Hugo -- gohugo.io</generator><language>en-US</language><lastBuildDate>Wed, 22 May 2024 07:51:17 +0000</lastBuildDate><atom:link href="https://clannad.icu/contributors/clannadzsy/index.xml" rel="self" type="application/rss+xml"/><item><title>在 HTTPS 端口使用 SSH</title><link>https://clannad.icu/blog/532834567/</link><pubDate>Wed, 22 May 2024 07:51:17 +0000</pubDate><guid>https://clannad.icu/blog/532834567/</guid><description>在 HTTPS 端口使用 SSH 有时，防火墙会完全拒绝允许 SSH 连接。 如果无法选择使用具有凭据缓存的 HTTPS 克隆，可以尝试使用通过 HTTPS 端口建立的 SSH 连接克隆。 大多数防火墙规则应允许此操作，但代理服务器可能会干扰
+GitHub Enterprise Server 用户：目前不支持经 SSH 通过 HTTPS 端口访问 GitHub Enterprise Server。
+要测试通过 HTTPS 端口的 SSH 是否可行，请运行以下 SSH 命令：
+$ ssh -T -p 443 git@ssh.github.com &amp;gt; Hi USERNAME! You've successfully authenticated, but GitHub does not &amp;gt; provide shell access. 注意：端口 443 的主机名为 ssh.，而不是 ``。
+如果这样有效，万事大吉！ 否则，可能需要遵循我们的故障排除指南。
+现在，若要克隆存储库，可以运行以下命令：
+git clone ssh://git@ssh.:443/YOUR-USERNAME/YOUR-REPOSITORY.git 启用通过 HTTPS 的 SSH 连接 如果你能在端口 443 上通过 SSH 连接到 git@ssh.</description></item><item><title>MySQL8 InnoDB 数据恢复</title><link>https://clannad.icu/blog/429417542/</link><pubDate>Tue, 30 Apr 2024 08:51:56 +0000</pubDate><guid>https://clannad.icu/blog/429417542/</guid><description>MySQL8 InnoDB 数据恢复 ~~ 硬盘突然损坏, 数据侥幸得以导出 ~~
 前提条件
 1.1 提前创建好表的结构 sql, 执行 sql 恢复表的结构
 1.2 然后使用 table_name.ibd 的文件覆盖, 最好是一张表恢复成功再覆盖下一张
@@ -32,7 +38,4 @@ URL分析
 tk 参数分析
 B00DQFGJR4 不变, 更改 tk 的值, 提示无法使用此功能, 因此, tk 参数并不是随机生成的, 而是与 asin 有关
 使用编辑器, 全局搜索 tk , 发现 tk 参数, 都是由 N.a.s2Tkk(t) 方法生成
-static asins(e, t) { return ve(this, void 0, void 0, (function*() { const a = yield n.</description></item><item><title>[Go] 数组, 切片的长度与容量</title><link>https://clannad.icu/blog/4217449500/</link><pubDate>Tue, 12 Oct 2021 07:18:30 +0000</pubDate><guid>https://clannad.icu/blog/4217449500/</guid><description>来源: Capacity and length of a slice in Go
-数组 数组是具有**size**相同值的某个对象的索引集合**type**，声明为：
-数组的属性 数组有固定大小，不能调整大小。切片可以调整大小。 数组的类型包括其大小。的[4]int数组类型是不同于[5]int，并且它们不能相比。 初始化一个数组，var name [size]type创建一个size类型元素的集合，type每个元素都是给定的零值type。 数组按值传递。这意味着当您将一个数组分配给另一个数组时，您将制作其内容的新副本： 切片 var name []type
-切片的属性 append()调用函数时，切片会自动调整大小。 切片是不可比较的，简单的相等比较a == b是不可能的。查看如何比较切片。 用 初始化切片var name []type会创建一个nil长度和容量等于 0 且没有底层数组的切片。看看nil 和 empty slice 有什么区别。 就像数组（以及 Go 中的所有内容）一样，切片按值传递。当分配一个切片到一个新的变量，则ptr，len以及cap被复制，包括ptr指针将指向同一底层数组。如果修改复制的切片，则会修改相同的共享数组，这将使旧切片和新切片中的所有更改都可见：</description></item></channel></rss>
+static asins(e, t) { return ve(this, void 0, void 0, (function*() { const a = yield n.</description></item></channel></rss>
