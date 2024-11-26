@@ -1,4 +1,10 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Blogs on</title><link>https://clannad.icu/blog/</link><description>Recent content in Blogs on</description><generator>Hugo -- gohugo.io</generator><language>en-US</language><lastBuildDate>Wed, 22 May 2024 07:51:17 +0000</lastBuildDate><atom:link href="https://clannad.icu/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>在 HTTPS 端口使用 SSH</title><link>https://clannad.icu/blog/532834567/</link><pubDate>Wed, 22 May 2024 07:51:17 +0000</pubDate><guid>https://clannad.icu/blog/532834567/</guid><description>在 HTTPS 端口使用 SSH 有时，防火墙会完全拒绝允许 SSH 连接。 如果无法选择使用具有凭据缓存的 HTTPS 克隆，可以尝试使用通过 HTTPS 端口建立的 SSH 连接克隆。 大多数防火墙规则应允许此操作，但代理服务器可能会干扰
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Blogs on</title><link>https://clannad.icu/blog/</link><description>Recent content in Blogs on</description><generator>Hugo -- gohugo.io</generator><language>en-US</language><lastBuildDate>Tue, 26 Nov 2024 14:58:22 +0000</lastBuildDate><atom:link href="https://clannad.icu/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Wsl2 Linux 子系统的导入与导出</title><link>https://clannad.icu/blog/3262080571/</link><pubDate>Tue, 26 Nov 2024 14:58:22 +0000</pubDate><guid>https://clannad.icu/blog/3262080571/</guid><description> 关闭 wsl
+wsl --shutdown 查看 wsl 信息
+wsl -l -v NAME STATE VERSION * Debian Running 2 导出
+wsl --export Debian D:\Debian.tar 注销
+wsl --unregister Debian 导入
+wsl --import Debian D:\Debian D:\Debian.tar 设置默认登录用户, 否则默认为 root 用户登录
+Debian config --default-user &amp;lt;用户名&amp;gt;</description></item><item><title>在 HTTPS 端口使用 SSH</title><link>https://clannad.icu/blog/532834567/</link><pubDate>Wed, 22 May 2024 07:51:17 +0000</pubDate><guid>https://clannad.icu/blog/532834567/</guid><description>在 HTTPS 端口使用 SSH 有时，防火墙会完全拒绝允许 SSH 连接。 如果无法选择使用具有凭据缓存的 HTTPS 克隆，可以尝试使用通过 HTTPS 端口建立的 SSH 连接克隆。 大多数防火墙规则应允许此操作，但代理服务器可能会干扰
 GitHub Enterprise Server 用户：目前不支持经 SSH 通过 HTTPS 端口访问 GitHub Enterprise Server。
 要测试通过 HTTPS 端口的 SSH 是否可行，请运行以下 SSH 命令：
 $ ssh -T -p 443 git@ssh.github.com &amp;gt; Hi USERNAME! You've successfully authenticated, but GitHub does not &amp;gt; provide shell access. 注意：端口 443 的主机名为 ssh.，而不是 ``。
@@ -30,12 +36,4 @@ cer格式 openssl x509 -inform DER -text -in xxx.cer &amp;gt; hash值.0 pem格�
 打开/etc/security/limits.conf文件：
 $ vi /etc/security/limits.conf 在文件末尾添加以下两行：
 root - nofile 65535 root - nproc 30000 让配置生效：
-$ sysctl -p</description></item><item><title>[Python] 卖家精灵 Chrome 插件 Js 逆向</title><link>https://clannad.icu/blog/2494707647/</link><pubDate>Fri, 25 Mar 2022 02:05:38 +0000</pubDate><guid>https://clannad.icu/blog/2494707647/</guid><description>chrome://version, 查看 个人资料路径 C:\Users\用户名\AppData\Local\Google\Chrome\User Data\Default 打开插件所在文件夹: Extensions, 目录如下:
-C:\Users\用户名\AppData\Local\Google\Chrome\User Data\Default\Extensions chrome://extensions/ 查看卖家精灵插件 ID
-ID：lnbmbgocenenhhhdojdielgnmeflbnfb 根据插件ID, 寻找对应的文件夹并使用编辑器打开
-卖家精灵产品查询分析流程
-URL分析
-tk 参数分析
-B00DQFGJR4 不变, 更改 tk 的值, 提示无法使用此功能, 因此, tk 参数并不是随机生成的, 而是与 asin 有关
-使用编辑器, 全局搜索 tk , 发现 tk 参数, 都是由 N.a.s2Tkk(t) 方法生成
-static asins(e, t) { return ve(this, void 0, void 0, (function*() { const a = yield n.</description></item></channel></rss>
+$ sysctl -p</description></item></channel></rss>
