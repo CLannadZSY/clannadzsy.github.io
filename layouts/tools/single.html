@@ -1,0 +1,112 @@
+{{ define "main" }}
+<div class="tools-shell" data-json-tool>
+  <aside class="tools-sidebar">
+    <div class="tools-sidebar-title">工具箱</div>
+    <nav aria-label="工具导航">
+      <div class="tools-nav-group">格式化</div>
+      <button class="tools-nav-link active" type="button" data-tool-tab="json" aria-controls="json-tool" aria-current="page">JSON 格式化</button>
+      <div class="tools-nav-group">代码转换</div>
+      <button class="tools-nav-link" type="button" data-tool-tab="curl" aria-controls="curl-tool">cURL 转 requests</button>
+      <div class="tools-nav-group">安全</div>
+      <button class="tools-nav-link" type="button" data-tool-tab="password" aria-controls="password-tool">密码生成器</button>
+    </nav>
+  </aside>
+
+  <main class="tools-main">
+    <div class="json-workspace" id="json-tool" data-tool-panel="json">
+      <section class="json-panel">
+        <div class="json-panel-header">
+          <label for="json-input">原始 JSON</label>
+          <button class="btn btn-primary btn-sm" id="json-format" type="button">格式化</button>
+        </div>
+        <textarea id="json-input" spellcheck="false" placeholder="支持标准 JSON、JSON5 和 Python Dict，例如：{1:1}"></textarea>
+        <p class="json-message" id="json-message" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="json-panel">
+        <div class="json-panel-header">
+          <span>格式化结果</span>
+          <button class="btn btn-outline-primary btn-sm json-copy" id="json-copy" type="button" disabled>
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span>复制</span>
+          </button>
+        </div>
+        <pre class="json-output"><code id="json-output" class="language-json" aria-label="格式化后的 JSON"></code></pre>
+      </section>
+    </div>
+
+    <div class="json-workspace" id="curl-tool" data-tool-panel="curl" hidden>
+      <section class="json-panel">
+        <div class="json-panel-header">
+          <label for="curl-input">cURL 命令</label>
+          <button class="btn btn-primary btn-sm" id="curl-convert" type="button">转换</button>
+        </div>
+        <textarea id="curl-input" spellcheck="false" placeholder="在这里粘贴以 curl 开头的命令"></textarea>
+        <p class="json-message" id="curl-message" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="json-panel">
+        <div class="json-panel-header">
+          <span>Python requests</span>
+          <button class="btn btn-outline-primary btn-sm json-copy" id="curl-copy" type="button" disabled>
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span>复制</span>
+          </button>
+        </div>
+        <pre class="json-output"><code id="curl-output" class="language-python" aria-label="生成的 Python requests 代码"></code></pre>
+      </section>
+    </div>
+
+    <div class="password-tool" id="password-tool" data-tool-panel="password" hidden>
+      <section class="password-card">
+        <div class="password-section">
+          <div class="password-section-title">选择密码类型</div>
+          <div class="password-type-tabs" role="group" aria-label="密码类型">
+            <button class="active" type="button" data-password-type="random" aria-pressed="true">随机密码</button>
+            <button type="button" data-password-type="memorable" aria-pressed="false">易记密码</button>
+            <button type="button" data-password-type="pin" aria-pressed="false">PIN</button>
+          </div>
+        </div>
+
+        <div class="password-section">
+          <div class="password-section-title">自定义密码</div>
+          <label class="password-length" for="password-length">
+            <span id="password-length-label">字符数</span>
+            <input id="password-length" type="range" min="8" max="64" value="20">
+            <output id="password-length-value" for="password-length">20</output>
+          </label>
+
+          <div class="password-toggles" id="password-toggles">
+            <label class="password-toggle">
+              <span>数字</span>
+              <input id="password-numbers" type="checkbox" checked>
+              <span class="password-toggle-control" aria-hidden="true"></span>
+            </label>
+            <label class="password-toggle">
+              <span>符号</span>
+              <input id="password-symbols" type="checkbox">
+              <span class="password-toggle-control" aria-hidden="true"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="password-section password-result-section">
+          <div class="password-section-title">生成的密码</div>
+          <output class="password-result" id="password-output" aria-live="polite"></output>
+          <div class="password-actions">
+            <button class="btn btn-primary" id="password-copy" type="button">复制密码</button>
+            <button class="btn btn-outline-primary" id="password-refresh" type="button">刷新密码</button>
+          </div>
+          <p class="password-message" id="password-message" role="status" aria-live="polite"></p>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+{{ end }}
