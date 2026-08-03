@@ -11,8 +11,11 @@
 {{ $katexAutoRender := resources.Get "js/vendor/katex/dist/contrib/auto-render.js" -}}
 
 {{ $app := resources.Get "js/app.js" -}}
+{{ $curlToRequests := resources.Get "js/curl-to-requests.js" -}}
+{{ $passwordGenerator := resources.Get "js/password-generator.js" -}}
+{{ $looseJson := resources.Get "js/loose-json.mjs" | js.Build -}}
 
-{{ $slice := slice $app -}}
+{{ $slice := slice $curlToRequests $passwordGenerator $looseJson $app -}}
 
 {{ if .Site.Params.options.lazySizes -}}
   {{ $lazySizes := resources.Get "js/lazysizes.js" -}}

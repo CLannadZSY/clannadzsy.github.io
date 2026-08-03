@@ -2,6 +2,7 @@ functions
 node_modules
 public
 resources
+assets/jsconfig.json
 # Local Netlify folder
 .netlify
 .idea
