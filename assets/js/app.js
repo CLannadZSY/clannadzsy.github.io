@@ -200,7 +200,6 @@ if (jsonTool) {
         const item = document.createElement('figure');
         const image = document.createElement('img');
         const caption = document.createElement('figcaption');
-        item.className = 'image-preview-item';
         image.src = url;
         image.alt = `第 ${index + 1} 张图片`;
         image.loading = 'lazy';
