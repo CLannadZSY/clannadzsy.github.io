@@ -185,4 +185,40 @@ if (jsonTool) {
   });
 
   generatePassword();
+
+  const imageListInput = document.getElementById('image-list-input');
+  const imageListButton = document.getElementById('image-list-show');
+  const imageListMessage = document.getElementById('image-list-message');
+  const imagePreviewGrid = document.getElementById('image-preview-grid');
+
+  imageListButton.addEventListener('click', () => {
+    try {
+      const { total, urls } = window.imageListParser.parseImageList(imageListInput.value);
+      const fragment = document.createDocumentFragment();
+
+      urls.forEach((url, index) => {
+        const item = document.createElement('figure');
+        const image = document.createElement('img');
+        const caption = document.createElement('figcaption');
+        item.className = 'image-preview-item';
+        image.src = url;
+        image.alt = `第 ${index + 1} 张图片`;
+        image.loading = 'lazy';
+        image.decoding = 'async';
+        caption.textContent = `${index + 1}`;
+        item.append(image, caption);
+        fragment.append(item);
+      });
+
+      imagePreviewGrid.replaceChildren(fragment);
+      imageListMessage.classList.add('success');
+      imageListMessage.textContent = total > urls.length
+        ? `共 ${total} 个链接，仅显示前 ${urls.length} 张。`
+        : `已显示 ${urls.length} 张图片。`;
+    } catch (error) {
+      imagePreviewGrid.replaceChildren();
+      imageListMessage.classList.remove('success');
+      imageListMessage.textContent = error.message;
+    }
+  });
 }

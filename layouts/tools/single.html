@@ -9,6 +9,8 @@
       <button class="tools-nav-link" type="button" data-tool-tab="curl" aria-controls="curl-tool">cURL 转 requests</button>
       <div class="tools-nav-group">安全</div>
       <button class="tools-nav-link" type="button" data-tool-tab="password" aria-controls="password-tool">密码生成器</button>
+      <div class="tools-nav-group">图片</div>
+      <button class="tools-nav-link" type="button" data-tool-tab="images" aria-controls="images-tool">批量图片预览</button>
     </nav>
   </aside>
 
@@ -106,6 +108,18 @@
           <p class="password-message" id="password-message" role="status" aria-live="polite"></p>
         </div>
       </section>
+    </div>
+
+    <div class="image-preview-tool" id="images-tool" data-tool-panel="images" hidden>
+      <section class="image-preview-input">
+        <div class="json-panel-header">
+          <label for="image-list-input">图片链接</label>
+          <button class="btn btn-primary btn-sm" id="image-list-show" type="button">显示图片</button>
+        </div>
+        <textarea id="image-list-input" spellcheck="false" placeholder="支持 JSON 字符串数组，或每行一个图片链接；最多显示前 100 张"></textarea>
+        <p class="json-message" id="image-list-message" role="status" aria-live="polite"></p>
+      </section>
+      <div class="image-preview-grid" id="image-preview-grid" aria-live="polite"></div>
     </div>
   </main>
 </div>
