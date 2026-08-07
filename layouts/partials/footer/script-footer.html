@@ -14,9 +14,11 @@
 {{ $curlToRequests := resources.Get "js/curl-to-requests.js" -}}
 {{ $passwordGenerator := resources.Get "js/password-generator.js" -}}
 {{ $imageList := resources.Get "js/image-list.js" -}}
+{{ $timestampConverter := resources.Get "js/timestamp-converter.js" -}}
+{{ $proxyCheck := resources.Get "js/proxy-check.js" -}}
 {{ $looseJson := resources.Get "js/loose-json.mjs" | js.Build -}}
 
-{{ $slice := slice $curlToRequests $passwordGenerator $imageList $looseJson $app -}}
+{{ $slice := slice $curlToRequests $passwordGenerator $imageList $timestampConverter $proxyCheck $looseJson $app -}}
 
 {{ if .Site.Params.options.lazySizes -}}
   {{ $lazySizes := resources.Get "js/lazysizes.js" -}}

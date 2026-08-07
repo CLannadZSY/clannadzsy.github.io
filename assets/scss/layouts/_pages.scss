@@ -41,6 +41,7 @@ body.tools.single .wrap.container {
 }
 
 .tools-sidebar {
+  min-width: 0;
   padding: 2rem 1rem;
   background: $gray-100;
   border-right: 1px solid $gray-200;
@@ -430,6 +431,617 @@ body.tools.single .wrap.container {
   text-align: center;
 }
 
+.timestamp-tool {
+  min-height: calc(100vh - 8rem);
+}
+
+.timestamp-shell {
+  max-width: 68rem;
+  margin: 0 auto;
+  overflow: hidden;
+  background: $white;
+  border: 1px solid $gray-300;
+  border-radius: $border-radius-lg;
+  box-shadow: 0 1rem 2.5rem rgba($black, 0.06);
+}
+
+.timestamp-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  background: $gray-100;
+  border-bottom: 1px solid $gray-200;
+}
+
+.timestamp-mode-tabs {
+  display: grid;
+  min-width: 18rem;
+  grid-template-columns: repeat(2, 1fr);
+  padding: 0.2rem;
+  background: $gray-200;
+  border-radius: $border-radius;
+}
+
+.timestamp-mode-button {
+  padding: 0.45rem 0.75rem;
+  background: transparent;
+  border: 0;
+  border-radius: calc(#{$border-radius} - 0.1rem);
+  color: $gray-600;
+}
+
+.timestamp-mode-button.active {
+  background: $white;
+  color: $body-color;
+  box-shadow: 0 0.1rem 0.3rem rgba($black, 0.08);
+}
+
+.timestamp-timezone {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0;
+  color: $gray-600;
+  font-size: $font-size-sm;
+}
+
+.timestamp-timezone input,
+.timestamp-field-row input,
+.timestamp-field-row select {
+  min-height: 2.75rem;
+  padding: 0.55rem 0.75rem;
+  background: $white;
+  border: 1px solid $gray-300;
+  border-radius: $border-radius;
+  color: $body-color;
+}
+
+.timestamp-timezone input {
+  width: 14rem;
+}
+
+.timestamp-timezone input:focus,
+.timestamp-field-row input:focus,
+.timestamp-field-row select:focus {
+  border-color: $primary;
+  box-shadow: 0 0 0 0.2rem rgba($primary, 0.15);
+  outline: 0;
+}
+
+.timestamp-single {
+  padding: 1.5rem;
+}
+
+.timestamp-field-block {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.timestamp-field-block > label,
+.timestamp-field-heading > label,
+.timestamp-batch-input > label {
+  margin: 0;
+  font-weight: 500;
+}
+
+.timestamp-field-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.timestamp-field-heading span {
+  color: $gray-600;
+  font-size: $font-size-sm;
+}
+
+.timestamp-field-row {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.timestamp-epoch-row {
+  grid-template-columns: minmax(12rem, 1fr) 9rem auto auto;
+}
+
+.timestamp-date-row {
+  grid-template-columns: minmax(10rem, 1fr) minmax(9rem, 0.65fr) auto;
+}
+
+.timestamp-swap {
+  display: flex;
+  width: 2rem;
+  height: 2rem;
+  align-items: center;
+  justify-content: center;
+  margin: 0.75rem auto;
+  background: rgba($primary, 0.1);
+  border-radius: 50%;
+  color: $primary;
+  font-size: $font-size-lg;
+}
+
+.timestamp-message {
+  min-height: 1.5rem;
+  margin: 0.7rem 0 0;
+  color: $danger;
+  font-size: $font-size-sm;
+}
+
+.timestamp-message.warning {
+  color: $warning;
+}
+
+.timestamp-results {
+  margin-top: 0.75rem;
+  overflow: hidden;
+  border: 1px solid $gray-200;
+  border-radius: $border-radius-lg;
+}
+
+.timestamp-result-row {
+  display: grid;
+  min-height: 3.15rem;
+  align-items: center;
+  grid-template-columns: 7rem minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  border-bottom: 1px solid $gray-200;
+}
+
+.timestamp-result-row:last-child {
+  border-bottom: 0;
+}
+
+.timestamp-results span {
+  color: $gray-600;
+  font-size: $font-size-sm;
+}
+
+.timestamp-results output {
+  min-width: 0;
+  font-family: $font-family-monospace;
+  overflow-wrap: anywhere;
+}
+
+.timestamp-result-copy {
+  padding: 0.3rem 0.55rem;
+  background: transparent;
+  border: 0;
+  border-radius: $border-radius;
+  color: $primary;
+  font-size: $font-size-sm;
+}
+
+.timestamp-result-copy:hover,
+.timestamp-result-copy:focus {
+  background: rgba($primary, 0.1);
+}
+
+.timestamp-batch {
+  display: grid;
+  grid-template-columns: minmax(16rem, 0.8fr) minmax(0, 1.2fr);
+  gap: 1rem;
+  padding: 1.5rem;
+}
+
+.timestamp-batch-input,
+.timestamp-batch-results {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid $gray-200;
+  border-radius: $border-radius-lg;
+}
+
+.timestamp-batch-input {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.timestamp-batch-textarea {
+  min-height: 16rem;
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: $white;
+  border: 1px solid $gray-300;
+  border-radius: $border-radius;
+  color: $body-color;
+  font-family: $font-family-monospace;
+  font-size: $font-size-sm;
+  resize: vertical;
+}
+
+.timestamp-batch-textarea:focus {
+  border-color: $primary;
+  box-shadow: 0 0 0 0.2rem rgba($primary, 0.15);
+  outline: 0;
+}
+
+.timestamp-batch-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.timestamp-batch-heading {
+  display: flex;
+  min-height: 3.5rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 0.85rem;
+  border-bottom: 1px solid $gray-200;
+  font-weight: 500;
+}
+
+.timestamp-batch-heading-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.timestamp-table-wrap {
+  overflow: auto;
+}
+
+.timestamp-table {
+  width: 100%;
+  min-width: 34rem;
+  margin: 0;
+  font-size: $font-size-sm;
+}
+
+.timestamp-table th,
+.timestamp-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid $gray-200;
+  font-weight: 400;
+  text-align: left;
+  vertical-align: top;
+}
+
+.timestamp-table th {
+  background: $gray-100;
+  color: $gray-600;
+}
+
+.timestamp-table-value {
+  font-family: $font-family-monospace;
+  overflow-wrap: anywhere;
+}
+
+.timestamp-table-empty {
+  height: 10rem;
+  color: $gray-600;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.timestamp-table .success {
+  color: $success;
+}
+
+.timestamp-table .danger {
+  color: $danger;
+}
+
+.proxy-check-tool {
+  min-height: calc(100vh - 8rem);
+}
+
+.proxy-check-shell {
+  max-width: 76rem;
+  margin: 0 auto;
+  overflow: hidden;
+  background: $white;
+  border: 1px solid $gray-300;
+  border-radius: $border-radius-lg;
+  box-shadow: 0 1rem 2.5rem rgba($black, 0.06);
+}
+
+.proxy-check-heading {
+  display: flex;
+  min-height: 5rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid $gray-200;
+}
+
+.proxy-check-brand,
+.proxy-service-status {
+  display: flex;
+  align-items: center;
+}
+
+.proxy-check-brand {
+  gap: 0.75rem;
+}
+
+.proxy-check-brand > span:last-child {
+  display: flex;
+  flex-direction: column;
+}
+
+.proxy-check-brand strong {
+  color: $body-color;
+  font-size: $font-size-lg;
+  font-weight: 500;
+}
+
+.proxy-check-brand small {
+  margin-top: 0.15rem;
+  color: $gray-600;
+}
+
+.proxy-check-logo {
+  display: inline-flex;
+  width: 2.75rem;
+  height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  background: $primary;
+  border-radius: $border-radius-lg;
+  color: $white;
+}
+
+.proxy-service-status {
+  gap: 0.4rem;
+  color: $gray-600;
+  font-size: $font-size-sm;
+}
+
+.proxy-status-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  background: $gray-500;
+  border-radius: 50%;
+}
+
+.proxy-service-status.connected {
+  color: $success;
+}
+
+.proxy-service-status.connected .proxy-status-dot {
+  background: $success;
+}
+
+.proxy-check-content {
+  padding: 1.5rem;
+  background: $gray-100;
+}
+
+.proxy-check-config {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(16rem, 1fr);
+  gap: 1rem;
+}
+
+.proxy-card,
+.proxy-stats > div,
+.proxy-results-card {
+  background: $white;
+  border: 1px solid $gray-300;
+  border-radius: $border-radius-lg;
+}
+
+.proxy-card {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.proxy-card-header {
+  display: flex;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid $gray-200;
+  font-weight: 500;
+}
+
+.proxy-card-header > span:last-child {
+  color: $gray-600;
+  font-size: $font-size-sm;
+  font-weight: 400;
+  text-align: right;
+}
+
+.proxy-list-input {
+  display: block;
+  width: calc(100% - 2rem);
+  min-height: 15.5rem;
+  margin: 1rem;
+  padding: 0.875rem;
+  background: $white;
+  border: 1px solid $gray-300;
+  border-radius: $border-radius;
+  color: $body-color;
+  font-family: $font-family-monospace;
+  font-size: $font-size-sm;
+  line-height: 1.65;
+  resize: vertical;
+}
+
+.proxy-settings-body {
+  display: grid;
+  gap: 0.55rem;
+  padding: 1rem;
+  font-size: $font-size-sm;
+}
+
+.proxy-setting-control {
+  width: 100%;
+  min-height: 2.6rem;
+  padding: 0.5rem 0.75rem;
+  background: $white;
+  border: 1px solid $gray-300;
+  border-radius: $border-radius;
+  color: $body-color;
+}
+
+.proxy-list-input:focus,
+.proxy-setting-control:focus {
+  border-color: $primary;
+  box-shadow: 0 0 0 0.2rem rgba($primary, 0.15);
+  outline: 0;
+}
+
+.proxy-setting-pair,
+.proxy-settings-actions {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.proxy-setting-pair {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.proxy-setting-pair label {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.proxy-settings-actions {
+  grid-template-columns: minmax(5rem, 0.75fr) minmax(8rem, 1.25fr);
+  margin-top: 0.3rem;
+}
+
+.proxy-message {
+  min-height: 1.25rem;
+  margin: 0;
+  color: $danger;
+  line-height: 1.4;
+}
+
+.proxy-message.success {
+  color: $success;
+}
+
+.proxy-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.proxy-stats > div {
+  display: flex;
+  min-height: 5rem;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+}
+
+.proxy-stat-label {
+  color: $gray-600;
+  font-size: $font-size-sm;
+}
+
+.proxy-stats strong {
+  margin-top: 0.2rem;
+  color: $body-color;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.proxy-stats strong.success,
+.proxy-result-success .proxy-result-status {
+  color: $success;
+}
+
+.proxy-stats strong.danger,
+.proxy-result-failed .proxy-result-status,
+.proxy-error {
+  color: $danger;
+}
+
+.proxy-results-card {
+  overflow: hidden;
+}
+
+.proxy-results-toolbar {
+  display: flex;
+  min-height: 3.5rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 0.85rem;
+  border-bottom: 1px solid $gray-200;
+}
+
+.proxy-filter-tabs,
+.proxy-result-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.proxy-filter-button {
+  padding: 0.45rem 0.7rem;
+  background: transparent;
+  border: 0;
+  border-radius: $border-radius;
+  color: $body-color;
+}
+
+.proxy-filter-button:hover,
+.proxy-filter-button:focus,
+.proxy-filter-button.active {
+  background: rgba($primary, 0.1);
+  color: $primary;
+}
+
+.proxy-table-wrap {
+  min-height: 13rem;
+  overflow: auto;
+}
+
+.proxy-results-table {
+  width: 100%;
+  min-width: 48rem;
+  margin: 0;
+  color: $body-color;
+  font-size: $font-size-sm;
+}
+
+.proxy-results-table th,
+.proxy-results-table td {
+  padding: 0.8rem;
+  border-bottom: 1px solid $gray-200;
+  font-weight: 400;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.proxy-results-table th {
+  background: $gray-100;
+  color: $gray-600;
+}
+
+.proxy-address {
+  max-width: 22rem;
+  font-family: $font-family-monospace;
+  overflow-wrap: anywhere;
+}
+
+.proxy-error {
+  max-width: 18rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.proxy-empty-row td {
+  height: 8rem;
+  color: $gray-600;
+  text-align: center;
+}
+
 body.dark .tools-sidebar,
 body.dark .json-panel-header {
   background: $body-overlay-dark;
@@ -443,6 +1055,20 @@ body.dark .json-output {
 body.dark .password-card,
 body.dark .image-preview-input,
 body.dark .image-preview-grid > figure,
+body.dark .timestamp-shell,
+body.dark .timestamp-timezone input,
+body.dark .timestamp-field-row input,
+body.dark .timestamp-field-row select,
+body.dark .timestamp-results,
+body.dark .timestamp-batch-input,
+body.dark .timestamp-batch-results,
+body.dark .timestamp-batch-textarea,
+body.dark .proxy-check-shell,
+body.dark .proxy-card,
+body.dark .proxy-stats > div,
+body.dark .proxy-results-card,
+body.dark .proxy-list-input,
+body.dark .proxy-setting-control,
 body.dark .password-length,
 body.dark .password-length output,
 body.dark .password-toggles,
@@ -454,14 +1080,42 @@ body.dark .password-type-tabs {
   background: $body-overlay-dark;
 }
 
+body.dark .timestamp-toolbar,
+body.dark .timestamp-mode-tabs,
+body.dark .timestamp-table th {
+  background: $body-overlay-dark;
+}
+
+body.dark .timestamp-shell,
+body.dark .timestamp-mode-button.active,
+body.dark .timestamp-timezone input,
+body.dark .timestamp-field-row input,
+body.dark .timestamp-field-row select,
+body.dark .timestamp-batch-textarea {
+  background: $body-bg-dark;
+}
+
 body.dark .password-type-tabs button,
 body.dark .password-length output,
-body.dark .password-result {
+body.dark .password-result,
+body.dark .timestamp-mode-button.active,
+body.dark .timestamp-timezone input,
+body.dark .timestamp-field-row input,
+body.dark .timestamp-field-row select,
+body.dark .timestamp-results output,
+body.dark .timestamp-batch-textarea,
+body.dark .timestamp-table {
   color: $body-color-dark;
 }
 
 body.dark .password-card,
 body.dark .image-preview-input,
+body.dark .proxy-check-shell,
+body.dark .proxy-card,
+body.dark .proxy-stats > div,
+body.dark .proxy-results-card,
+body.dark .proxy-list-input,
+body.dark .proxy-setting-control,
 body.dark .password-type-tabs button:hover,
 body.dark .password-type-tabs button:focus,
 body.dark .password-type-tabs button.active {
@@ -479,7 +1133,17 @@ body.dark .json-output::-webkit-scrollbar-thumb {
 body.dark .tools-sidebar,
 body.dark .json-panel + .json-panel,
 body.dark .json-workspace,
-body.dark .json-panel-header {
+body.dark .json-panel-header,
+body.dark .timestamp-toolbar,
+body.dark .timestamp-result-row,
+body.dark .timestamp-batch-heading,
+body.dark .timestamp-table th,
+body.dark .timestamp-table td,
+body.dark .proxy-check-heading,
+body.dark .proxy-card-header,
+body.dark .proxy-results-toolbar,
+body.dark .proxy-results-table th,
+body.dark .proxy-results-table td {
   border-color: $border-dark;
 }
 
@@ -487,8 +1151,19 @@ body.dark .tools-nav-link,
 body.dark .image-preview-input textarea,
 body.dark .json-panel textarea,
 body.dark .json-output code,
-body.dark .json-output code.hljs {
+body.dark .json-output code.hljs,
+body.dark .proxy-check-brand strong,
+body.dark .proxy-results-table,
+body.dark .proxy-filter-button,
+body.dark .proxy-list-input,
+body.dark .proxy-setting-control,
+body.dark .proxy-stats strong {
   color: $body-color-dark;
+}
+
+body.dark .proxy-check-content,
+body.dark .proxy-results-table th {
+  background: $body-overlay-dark;
 }
 
 body.dark .json-output .hljs-attr {
@@ -526,6 +1201,16 @@ body.dark .json-output .hljs-literal {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    overflow-x: auto;
+  }
+
+  .tools-sidebar nav > * {
+    flex: 0 0 auto;
+  }
+
+  .tools-sidebar .tools-nav-link {
+    width: auto;
+    white-space: nowrap;
   }
 
   .tools-nav-group {
@@ -549,6 +1234,33 @@ body.dark .json-output .hljs-literal {
   .json-panel + .json-panel {
     border-top: 1px solid $gray-300;
     border-left: 0;
+  }
+
+  .proxy-check-config {
+    grid-template-columns: 1fr;
+  }
+
+  .timestamp-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .timestamp-mode-tabs {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .timestamp-timezone {
+    justify-content: space-between;
+  }
+
+  .timestamp-timezone input {
+    width: 75%;
+    max-width: 20rem;
+  }
+
+  .timestamp-batch {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -582,6 +1294,62 @@ body.dark .json-output .hljs-literal {
 
   .password-actions {
     grid-template-columns: 1fr;
+  }
+
+  .timestamp-single,
+  .timestamp-batch {
+    padding: 1rem;
+  }
+
+  .timestamp-epoch-row,
+  .timestamp-date-row {
+    grid-template-columns: 1fr;
+  }
+
+  .timestamp-result-row {
+    grid-template-columns: 1fr auto;
+  }
+
+  .timestamp-results output {
+    grid-row: 2;
+    grid-column: 1 / -1;
+  }
+
+  .timestamp-batch-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .timestamp-batch-heading-actions .btn {
+    flex: 1;
+  }
+
+  .proxy-check-heading,
+  .proxy-check-content {
+    padding: 1rem;
+  }
+
+  .proxy-service-status {
+    display: none;
+  }
+
+  .proxy-setting-pair,
+  .proxy-settings-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .proxy-results-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .proxy-filter-tabs,
+  .proxy-result-actions {
+    justify-content: space-between;
+  }
+
+  .proxy-result-actions > button {
+    flex: 1;
   }
 }
 

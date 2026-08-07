@@ -9,8 +9,12 @@
       <button class="tools-nav-link" type="button" data-tool-tab="curl" aria-controls="curl-tool">cURL 转 requests</button>
       <div class="tools-nav-group">安全</div>
       <button class="tools-nav-link" type="button" data-tool-tab="password" aria-controls="password-tool">密码生成器</button>
+      <div class="tools-nav-group">时间</div>
+      <button class="tools-nav-link" type="button" data-tool-tab="timestamp" aria-controls="timestamp-tool">Unix 时间戳转换</button>
       <div class="tools-nav-group">图片</div>
       <button class="tools-nav-link" type="button" data-tool-tab="images" aria-controls="images-tool">批量图片预览</button>
+      <div class="tools-nav-group">网络</div>
+      <button class="tools-nav-link" type="button" data-tool-tab="proxy" aria-controls="proxy-tool">批量代理检测</button>
     </nav>
   </aside>
 
@@ -110,6 +114,89 @@
       </section>
     </div>
 
+    <div class="timestamp-tool" id="timestamp-tool" data-tool-panel="timestamp" hidden>
+      <section class="timestamp-shell">
+        <header class="timestamp-toolbar">
+          <div class="timestamp-mode-tabs" role="group" aria-label="转换模式">
+            <button class="timestamp-mode-button active" type="button" data-timestamp-mode="single" aria-pressed="true">单个转换</button>
+            <button class="timestamp-mode-button" type="button" data-timestamp-mode="batch" aria-pressed="false">批量转换</button>
+          </div>
+          <label class="timestamp-timezone" for="timestamp-timezone">
+            <span>时区</span>
+            <input id="timestamp-timezone" list="timestamp-timezones" value="Asia/Shanghai" autocomplete="off" spellcheck="false">
+            <datalist id="timestamp-timezones"></datalist>
+          </label>
+        </header>
+
+        <div class="timestamp-single" data-timestamp-view="single">
+          <div class="timestamp-field-block">
+            <div class="timestamp-field-heading">
+              <label for="timestamp-input">时间戳</label>
+              <span id="timestamp-detected-unit">自动识别：秒</span>
+            </div>
+            <div class="timestamp-field-row timestamp-epoch-row">
+              <input id="timestamp-input" type="text" inputmode="decimal" autocomplete="off" aria-describedby="timestamp-message">
+              <select id="timestamp-unit" aria-label="时间戳单位">
+                <option value="auto">自动识别</option>
+                <option value="seconds">秒 (s)</option>
+                <option value="milliseconds">毫秒 (ms)</option>
+              </select>
+              <button class="btn btn-outline-primary" id="timestamp-now" type="button">填入当前</button>
+              <button class="btn btn-outline-primary timestamp-copy" type="button" data-timestamp-copy="timestamp-input">复制</button>
+            </div>
+          </div>
+
+          <div class="timestamp-swap" aria-hidden="true">⇅</div>
+
+          <div class="timestamp-field-block">
+            <label for="timestamp-date">日期时间</label>
+            <div class="timestamp-field-row timestamp-date-row">
+              <input id="timestamp-date" type="date">
+              <input id="timestamp-time" type="time" step="1" aria-label="时间">
+              <button class="btn btn-outline-primary timestamp-copy" type="button" data-timestamp-copy="datetime">复制</button>
+            </div>
+          </div>
+
+          <p class="timestamp-message" id="timestamp-message" role="status" aria-live="polite"></p>
+
+          <div class="timestamp-results" aria-live="polite">
+            <div class="timestamp-result-row"><span>Unix 秒</span><output id="timestamp-seconds"></output><button class="timestamp-result-copy" type="button" data-timestamp-copy="timestamp-seconds">复制</button></div>
+            <div class="timestamp-result-row"><span>Unix 毫秒</span><output id="timestamp-milliseconds"></output><button class="timestamp-result-copy" type="button" data-timestamp-copy="timestamp-milliseconds">复制</button></div>
+            <div class="timestamp-result-row"><span>ISO 8601</span><output id="timestamp-iso"></output><button class="timestamp-result-copy" type="button" data-timestamp-copy="timestamp-iso">复制</button></div>
+            <div class="timestamp-result-row"><span>本地时间</span><output id="timestamp-local"></output><button class="timestamp-result-copy" type="button" data-timestamp-copy="timestamp-local">复制</button></div>
+            <div class="timestamp-result-row"><span>相对时间</span><output id="timestamp-relative"></output><button class="timestamp-result-copy" type="button" data-timestamp-copy="timestamp-relative">复制</button></div>
+          </div>
+        </div>
+
+        <div class="timestamp-batch" data-timestamp-view="batch" hidden>
+          <div class="timestamp-batch-input">
+            <label for="timestamp-batch-input">每行一个时间戳或日期时间</label>
+            <textarea class="timestamp-batch-textarea" id="timestamp-batch-input" spellcheck="false" placeholder="1786094802&#10;1786094802000&#10;2026-08-07 17:26:42"></textarea>
+            <p class="timestamp-message" id="timestamp-batch-message" role="status" aria-live="polite"></p>
+            <div class="timestamp-batch-actions">
+              <button class="btn btn-outline-primary" id="timestamp-batch-clear" type="button">清空</button>
+              <button class="btn btn-primary" id="timestamp-batch-convert" type="button">转换</button>
+            </div>
+          </div>
+          <div class="timestamp-batch-results">
+            <div class="timestamp-batch-heading">
+              <span>转换结果</span>
+              <div class="timestamp-batch-heading-actions">
+                <button class="btn btn-outline-primary btn-sm" id="timestamp-batch-copy" type="button" disabled>复制结果</button>
+                <button class="btn btn-outline-primary btn-sm" id="timestamp-batch-export" type="button" disabled>导出 CSV</button>
+              </div>
+            </div>
+            <div class="timestamp-table-wrap">
+              <table class="timestamp-table">
+                <thead><tr><th>输入</th><th>转换结果</th><th>状态</th></tr></thead>
+                <tbody id="timestamp-batch-body"><tr><td class="timestamp-table-empty" colspan="3">输入内容后点击“转换”</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
     <div class="image-preview-tool" id="images-tool" data-tool-panel="images" hidden>
       <section class="image-preview-input">
         <div class="json-panel-header">
@@ -120,6 +207,121 @@
         <p class="json-message success" id="image-list-message" role="status" aria-live="polite"></p>
       </section>
       <div class="image-preview-grid" id="image-preview-grid" aria-live="polite"></div>
+    </div>
+
+    <div class="proxy-check-tool" id="proxy-tool" data-tool-panel="proxy" hidden>
+      <section class="proxy-check-shell">
+        <header class="proxy-check-heading">
+          <div class="proxy-check-brand">
+            <span class="proxy-check-logo" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                <path d="m9 12 2 2 4-4"></path>
+              </svg>
+            </span>
+            <span><strong>ProxyCheck</strong><small>批量代理连通性验证</small></span>
+          </div>
+          <div class="proxy-service-status" id="proxy-service-status" role="status">
+            <span class="proxy-status-dot" aria-hidden="true"></span>
+            <span>正在连接检测服务</span>
+          </div>
+        </header>
+
+        <div class="proxy-check-content">
+          <div class="proxy-check-config">
+            <section class="proxy-card proxy-list-card">
+              <div class="proxy-card-header">
+                <label for="proxy-list-input">代理列表</label>
+                <span id="proxy-list-count">0 条 · 每行一个</span>
+              </div>
+              <textarea class="proxy-list-input" id="proxy-list-input" spellcheck="false" placeholder="socks5h://proxy.example.com:1080&#10;socks5://user:pass@proxy.example.com:1080&#10;http://proxy.example.com:8080&#10;user:pass@proxy.example.com:3128"></textarea>
+            </section>
+
+            <section class="proxy-card proxy-settings-card">
+              <div class="proxy-card-header">
+                <span>验证设置</span>
+                <span>自动识别协议与认证</span>
+              </div>
+              <div class="proxy-settings-body">
+                <label for="proxy-type">代理类型</label>
+                <select class="proxy-setting-control" id="proxy-type">
+                  <option value="auto">自动识别</option>
+                  <option value="http">HTTP</option>
+                  <option value="https">HTTPS</option>
+                  <option value="socks5">SOCKS5</option>
+                  <option value="socks4">SOCKS4</option>
+                </select>
+
+                <label for="proxy-test-url">测试地址</label>
+                <input class="proxy-setting-control" id="proxy-test-url" type="url" value="http://ipinfo.io/json" readonly>
+
+                <div class="proxy-setting-pair">
+                  <label for="proxy-timeout">超时
+                    <select class="proxy-setting-control" id="proxy-timeout">
+                      <option value="3">3 秒</option>
+                      <option value="5">5 秒</option>
+                      <option value="8" selected>8 秒</option>
+                      <option value="10">10 秒</option>
+                      <option value="15">15 秒</option>
+                    </select>
+                  </label>
+                  <label for="proxy-concurrency">并发数
+                    <select class="proxy-setting-control" id="proxy-concurrency">
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      <option value="20" selected>20</option>
+                      <option value="50">50</option>
+                    </select>
+                  </label>
+                </div>
+
+                <div class="proxy-settings-actions">
+                  <button class="btn btn-outline-primary" id="proxy-clear" type="button">清空</button>
+                  <button class="btn btn-primary" id="proxy-start" type="button"><span id="proxy-start-label">▷ 开始验证</span></button>
+                </div>
+                <p class="proxy-message" id="proxy-message" role="status" aria-live="polite"></p>
+              </div>
+            </section>
+          </div>
+
+          <div class="proxy-stats" aria-live="polite">
+            <div><span class="proxy-stat-label">总数</span><strong id="proxy-total">0</strong></div>
+            <div><span class="proxy-stat-label">可用</span><strong class="success" id="proxy-success">0</strong></div>
+            <div><span class="proxy-stat-label">失败</span><strong class="danger" id="proxy-failed">0</strong></div>
+          </div>
+
+          <section class="proxy-results-card">
+            <div class="proxy-results-toolbar">
+              <div class="proxy-filter-tabs" role="group" aria-label="结果筛选">
+                <button class="proxy-filter-button active" type="button" data-proxy-filter="all" aria-pressed="true">全部</button>
+                <button class="proxy-filter-button" type="button" data-proxy-filter="success" aria-pressed="false">可用</button>
+                <button class="proxy-filter-button" type="button" data-proxy-filter="failed" aria-pressed="false">失败</button>
+              </div>
+              <div class="proxy-result-actions">
+                <button class="btn btn-outline-primary btn-sm" id="proxy-copy" type="button" disabled>复制可用</button>
+                <button class="btn btn-outline-primary btn-sm" id="proxy-export" type="button" disabled>导出 CSV</button>
+              </div>
+            </div>
+            <div class="proxy-table-wrap">
+              <table class="proxy-results-table">
+                <thead>
+                  <tr>
+                    <th>状态</th>
+                    <th>类型</th>
+                    <th>代理地址</th>
+                    <th>认证</th>
+                    <th>延迟</th>
+                    <th>出口 IP</th>
+                  </tr>
+                </thead>
+                <tbody id="proxy-results-body">
+                  <tr class="proxy-empty-row"><td colspan="6">点击“开始验证”查看批量结果</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </section>
     </div>
   </main>
 </div>
