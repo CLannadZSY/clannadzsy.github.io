@@ -7,6 +7,7 @@
       <button class="tools-nav-link active" type="button" data-tool-tab="json" aria-controls="json-tool" aria-current="page">JSON 格式化</button>
       <div class="tools-nav-group">代码转换</div>
       <button class="tools-nav-link" type="button" data-tool-tab="curl" aria-controls="curl-tool">cURL 转 requests</button>
+      <button class="tools-nav-link" type="button" data-tool-tab="naming" aria-controls="naming-tool">下划线 ↔ 驼峰</button>
       <div class="tools-nav-group">安全</div>
       <button class="tools-nav-link" type="button" data-tool-tab="password" aria-controls="password-tool">密码生成器</button>
       <div class="tools-nav-group">时间</div>
@@ -67,6 +68,37 @@
         </div>
         <pre class="json-output"><code id="curl-output" class="language-python" aria-label="生成的 Python requests 代码"></code></pre>
       </section>
+    </div>
+
+    <div class="naming-tool" id="naming-tool" data-tool-panel="naming" hidden>
+      <div class="naming-toolbar">
+        <div class="naming-direction" role="group" aria-label="转换方向">
+          <button class="btn btn-primary btn-sm" type="button" data-naming-direction="camel" aria-pressed="true">下划线 → 驼峰</button>
+          <button class="btn btn-outline-primary btn-sm" type="button" data-naming-direction="snake" aria-pressed="false">驼峰 → 下划线</button>
+        </div>
+        <button class="btn btn-outline-primary btn-sm" id="naming-swap" type="button">交换方向</button>
+      </div>
+
+      <div class="json-workspace naming-workspace">
+        <section class="json-panel">
+          <div class="json-panel-header">
+            <label for="naming-input">原始变量名</label>
+            <button class="btn btn-outline-primary btn-sm" id="naming-clear" type="button">清空</button>
+          </div>
+          <textarea id="naming-input" spellcheck="false" placeholder="支持每行一个变量名，例如：user_name"></textarea>
+        </section>
+
+        <section class="json-panel">
+          <div class="json-panel-header">
+            <label for="naming-output">转换结果</label>
+            <button class="btn btn-outline-primary btn-sm json-copy" id="naming-copy" type="button" disabled>
+              <span>复制</span>
+            </button>
+          </div>
+          <textarea id="naming-output" readonly aria-label="变量名转换结果"></textarea>
+          <p class="json-message" id="naming-message" role="status" aria-live="polite"></p>
+        </section>
+      </div>
     </div>
 
     <div class="password-tool" id="password-tool" data-tool-panel="password" hidden>

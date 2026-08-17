@@ -101,6 +101,60 @@ if (jsonTool) {
     }
   });
 
+  const namingInput = document.getElementById('naming-input');
+  const namingOutput = document.getElementById('naming-output');
+  const namingDirections = jsonTool.querySelectorAll('[data-naming-direction]');
+  const namingSwap = document.getElementById('naming-swap');
+  const namingClear = document.getElementById('naming-clear');
+  const namingCopy = document.getElementById('naming-copy');
+  const namingCopyLabel = namingCopy.querySelector('span');
+  const namingMessage = document.getElementById('naming-message');
+  let namingDirection = 'camel';
+
+  const renderNamingResult = () => {
+    const convert = namingDirection === 'camel'
+      ? window.namingConverter.toCamel
+      : window.namingConverter.toSnake;
+    namingOutput.value = namingInput.value.split(/\r?\n/).map(convert).join('\n');
+    namingCopy.disabled = !namingOutput.value;
+    namingMessage.textContent = '';
+  };
+
+  const setNamingDirection = (direction) => {
+    namingDirection = direction;
+    namingDirections.forEach((button) => {
+      const active = button.dataset.namingDirection === direction;
+      button.classList.toggle('btn-primary', active);
+      button.classList.toggle('btn-outline-primary', !active);
+      button.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+    renderNamingResult();
+  };
+
+  namingDirections.forEach((button) => {
+    button.addEventListener('click', () => { setNamingDirection(button.dataset.namingDirection); });
+  });
+  namingInput.addEventListener('input', renderNamingResult);
+  namingSwap.addEventListener('click', () => {
+    if (!namingOutput.value) return;
+    namingInput.value = namingOutput.value;
+    setNamingDirection(namingDirection === 'camel' ? 'snake' : 'camel');
+  });
+  namingClear.addEventListener('click', () => {
+    namingInput.value = '';
+    renderNamingResult();
+    namingInput.focus();
+  });
+  namingCopy.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(namingOutput.value);
+      namingCopyLabel.textContent = '已复制';
+      setTimeout(() => { namingCopyLabel.textContent = '复制'; }, 1500);
+    } catch (error) {
+      namingMessage.textContent = '复制失败，请手动选择结果复制。';
+    }
+  });
+
   const passwordTypeButtons = jsonTool.querySelectorAll('[data-password-type]');
   const passwordLengthInput = document.getElementById('password-length');
   const passwordLengthLabel = document.getElementById('password-length-label');
