@@ -1,6 +1,6 @@
 ---
 title: "Golang并发时报错connection Reset by Peer"
-description: ""
+description: "记录 Go 并发请求遇到 connection reset by peer 时，从用户文件句柄限制入手的排查思路，以及 limits.conf 中 nofile、nproc 的配置笔记。"
 lead: ""
 date: 2023-03-02T01:46:42Z
 lastmod: 2023-03-02T01:46:42Z

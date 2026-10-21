@@ -1,6 +1,6 @@
 ---
 title: "Single Dispatch Generic Functions"
-description: ""
+description: "A Fluent Python example uses functools.singledispatch to generate type-specific HTML for strings, sequences and numeric values, with registered handlers and sample output."
 lead: ""
 date: 2021-04-29T06:25:32Z
 lastmod: 2021-04-29T06:25:32Z

@@ -1,6 +1,6 @@
 ---
 title: "Python何时执行装饰器"
-description: ""
+description: "结合直接运行与导入 decorator.py 的输出，记录 Python 装饰器在函数定义时执行的时机，并区分装饰器执行、函数注册和被装饰函数调用。"
 lead: ""
 date: 2021-04-29T02:39:20Z
 lastmod: 2021-04-29T02:39:20Z

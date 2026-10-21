@@ -32,6 +32,9 @@ jobs:
           python3 tests/seo-sitemap.py public --base-url https://clannad.icu/
           python3 tests/seo-homepage.py public --base-url https://clannad.icu/
 
+      - name: Validate blog descriptions
+        run: python3 tests/seo-blog-descriptions.py public --base-url https://clannad.icu/
+
       - name: Copy CNAME file to public
         run: cp ./CNAME ./public
 

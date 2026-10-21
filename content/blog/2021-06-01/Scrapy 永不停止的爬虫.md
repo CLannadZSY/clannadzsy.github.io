@@ -1,6 +1,6 @@
 ---
 title: "Scrapy 永不停止的爬虫"
-description: ""
+description: "展示 Spider 空闲时追加请求、RedisSpider 按分钟等待新任务的示例，涉及 spider_idle 信号、DontCloseSpider 和等待超时后关闭的处理。"
 lead: ""
 date: 2021-06-01T02:34:55Z
 lastmod: 2021-06-01T02:34:55Z

@@ -34,7 +34,8 @@
 | 阶段 | 任务 | 验收方式 |
 | --- | --- | --- |
 | P1 已完成 | 处理现有文章的 Markdown 格式错误，恢复 GitHub Actions 的 `npm test` 检查 | 不绕过检查，完整 `npm test` 已通过 |
-| P1 | 为重点技术文章填写独立摘要，修正 SSH、Python、MySQL 等文章的残缺示例，补充适用环境 | 重点页面摘要各不相同，示例经实际验证 |
+| P1 摘要已完成 | 为全部 29 个独立博客页面填写准确摘要，并同步 HTML、Open Graph、Twitter 与 Article 描述 | 摘要非空且各不相同，元信息一致；正文与渲染后的文章区域不变 |
+| P1 | 修正 SSH、Python、MySQL 等文章的残缺示例，补充适用环境 | 示例经实际验证 |
 | P1 | 清理确无保留价值的 Doks 示例文档和示例作者页 | Sitemap 与导航只保留目标内容；保留供阅读的示例使用 noindex |
 | P1 | 为 JSON、cURL 转 requests、时间戳工具建立独立页面并补充说明、示例和文章内链 | 每个工具有独立 URL、Title、H1 和有效输入输出示例 |
 | P2 | 修正文章日期、面包屑和作者结构化数据，以及中文页语言声明 | Rich Results Test 与生成 HTML 检查通过 |
@@ -63,4 +64,16 @@
 ```sh
 python3 tests/seo-sitemap.py public --base-url https://clannad.icu/
 python3 tests/seo-homepage.py public --base-url https://clannad.icu/
+```
+
+## 博客 description 修复记录
+
+已为 30 个源文件对应的 29 个独立博客页面补充准确、独立的摘要。两份共用同一 URL 且正文相同的 Golang Chronicles 源文件共用同一摘要；故事明确描述为虚构冒险，Hello World 的摘要仅概括实际存在的两个 Python import 示例。
+
+本次文章改动仅限 frontmatter 的 `description` 字段，其他元数据、正文、代码、链接和图片保持原样。30 份源文件的正文及 29 个页面渲染后的文章区域均通过 SHA-256 比对，完全一致。首页模板、样式和动漫内容未修改。
+
+提交前，本地 `npm test`、完整生产构建、博客摘要检查以及原有首页和 Sitemap 验收均通过。工作流新增博客摘要检查，验证 HTML description、Open Graph、Twitter 和 Article 描述一致，且不再使用重复的站点口号。推送后由 GitHub Actions 部署，线上结果需按实际页面响应核验。
+
+```sh
+python3 tests/seo-blog-descriptions.py public --base-url https://clannad.icu/
 ```

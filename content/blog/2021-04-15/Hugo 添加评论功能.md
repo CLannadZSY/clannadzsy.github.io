@@ -1,6 +1,6 @@
 ---
 title: "Hugo 添加评论功能"
-description: "使用 utterances Github App 为你的博客添加评论功能"
+description: "记录为 Hugo 博客接入 utterances 评论的配置方法，包括安装 GitHub App、在文章模板中加载评论脚本，以及设置仓库、评论关联规则和主题。"
 lead: ""
 date: 2021-04-15T20:18:28+08:00
 lastmod: 2021-04-15T20:18:28+08:00

@@ -3,7 +3,7 @@ title: "List, Tuple, += 问题记录"
 date: 2021-04-26T07:15:47Z
 lastmod: 2021-04-26T07:15:47Z
 draft: false
-description: "Python List, Tuple, += 问题记录"
+description: "通过嵌套列表与元组中的可变列表示例，记录重复引用、原地加法和下标赋值的差异，并结合 dis 字节码观察 += 引发异常时对象仍被修改的现象。"
 lead: ""
 weight: 50
 contributors: [clannadzsy]

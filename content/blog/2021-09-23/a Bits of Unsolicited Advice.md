@@ -1,6 +1,6 @@
 ---
 title: "A Bits of Unsolicited Advice"
-description: ""
+description: "A bilingual collection of life advice on learning, listening, habits, creativity, gratitude and taking responsibility, with English quotations and Chinese notes."
 lead: ""
 date: 2021-09-23T02:05:12Z
 lastmod: 2021-09-23T02:05:12Z

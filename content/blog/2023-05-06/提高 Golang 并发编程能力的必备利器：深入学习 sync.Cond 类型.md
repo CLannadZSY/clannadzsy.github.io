@@ -1,6 +1,6 @@
 ---
 title: "提高 Golang 并发编程能力的必备利器：深入学习 sync.Cond 类型"
-description: ""
+description: "整理 Go sync.Cond 的条件变量用法，介绍 Wait、Signal、Broadcast 与互斥锁的配合，并记录初始化等待和生产者消费者示例。"
 lead: ""
 date: 2023-05-06T03:02:01Z
 lastmod: 2023-05-06T03:02:01Z

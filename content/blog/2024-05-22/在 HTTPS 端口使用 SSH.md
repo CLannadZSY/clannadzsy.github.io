@@ -1,6 +1,6 @@
 ---
 title: "在 HTTPS 端口使用 SSH"
-description: ""
+description: "整理 GitHub SSH 连接受限时通过 443 端口连接的配置笔记，涉及连通性测试、仓库克隆、SSH 配置文件与已知主机指纹检查。"
 lead: ""
 date: 2024-05-22T07:51:17Z
 lastmod: 2024-05-22T07:51:17Z

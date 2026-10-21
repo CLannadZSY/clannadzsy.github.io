@@ -1,6 +1,6 @@
 ---
 title: "[Go] Method"
-description: ""
+description: "用 Human、Student 和 Employee 示例说明 Go 结构体嵌入带来的方法提升，以及外层类型定义同名 SayHi 方法后，方法调用行为如何变化。"
 lead: ""
 date: 2021-08-30T01:57:38Z
 lastmod: 2021-08-30T01:57:38Z

@@ -1,6 +1,6 @@
 ---
 title: "Wsl2 Linux 子系统的导入与导出"
-description: ""
+description: "记录 WSL 2 中 Debian 子系统的导入与导出命令，涵盖关闭实例、查看版本、导出归档、注销并重新导入，以及设置默认登录用户。"
 lead: ""
 date: 2024-11-26T14:58:22Z
 lastmod: 2024-11-26T14:58:22Z
