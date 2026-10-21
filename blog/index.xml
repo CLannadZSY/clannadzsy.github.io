@@ -13,7 +13,7 @@ $ ssh -T -p 443 git@ssh.github.com &amp;gt; Hi USERNAME! You've successfully aut
 git clone ssh://git@ssh.:443/YOUR-USERNAME/YOUR-REPOSITORY.git 启用通过 HTTPS 的 SSH 连接 如果你能在端口 443 上通过 SSH 连接到 git@ssh.</description></item><item><title>MySQL8 InnoDB 数据恢复</title><link>https://clannad.icu/blog/429417542/</link><pubDate>Tue, 30 Apr 2024 08:51:56 +0000</pubDate><guid>https://clannad.icu/blog/429417542/</guid><description>MySQL8 InnoDB 数据恢复 ~~ 硬盘突然损坏, 数据侥幸得以导出 ~~
 前提条件
 1.1 提前创建好表的结构 sql, 执行 sql 恢复表的结构
-1.2 然后使用 table_name.ibd 的文件覆盖, 最好是一张表恢复成功再覆盖下一张
+1.2 然后使用 table_name.ibd的文件覆盖, 最好是一张表恢复成功再覆盖下一张
 找到 mysql 安装目录文件夹, 进入需要恢复的数据库的database_name文件夹
 将 table_name.ibd 复制进去, 修改文件为所属为 mysql
 sudo chown mysql:mysql &amp;lt;table_name&amp;gt;.ibd mysql -u root -p user &amp;lt;database_name&amp;gt;; ALTER TABLE &amp;lt;table_name&amp;gt; DISCARD TABLESPACE; ALTER TABLE &amp;lt;table_name&amp;gt; IMPORT TABLESPACE; # 验证数据是否恢复成功 select * from crocodile_user limit 1; ​</description></item><item><title>JS获取Shadow DOM中closes 节点</title><link>https://clannad.icu/blog/3082362680/</link><pubDate>Thu, 21 Mar 2024 01:44:00 +0000</pubDate><guid>https://clannad.icu/blog/3082362680/</guid><description>安装 油猴 插件, 在你需要获取的网站, 新建脚本, 填入以下代码, 刷新页面即可
@@ -28,12 +28,15 @@ sync.Cond 的基本概念 1.1 条件变量 条件变量是一种同步机制，�
 生成证书 首先需要将证书生成在本地电脑上，可使用cer或pem格式。然后通过openssl计算证书hash值：
 cer格式证书 openssl x509 -inform DER -subject_hash_old -in &amp;lt;证书文件.cer&amp;gt; pem格式证书 openssl x509 -inform PEM -subject_hash_old -in &amp;lt;证书文件.pem&amp;gt; 然后生成系统预设格式的证书文件（记得加上&amp;quot;.0&amp;quot;），如果hash值一样，则另一个设置成.1：
 cer格式 openssl x509 -inform DER -text -in xxx.cer &amp;gt; hash值.0 pem格式 openssl x509 -inform PEM -text -in xxx.pem &amp;gt; hash值.0 安装证书 将证书安装到系统中：
-手机连接电脑，使用adb命令将手机连接到电脑。 禁用系统验证： adb root adb disable-verity adb reboot adb root adb remount 将证书文件push到手机： adb push &amp;lt;证书文件hash.0&amp;gt; /system/etc/security/cacerts/ 重启手机。 如果在adb disable-verity这步出现失败，则需要进行提权：</description></item><item><title>Golang并发时报错connection Reset by Peer</title><link>https://clannad.icu/blog/630506263/</link><pubDate>Thu, 02 Mar 2023 01:46:42 +0000</pubDate><guid>https://clannad.icu/blog/630506263/</guid><description>当使用Golang进行并发时，有时可能会遇到connection reset by peer的错误。最开始可能会认为这是Golang的HTTP包的问题，但最终在Github中找到了解决方法。
+手机连接电脑，使用adb命令将手机连接到电脑。
+禁用系统验证：
+adb root adb disable-verity adb reboot adb root adb remount 将证书文件push到手机：
+adb push &amp;lt;证书文件hash.0&amp;gt; /system/etc/security/cacerts/ 重启手机。</description></item><item><title>Golang并发时报错connection Reset by Peer</title><link>https://clannad.icu/blog/630506263/</link><pubDate>Thu, 02 Mar 2023 01:46:42 +0000</pubDate><guid>https://clannad.icu/blog/630506263/</guid><description>当使用Golang进行并发时，有时可能会遇到connection reset by peer的错误。最开始可能会认为这是Golang的HTTP包的问题，但最终在Github中找到了解决方法。
 首先，需要知道在操作系统中，打开的文件数、打开的socket数以及正在监听的端口数等统称为句柄数。操作系统对每个用户的句柄数都有默认限制，例如root用户默认限制为4096个句柄数。
 因此，当Golang并发时报错connection reset by peer时，并不是因为你编写的程序有问题，而是操作系统设置的问题。
 为了避免操作系统的文件句柄数限制goroutine的socket并发数量，我们需要增大程序运行时所使用用户的句柄数。如果你的进程使用root用户运行，那么需要增大root用户可打开的句柄数。
 增加root用户可打开的文件数的方法如下：
 打开/etc/security/limits.conf文件：
-$ vi /etc/security/limits.conf 在文件末尾添加以下两行：
+vi /etc/security/limits.conf 在文件末尾添加以下两行：
 root - nofile 65535 root - nproc 30000 让配置生效：
-$ sysctl -p</description></item></channel></rss>
+sysctl -p</description></item></channel></rss>
