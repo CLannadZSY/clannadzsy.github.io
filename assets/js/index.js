@@ -83,14 +83,18 @@ Source:
   });
 
   var docs = [
-    {{ range $index, $page := (where .Site.Pages "Section" "docs") -}}
+    {{ $seen := newScratch -}}
+    {{ range $index, $page := (where .Site.RegularPages "Type" "in" (slice "blog" "tools")) -}}
+      {{ if not ($seen.Get .RelPermalink) -}}
+      {{ $seen.Set .RelPermalink true -}}
       {
         id: {{ $index }},
         href: "{{ .RelPermalink | relURL }}",
         title: {{ .Title | jsonify }},
         description: {{ .Params.description | jsonify }},
-        content: {{ .Content | jsonify }}
+        content: {{ .Plain | jsonify }}
       },
+      {{ end -}}
     {{ end -}}
   ];
 

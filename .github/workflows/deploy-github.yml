@@ -35,6 +35,9 @@ jobs:
       - name: Validate blog descriptions
         run: python3 tests/seo-blog-descriptions.py public --base-url https://clannad.icu/
 
+      - name: Validate published content
+        run: python3 tests/seo-published-content.py public --base-url https://clannad.icu/
+
       - name: Copy CNAME file to public
         run: cp ./CNAME ./public
 

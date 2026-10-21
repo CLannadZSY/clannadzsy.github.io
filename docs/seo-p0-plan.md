@@ -36,7 +36,7 @@
 | P1 已完成 | 处理现有文章的 Markdown 格式错误，恢复 GitHub Actions 的 `npm test` 检查 | 不绕过检查，完整 `npm test` 已通过 |
 | P1 摘要已完成 | 为全部 29 个独立博客页面填写准确摘要，并同步 HTML、Open Graph、Twitter 与 Article 描述 | 摘要非空且各不相同，元信息一致；正文与渲染后的文章区域不变 |
 | P1 | 修正 SSH、Python、MySQL 等文章的残缺示例，补充适用环境 | 示例经实际验证 |
-| P1 | 清理确无保留价值的 Doks 示例文档和示例作者页 | Sitemap 与导航只保留目标内容；保留供阅读的示例使用 noindex |
+| P1 示例清理已完成 | 移除 9 个 Doks 示例文档及栏目页、Henk 示例作者页；保留真实作者与文章 | 10 个旧 URL 不再生成，根 Sitemap 剩余 34 个有效 URL；真实作者归档和 29 篇文章保留 |
 | P1 | 为 JSON、cURL 转 requests、时间戳工具建立独立页面并补充说明、示例和文章内链 | 每个工具有独立 URL、Title、H1 和有效输入输出示例 |
 | P2 | 修正文章日期、面包屑和作者结构化数据，以及中文页语言声明 | Rich Results Test 与生成 HTML 检查通过 |
 | P2 | 检查 www 证书和跳转，优化图片及广告占位、脚本加载 | 域名访问和跳转正常；移动端实测 LCP、INP、CLS |
@@ -76,4 +76,20 @@ python3 tests/seo-homepage.py public --base-url https://clannad.icu/
 
 ```sh
 python3 tests/seo-blog-descriptions.py public --base-url https://clannad.icu/
+```
+
+## Doks 示例内容清理记录
+
+删除 `content/docs` 中的 9 份模板文档与栏目索引，以及 `henk-verlinde` 示例作者页；实际博客中的 Hugo/Doks 建站文章和引用链接保留。作者目录改为本站说明，明确保留 `clannadzsy` 作者页、GitHub 信息及完整文章归档，原作者 URL 不变。
+
+根 Sitemap 从 44 个 URL 减为 34 个，恰好移除上述 10 个旧地址；博客 Sitemap 仍为 29 个独立文章地址。三个示例文档栏目 Sitemap 和相关 RSS 不再生成，旧页面在 GitHub Pages 发布后应返回 404。保留原 robots 规则，允许搜索引擎读取这些 404。
+
+站内搜索从模板文档切换为已发布的博客和工具，按最终 URL 去重，并更新搜索框提示；避免删除示例后出现空索引。文章正文、元数据和图片、首页六组动漫内容及样式源码均未改动。
+
+新增发布内容验收并加入部署工作流，检查旧页面与 Sitemap 清理、真实文章保留、有效站内链接及作者归档。发布后同时检查普通请求和带缓存参数的响应。
+
+提交前完整 `npm test`、生产构建及四项 SEO 输出验收通过。29 个渲染后的文章区域与清理前的 SHA-256 完全一致，158 份文章、图片、主题样式及首页等受保护文件逐字节未变；另有一份搜索脚本按上述范围更新。生产 CSS 仅清除了两个未使用的 tutorial/showcase 选择器，桌面、手机和手机深色模式中，同一首页使用清理前后 CSS 的截图像素完全一致。浏览器实测文章及工具搜索通过，索引为 30 个唯一地址。
+
+```sh
+python3 tests/seo-published-content.py public --base-url https://clannad.icu/
 ```
