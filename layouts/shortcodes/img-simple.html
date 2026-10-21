@@ -1,3 +1,2 @@
-{{ $image := .Page.Resources.GetMatch (printf "*%s*" (.Get "src")) -}}
-{{ $lqip := $image.Resize $.Site.Params.lqipWidth -}}
-<img class="img-simple img-fluid lazyload blur-up{{ with .Get "class" }} {{.}}{{ end }}" src="{{ $lqip.RelPermalink }}" data-src="{{ $image.RelPermalink }}" width="{{ $image.Width }}" height="{{ $image.Height }}" {{ with .Get "alt" }}alt="{{.}}"{{ end }}>
+{{- $class := printf "img-simple img-fluid %s" (.Get "class" | default "") -}}
+{{- partial "images/native.html" (dict "page" .Page "src" (.Get "src") "alt" (.Get "alt") "title" (.Get "title") "loading" (.Get "loading") "sizes" (.Get "sizes") "class" $class) -}}

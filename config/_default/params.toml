@@ -47,7 +47,7 @@ docsRepo = "https://github.com/h-enk/doks"
 editPage = false
 
 [options]
-  lazySizes = true
+  lazySizes = false
   clipBoard = true
   instantPage = true
   flexSearch = true

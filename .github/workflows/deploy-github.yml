@@ -67,6 +67,11 @@ jobs:
           python3 -B tests/seo-structured-data.py --self-test
           python3 -B tests/seo-structured-data.py public --base-url https://clannad.icu/
 
+      - name: Validate performance markup
+        run: |
+          python3 -B tests/seo-performance.py --self-test
+          python3 -B tests/seo-performance.py public --base-url https://clannad.icu/ --check-assets
+
       - name: Set up Node.js for browser utility tests
         uses: actions/setup-node@v4
         with:
@@ -80,6 +85,8 @@ jobs:
           node tests/password-generator.mjs
           node tests/naming-converter.mjs
           node tests/image-list.mjs
+          node tests/deferred-embeds.mjs
+          node tests/output-highlight.mjs
 
       - name: Copy CNAME file to public
         run: cp ./CNAME ./public

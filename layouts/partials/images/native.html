@@ -1,0 +1,55 @@
+{{- $page := .page -}}
+{{- $destination := .src -}}
+{{- $source := $destination -}}
+{{- $image := false -}}
+{{- $srcset := slice -}}
+{{- $loading := .loading | default "lazy" -}}
+{{- $sizes := .sizes | default "(min-width: 768px) 700px, calc(100vw - 3rem)" -}}
+{{- $remote := gt (len (findRE `^([[:alpha:]][[:alnum:]+.-]*:|//|#)` $destination)) 0 -}}
+{{- if not $remote -}}
+  {{- $filename := replaceRE `[?#].*$` "" $destination -}}
+  {{- $bundleImage := $page.Resources.GetMatch $filename -}}
+  {{- if not $bundleImage -}}
+    {{- $bundleImage = $page.Resources.GetMatch (printf "*%s*" $filename) -}}
+  {{- end -}}
+  {{- with $bundleImage -}}
+    {{- $image = . -}}
+    {{- $source = .RelPermalink -}}
+  {{- else -}}
+    {{- with $page.File -}}
+      {{- $relative := path.Join .Dir $filename -}}
+      {{- if and (hasPrefix $relative "blog/") (fileExists (path.Join "content" $relative)) -}}
+        {{- $assetPath := path.Join "article-images" (strings.TrimPrefix "blog/" $relative) -}}
+        {{- with resources.Get $assetPath -}}
+          {{- $image = . -}}
+          {{- $source = (path.Join "/" $relative) | relURL -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- if not .loading -}}
+  {{- range findRE `!\[[^]]*\]\([^)]+\)` $page.RawContent 1 -}}
+    {{- $first := replaceRE `^!\[[^]]*\]\(\s*<?([^ >)]+)>?.*\)$` "${1}" . -}}
+    {{- if eq (strings.TrimPrefix "./" $first) (strings.TrimPrefix "./" $destination) -}}
+      {{- $loading = "eager" -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- if $image -}}
+  {{- if eq $image.MediaType.SubType "png" -}}
+    {{- $originalBytes := len $image.Content -}}
+    {{- range (slice 480 768 1200) -}}
+      {{- if lt . $image.Width -}}
+        {{- $candidate := $image.Resize (printf "%dx png Lanczos" .) -}}
+        {{- if lt (len $candidate.Content) $originalBytes -}}
+          {{- $srcset = $srcset | append (printf "%s %dw" $candidate.RelPermalink $candidate.Width) -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $srcset = $srcset | append (printf "%s %dw" $source $image.Width) -}}
+  <a href="{{ $source | safeURL }}"><img class="{{ .class | default "img-fluid" }}" src="{{ $source | safeURL }}" width="{{ $image.Width }}" height="{{ $image.Height }}"{{ if gt (len $srcset) 1 }} srcset="{{ delimit $srcset ", " | safeHTMLAttr }}" sizes="{{ $sizes }}"{{ end }} alt="{{ .alt }}"{{ with .title }} title="{{ . }}"{{ end }} loading="{{ $loading }}" decoding="async"></a>
+{{- else -}}
+  <img class="{{ .class | default "img-fluid" }}" src="{{ $destination | safeURL }}" alt="{{ .alt }}"{{ with .title }} title="{{ . }}"{{ end }} loading="{{ $loading }}" decoding="async">
+{{- end -}}

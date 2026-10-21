@@ -39,7 +39,7 @@
 | P1 示例清理已完成 | 移除 9 个 Doks 示例文档及栏目页、Henk 示例作者页；保留真实作者与文章 | 10 个旧 URL 不再生成，根 Sitemap 剩余 34 个有效 URL；真实作者归档和 29 篇文章保留 |
 | P1 工具拆页已完成 | 为 JSON、cURL 转 requests、时间戳工具建立独立页面，补充说明、示例和工具互链 | 三个独立 URL、Title、H1、description、可见说明与可验证示例；进入 Sitemap 和站内搜索 |
 | P2 结构化数据已修复 | 修正文章日期、面包屑和作者结构化数据，以及中文页语言声明 | 生成 HTML 与线上 JSON-LD、日期、作者及语言一致性检查；Google 富媒体测试单独记录 |
-| P2 | 检查 www 证书和跳转，优化图片及广告占位、脚本加载 | 域名访问和跳转正常；移动端实测 LCP、INP、CLS |
+| P2 性能源码已优化，www 待 DNS/证书复核 | 修复图片地址与响应式加载，稳定广告/评论占位，按页面加载脚本 | 构建、功能及性能回归；移动端 LCP/CLS 和交互实验室代理对比。www 由域名 DNS 与 GitHub Pages 证书共同决定 |
 | 持续 | 用 Search Console 验证索引状态和实际搜索需求，再扩展技术或动漫专题 | 对比页面和查询的展示、点击、CTR、排名及索引状态 |
 
 ## 本次执行结果
@@ -165,3 +165,38 @@ python3 -B tests/seo-structured-data.py public --base-url https://clannad.icu/
 ```
 
 规范依据：[Article](https://developers.google.com/search/docs/appearance/structured-data/article)、[Breadcrumb](https://developers.google.com/search/docs/appearance/structured-data/breadcrumb)、[页面日期](https://developers.google.com/search/docs/appearance/publication-dates)。本轮 Google Rich Results Test 的浏览器连接超时，未取得 Google 的测试结论；不将本地结构化数据验收描述为该外部测试已通过。发布后另以实际线上 HTML 复核，搜索结果展示以 Google 后续抓取和处理为准。
+
+## 图片、广告占位与脚本性能优化记录
+
+2026-10-22 完成以下源码优化，保留全部 39 份 Markdown 的正文和元数据、16 份原始图片文件及所有现有页面 URL。26 篇文章的渲染正文逐字节不变；另外三个图文页面仅调整图片属性与原图链接，文字、代码、既有正文链接和图片含义不变。
+
+- 修复五个本地图片的实际 404：文章使用数字 URL，图片仍保存在日期目录。渲染钩子映射到既有有效原图 URL，不改 Markdown；补齐真实宽高、`decoding=async`，首图 eager、后续 lazy，禁用 JavaScript 时仍可见。
+- 保留原 PNG 与点击原图能力。三个截图增加六个确实更小的 480/768 宽 PNG 派生资源；缩小后反而更大的候选不发布。手机 DPR=1 下三个截图候选合计 58,186 字节，原图合计 149,730 字节。两张远端 Go 示意图保留来源，不下载或替换。移除图片对 lazysizes 的依赖，两个图片 shortcode 同步支持原生加载。
+- 首页、博客列表与文章共用原广告 ID，预留 100px 广告高度，使用 [AdSense 支持的固定高度、弹性宽度方式](https://support.google.com/adsense/answer/9183363?hl=en)，不裁剪广告。脚本在页面 load 后、idle 且广告位进入预加载范围时请求，一页只加载一次；无显式广告位的页面不加载 AdSense。空填充或服务被阻断时保留空间，避免二次塌陷。
+- 评论保留仓库、标题关联和原主题，预留初始 320px 空间，接近阅读末尾再加载。该高度只能减少初始插入的跳动，不保证任意长度评论的后续增长都没有位移。
+- 脚本按页面拆为公共核心、需要时的高亮/代码复制，以及工具专用包；独立工具只包含自身转换依赖。首方脚本保留 defer、完整性校验及依赖顺序。搜索仍通过低优先级 defer 下载 33 项数据，首次 focus/input 才构建索引；不将此描述为索引按需下载。保留原有 instant.page 预取。
+- 大工具输出超过 16,384 个 UTF-16 代码单元时，先显示完整结果并开放复制，再于首帧之后空闲着色；取消过期及已卸载输出的着色任务。小结果沿用同步高亮，最终高亮风格保留。此改动改善首次响应，仍有后续着色计算成本。
+
+提交前完整 `npm test`、生产构建、七项 SEO/性能检查、原六项工具测试及新增两项运行逻辑测试通过；新增检查已接入部署工作流。性能标记验收覆盖 37 页、七张现有图片的原生属性及五张本地图/全部派生文件的实际 PNG 尺寸和体积；错误夹具覆盖脚本重复、丢失 defer、错页面工具包及广告尺寸回退。运行测试覆盖第三方加载时机、单例、被阻断、API 降级和高亮任务取消。
+
+三次冷缓存移动实验室对比采用 Chrome 155、390×844、CPU 4 倍减速、150ms RTT、1.6Mbps 下行、750kbps 上行，本地未压缩 HTTP，真实第三方请求全部阻断：
+
+| 指标 | 优化前中位数 | 最终中位数 |
+| --- | --- | --- |
+| 首页 LCP | 2108ms | 1628ms |
+| 首页首方 JS 原始体积 | 280,199 字节 | 159,104 字节 |
+| 大 JSON 点击到两帧 | 397.2ms | 105.2ms |
+| 大 JSON 点击 EventTiming 代理 | 416ms | 120ms |
+
+这些数据不是现场 INP 或生产 CDN 的流量统计。大 JSON 的延后着色仍产生约 170～177ms 空闲长任务；原图文页曾有图片 404，因此不把“原来没下载到图片”的字节差当作图片压缩收益。受控的 100px 广告/300px 初始评论填充测试显示，修复前会推移标题和页脚，修复后四个桌面/手机场景位移及 CLS 均为 0；不以此保证真实广告服务的所有布局行为。
+
+桌面、手机及手机深色模式下，首页六组动漫区域使用旧/新 CSS 对比的像素差均为 0；新增广告和页脚占位区域不纳入该像素比较。工具 16 阶段浏览器回归、图片八组浏览器与 shortcode 的无 JavaScript 验证通过，无站内资源缺失或 JavaScript 错误。37 个 Sitemap URL、69 条栏目记录、33 个搜索条目及上一轮结构化数据均保留。
+
+初始域名核查：HTTPS 主域名证书正常，HTTP 主域名与 www 均跳转到 HTTPS 主域名并保留文章路径、查询参数；www 的 HTTPS 因证书名称不匹配失败。www 当时 CNAME 指向 `clannad.icu`，应依 [GitHub Pages 官方配置](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site)改为 `clannadzsy.github.io`。用户已选择自行修改 DNS；仓库源码不能代替 DNS 或签发证书，最终状态需在部署后再次实测。
+
+```sh
+python3 -B tests/seo-performance.py --self-test
+python3 -B tests/seo-performance.py public --check-assets
+node tests/deferred-embeds.mjs
+node tests/output-highlight.mjs
+```

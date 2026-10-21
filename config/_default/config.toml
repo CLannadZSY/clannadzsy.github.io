@@ -81,6 +81,9 @@ rel  = "sitemap"
     source = "assets"
     target = "assets"
   [[module.mounts]]
+    source = "content/blog"
+    target = "assets/article-images"
+  [[module.mounts]]
     source = "static"
     target = "static"
   [[module.mounts]]

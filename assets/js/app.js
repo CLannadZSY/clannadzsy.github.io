@@ -1,3 +1,27 @@
+const highlightRevisions = new WeakMap();
+const highlightToolOutput = (block) => {
+  if (!window.hljs) return;
+  const revision = (highlightRevisions.get(block) || 0) + 1;
+  highlightRevisions.set(block, revision);
+  const content = block.textContent;
+  const apply = () => {
+    if (block.isConnected && highlightRevisions.get(block) === revision && block.textContent === content) {
+      window.hljs.highlightBlock(block);
+    }
+  };
+  if (content.length <= 16384) {
+    apply();
+    return;
+  }
+  // Let the complete, copyable result paint before expensive syntax coloring.
+  window.requestAnimationFrame(() => {
+    window.setTimeout(() => {
+      if ('requestIdleCallback' in window) window.requestIdleCallback(apply, { timeout: 1000 });
+      else apply();
+    }, 0);
+  });
+};
+
 const jsonTool = document.querySelector('[data-json-tool]');
 
 if (jsonTool) {
@@ -44,7 +68,7 @@ if (jsonTool) {
         formatted = JSON.stringify(window.parseLooseJson(input.value), null, 2);
         output.className = 'language-json';
         output.textContent = formatted;
-        window.hljs.highlightBlock(output);
+        highlightToolOutput(output);
         copyButton.disabled = false;
         message.textContent = '';
       } catch (error) {
@@ -88,7 +112,7 @@ if (jsonTool) {
         requestsCode = window.convertCurlToRequests(curlInput.value);
         curlOutput.className = 'language-python';
         curlOutput.textContent = requestsCode;
-        window.hljs.highlightBlock(curlOutput);
+        highlightToolOutput(curlOutput);
         curlCopyButton.disabled = false;
         curlMessage.textContent = '';
       } catch (error) {

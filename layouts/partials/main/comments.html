@@ -1,0 +1,9 @@
+{{ if .Site.Params.utteranc.enable -}}
+<section class="comments-slot" data-comments-container aria-label="评论">
+  <div data-comments-mount
+       data-repo="{{ .Site.Params.utteranc.repo }}"
+       data-issue-term="{{ .Site.Params.utteranc.issueTerm }}"
+       data-theme="{{ .Site.Params.utteranc.theme }}"></div>
+  <noscript><p>启用 JavaScript 后可加载评论。</p></noscript>
+</section>
+{{ end -}}

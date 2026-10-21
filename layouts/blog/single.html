@@ -1,18 +1,6 @@
 {{ define "main" }}
 
-<div align="center">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-
-  <ins class="adsbygoogle"
-       style="display:block"
-       data-ad-client="ca-pub-7158791715796373"
-       data-ad-slot="4686887066"
-       data-ad-format="auto"
-       data-full-width-responsive="true"></ins>
-  <script>
-    (adsbygoogle = window.adsbygoogle || []).push({});
-  </script>
-</div>
+{{ partial "main/ad-slot.html" . }}
 
 <div class="row justify-content-center">
   <div class="col-md-12 col-lg-10 col-xl-8">
@@ -27,16 +15,7 @@
   </div>
 </div>
 
-<!-- 添加评论 -->
-{{ if .Site.Params.utteranc.enable }}
-<script src="https://utteranc.es/client.js"
-        repo="{{ .Site.Params.utteranc.repo }}"
-        issue-term="{{ .Site.Params.utteranc.issueTerm }}"
-        theme="{{ .Site.Params.utteranc.theme }}"
-        crossorigin="anonymous"
-        async>
-</script>
-{{ end }}
+{{ partial "main/comments.html" . }}
 
 {{ end }}
 

@@ -1,97 +1,77 @@
-{{ $indexTemplate := resources.Get "js/index.js" -}}
-{{ $index := $indexTemplate | resources.ExecuteAsTemplate "index.js" . -}}
+{{- $isTools := eq .Type "tools" -}}
+{{- $tool := .Params.tool | default "" -}}
+{{- $hasCode := or (gt (len (findRE "<pre(?:\\s|>)" .Content)) 0) (and $isTools (in (slice "" "json" "curl") $tool)) -}}
+{{- $hasClipboard := and .Site.Params.options.clipBoard (in .Content "btn-clipboard") -}}
+{{- $scripts := slice -}}
+{{- $core := slice -}}
 
-{{ $bs := resources.Get "js/bootstrap.js" -}}
-{{ $bs := $bs | js.Build -}}
+{{- if $hasClipboard -}}
+  {{- $core = $core | append (resources.Get "js/clipboard.js" | js.Build) -}}
+{{- end -}}
+{{- if .Site.Params.options.instantPage -}}
+  {{- $core = $core | append (resources.Get "js/instant.page.js" | js.Build) -}}
+{{- end -}}
+{{- if .Site.Params.options.flexSearch -}}
+  {{- $core = $core | append (resources.Get "js/vendor/flexsearch/dist/flexsearch.min.js") -}}
+{{- end -}}
+{{- if .Site.Params.options.darkMode -}}
+  {{- $core = $core | append (resources.Get "js/darkmode.js" | js.Build) -}}
+{{- end -}}
+{{- if gt (len $core) 0 -}}
+  {{- $scripts = $scripts | append ($core | resources.Concat (cond $hasClipboard "core-clipboard.js" "core.js")) -}}
+{{- end -}}
 
-{{ $highlight := resources.Get "js/highlight.js" -}}
-{{ $highlight := $highlight | js.Build -}}
+{{- if .Site.Params.options.bootStrapJs -}}
+  {{- $scripts = $scripts | append (resources.Get "js/bootstrap.js" | js.Build) -}}
+{{- end -}}
+{{- if and .Site.Params.options.highLight $hasCode -}}
+  {{- $scripts = $scripts | append (resources.Get "js/highlight.js" | js.Build) -}}
+{{- end -}}
+{{- if .Site.Params.options.kaTex -}}
+  {{- $scripts = $scripts | append (resources.Get "js/vendor/katex/dist/katex.js") -}}
+  {{- $scripts = $scripts | append (resources.Get "js/vendor/katex/dist/contrib/auto-render.js") -}}
+  {{- $scripts = $scripts | append (resources.Get "js/katex.js" | js.Build) -}}
+{{- end -}}
 
-{{ $katex := resources.Get "js/vendor/katex/dist/katex.js" -}}
-{{ $katexAutoRender := resources.Get "js/vendor/katex/dist/contrib/auto-render.js" -}}
+{{- if $isTools -}}
+  {{- $tools := slice -}}
+  {{- if in (slice "" "json") $tool -}}
+    {{- $tools = $tools | append (resources.Get "js/loose-json.mjs" | js.Build) -}}
+  {{- end -}}
+  {{- if in (slice "" "curl") $tool -}}
+    {{- $tools = $tools | append (resources.Get "js/curl-to-requests.js") -}}
+  {{- end -}}
+  {{- if in (slice "" "timestamp") $tool -}}
+    {{- $tools = $tools | append (resources.Get "js/timestamp-converter.js") -}}
+  {{- end -}}
+  {{- if not $tool -}}
+    {{- range slice "naming-converter" "password-generator" "image-list" "proxy-check" -}}
+      {{- $tools = $tools | append (resources.Get (printf "js/%s.js" .)) -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $tools = $tools | append (resources.Get "js/app.js") -}}
+  {{- $tools = $tools | resources.Concat (printf "tools%s.js" (cond (ne $tool "") (printf "-%s" $tool) "")) -}}
+  {{- $scripts = $scripts | append $tools -}}
+{{- end -}}
 
-{{ $app := resources.Get "js/app.js" -}}
-{{ $curlToRequests := resources.Get "js/curl-to-requests.js" -}}
-{{ $namingConverter := resources.Get "js/naming-converter.js" -}}
-{{ $passwordGenerator := resources.Get "js/password-generator.js" -}}
-{{ $imageList := resources.Get "js/image-list.js" -}}
-{{ $timestampConverter := resources.Get "js/timestamp-converter.js" -}}
-{{ $proxyCheck := resources.Get "js/proxy-check.js" -}}
-{{ $looseJson := resources.Get "js/loose-json.mjs" | js.Build -}}
+{{- if or .IsHome (eq .Section "blog") -}}
+  {{- with resources.Get "js/deferred-embeds.js" -}}
+    {{- $scripts = $scripts | append (. | js.Build) -}}
+  {{- end -}}
+{{- end -}}
+{{- range $scripts -}}
+  {{- $script := . -}}
+  {{- if ne (hugo.Environment) "development" -}}
+    {{- $script = $script | minify | fingerprint "sha512" -}}
+  {{- end -}}
+  <script src="{{ $script.RelPermalink }}"{{ if ne (hugo.Environment) "development" }} integrity="{{ $script.Data.Integrity }}" crossorigin="anonymous"{{ end }} defer></script>
+{{- end -}}
 
-{{ $slice := slice $curlToRequests $namingConverter $passwordGenerator $imageList $timestampConverter $proxyCheck $looseJson $app -}}
-
-{{ if .Site.Params.options.lazySizes -}}
-  {{ $lazySizes := resources.Get "js/lazysizes.js" -}}
-  {{ $lazySizes := $lazySizes | js.Build -}}
-  {{ $slice = $slice | append $lazySizes -}}
-{{ end -}}
-
-{{ if .Site.Params.options.clipBoard -}}
-  {{ $clipBoard := resources.Get "js/clipboard.js" -}}
-  {{ $clipBoard := $clipBoard | js.Build -}}
-  {{ $slice = $slice | append $clipBoard -}}
-{{ end -}}
-
-{{ if .Site.Params.options.instantPage -}}
-  {{ $instantPage := resources.Get "js/instant.page.js" -}}
-  {{ $instantPage := $instantPage | js.Build -}}
-  {{ $slice = $slice | append $instantPage -}}
-{{ end -}}
-
-{{ if .Site.Params.options.flexSearch -}}
-  {{ $flexSearch := resources.Get "js/vendor/flexsearch/dist/flexsearch.min.js" -}}
-  {{ $slice = $slice | append $flexSearch -}}
-{{ end -}}
-
-{{ if .Site.Params.options.darkMode -}}
-  {{ $darkMode := resources.Get "js/darkmode.js" -}}
-  {{ $darkMode := $darkMode | js.Build -}}
-  {{ $slice = $slice | append $darkMode -}}
-{{ end -}}
-
-{{ if .Site.Params.options.kaTex -}}
-  {{ $katexConfig := resources.Get "js/katex.js" -}}
-  {{ $katexConfig := $katexConfig | js.Build -}}
-  {{ $slice = $slice | append $katexConfig -}}
-{{ end -}}
-
-{{ $js := $slice | resources.Concat "main.js" -}}
-
-{{ if eq (hugo.Environment) "development" -}}
-  {{ if .Site.Params.options.bootStrapJs -}}
-    <script src="{{ $bs.RelPermalink }}" defer></script>
-  {{ end -}}
-  {{ if .Site.Params.options.highLight -}}
-    <script src="{{ $highlight.RelPermalink }}" defer></script>
-  {{ end -}}
-  {{ if .Site.Params.options.kaTex -}}
-    <script src="{{ $katex.RelPermalink }}" defer></script>
-    <script src="{{ $katexAutoRender.RelPermalink }}" onload="renderMathInElement(document.body);" defer></script>
-  {{ end -}}
-  <script src="{{ $js.RelPermalink }}" defer></script>
-  {{ if .Site.Params.options.flexSearch -}}
-    <script src="{{ $index.RelPermalink }}" defer></script>
-  {{ end -}}
-{{ else -}}
-  {{ $js := $js | minify | fingerprint "sha512" -}}
-  {{ $index := $index | minify | fingerprint "sha512" -}}
-  {{ $bs := $bs | minify | fingerprint "sha512" -}}
-  {{ $highlight := $highlight | minify | fingerprint "sha512" -}}
-  {{ $katex := $katex | minify | fingerprint "sha512" -}}
-  {{ $katexAutoRender := $katexAutoRender | minify | fingerprint "sha512" -}}
-  {{ if .Site.Params.options.bootStrapJs -}}
-    <script src="{{ $bs.RelPermalink }}" integrity="{{ $bs.Data.Integrity }}" crossorigin="anonymous" defer></script>
-  {{ end -}}
-  {{ if .Site.Params.options.highLight -}}
-    <script src="{{ $highlight.RelPermalink }}" integrity="{{ $highlight.Data.Integrity }}" crossorigin="anonymous" defer></script>
-  {{ end -}}
-  {{ if .Site.Params.options.kaTex -}}
-    <script src="{{ $katex.RelPermalink }}" integrity="{{ $katex.Data.Integrity }}" crossorigin="anonymous" defer></script>
-    <script src="{{ $katexAutoRender.RelPermalink }}" integrity="{{ $katexAutoRender.Data.Integrity }}" crossorigin="anonymous" defer></script>
-  {{ end -}}
-  <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" crossorigin="anonymous" defer></script>
-  {{ if .Site.Params.options.flexSearch -}}
-    <script src="{{ $index.RelPermalink }}" integrity="{{ $index.Data.Integrity }}" crossorigin="anonymous" defer></script>
-  {{ end -}}
-{{ end -}}
+{{- if .Site.Params.options.flexSearch -}}
+  {{- $indexTemplate := resources.Get "js/index.js" -}}
+  {{- $index := $indexTemplate | resources.ExecuteAsTemplate "index.js" . -}}
+  {{- if ne (hugo.Environment) "development" -}}
+    {{- $index = $index | minify | fingerprint "sha512" -}}
+  {{- end -}}
+  <script src="{{ $index.RelPermalink }}"{{ if ne (hugo.Environment) "development" }} integrity="{{ $index.Data.Integrity }}" crossorigin="anonymous"{{ end }} fetchpriority="low" defer></script>
+{{- end -}}
