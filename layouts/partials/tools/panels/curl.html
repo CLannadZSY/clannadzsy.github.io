@@ -1,0 +1,24 @@
+<div class="json-workspace" id="curl-tool" data-tool-panel="curl"{{ if not .active }} hidden{{ end }}>
+  <section class="json-panel">
+    <div class="json-panel-header">
+      <label for="curl-input">cURL 命令</label>
+      <button class="btn btn-primary btn-sm" id="curl-convert" type="button">转换</button>
+    </div>
+    <textarea id="curl-input" spellcheck="false" placeholder="在这里粘贴以 curl 开头的命令"></textarea>
+    <p class="json-message" id="curl-message" role="status" aria-live="polite"></p>
+  </section>
+
+  <section class="json-panel">
+    <div class="json-panel-header">
+      <span>Python requests</span>
+      <button class="btn btn-outline-primary btn-sm json-copy" id="curl-copy" type="button" disabled>
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+        <span>复制</span>
+      </button>
+    </div>
+    <pre class="json-output"><code id="curl-output" class="language-python" aria-label="生成的 Python requests 代码"></code></pre>
+  </section>
+</div>

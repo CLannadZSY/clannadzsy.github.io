@@ -29,7 +29,7 @@ h4:hover a {
   font-size: $font-size-base;
 }
 
-body.tools.single .wrap.container {
+body.tools .wrap.container {
   max-width: none;
   padding: 0;
 }
@@ -88,6 +88,59 @@ body.tools.single .wrap.container {
 .tools-main {
   min-width: 0;
   padding: 2rem;
+}
+
+.tool-page-header {
+  max-width: 64rem;
+  margin-bottom: 1.5rem;
+}
+
+.tool-page-header h1 {
+  margin-bottom: 0.75rem;
+  font-size: clamp(1.75rem, 2.5vw, 2.5rem);
+  overflow-wrap: anywhere;
+}
+
+.tool-page-header p {
+  margin-bottom: 0;
+  line-height: 1.8;
+}
+
+.tool-guide {
+  max-width: 64rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.tool-guide h2 {
+  margin-top: 2rem;
+  font-size: 1.5rem;
+}
+
+.tool-guide pre {
+  max-width: 100%;
+  padding: 1rem;
+  overflow-x: auto;
+  border: 1px solid $gray-300;
+  border-radius: $border-radius;
+  overflow-wrap: normal;
+}
+
+.tool-guide table {
+  width: 100%;
+  font-size: 0.95rem;
+}
+
+.tool-guide th,
+.tool-guide td {
+  padding: 0.5rem;
+  vertical-align: top;
+}
+
+body.dark .tool-guide pre {
+  border-color: $border-dark;
 }
 
 .json-workspace {
@@ -1123,6 +1176,18 @@ body.dark .timestamp-field-row input,
 body.dark .timestamp-field-row select,
 body.dark .timestamp-batch-textarea {
   background: $body-bg-dark;
+}
+
+body.dark .timestamp-mode-button,
+body.dark .timestamp-timezone,
+body.dark .timestamp-field-heading span,
+body.dark .timestamp-results span {
+  color: $gray-500;
+}
+
+body.dark .timestamp-result-copy,
+body.dark .timestamp-swap {
+  color: $link-color-dark;
 }
 
 body.dark .password-type-tabs button,

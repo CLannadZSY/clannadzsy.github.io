@@ -31,7 +31,7 @@
     <link rel="next" href="{{ .Paginator.Next.URL | relURL }}">
   {{ end -}}
 {{ else -}}
-  <link rel="canonical" href="{{ .RelPermalink }}">
+  <link rel="canonical" href="{{ if eq .Type "tools" }}{{ .Permalink }}{{ else }}{{ .RelPermalink }}{{ end }}">
 {{ end -}}
 
 {{ partial "head/twitter_cards.html" . }}

@@ -38,6 +38,23 @@ jobs:
       - name: Validate published content
         run: python3 tests/seo-published-content.py public --base-url https://clannad.icu/
 
+      - name: Validate independent tool pages
+        run: python3 tests/seo-tools.py public --base-url https://clannad.icu/
+
+      - name: Set up Node.js for browser utility tests
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Test toolbox functions
+        run: |
+          node tests/loose-json.mjs
+          node tests/curl-to-requests.mjs
+          node tests/timestamp-converter.mjs
+          node tests/password-generator.mjs
+          node tests/naming-converter.mjs
+          node tests/image-list.mjs
+
       - name: Copy CNAME file to public
         run: cp ./CNAME ./public
 

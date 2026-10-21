@@ -1,0 +1,24 @@
+<div class="json-workspace" id="json-tool" data-tool-panel="json"{{ if not .active }} hidden{{ end }}>
+  <section class="json-panel">
+    <div class="json-panel-header">
+      <label for="json-input">原始 JSON</label>
+      <button class="btn btn-primary btn-sm" id="json-format" type="button">格式化</button>
+    </div>
+    <textarea id="json-input" spellcheck="false" placeholder="支持标准 JSON、JSON5 和 Python Dict，例如：{1:1}"></textarea>
+    <p class="json-message" id="json-message" role="status" aria-live="polite"></p>
+  </section>
+
+  <section class="json-panel">
+    <div class="json-panel-header">
+      <span>格式化结果</span>
+      <button class="btn btn-outline-primary btn-sm json-copy" id="json-copy" type="button" disabled>
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+        <span>复制</span>
+      </button>
+    </div>
+    <pre class="json-output"><code id="json-output" class="language-json" aria-label="格式化后的 JSON"></code></pre>
+  </section>
+</div>

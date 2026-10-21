@@ -1,0 +1,7 @@
+{{ $active := eq .selected .key -}}
+{{ if or .path .standalone -}}
+  {{ $path := .path | default (printf "tools/#%s" .key) -}}
+  <a class="tools-nav-link{{ if $active }} active{{ end }}" href="{{ $path | relURL }}" data-tool-link="{{ .key }}"{{ if $active }} aria-current="{{ if .standalone }}page{{ else }}true{{ end }}"{{ end }}>{{ .label }}</a>
+{{ else -}}
+  <button class="tools-nav-link{{ if $active }} active{{ end }}" type="button" data-tool-tab="{{ .key }}" aria-controls="{{ .key }}-tool"{{ if $active }} aria-current="true"{{ end }}>{{ .label }}</button>
+{{ end -}}

@@ -1,0 +1,19 @@
+{{ $standalone := ne .tool "" -}}
+<aside class="tools-sidebar">
+  <div class="tools-sidebar-title"><a class="text-body" href="{{ "tools/" | relURL }}"{{ if not $standalone }} aria-current="page"{{ end }}>工具箱</a></div>
+  <nav aria-label="工具导航">
+    <div class="tools-nav-group">格式化</div>
+    {{ partial "tools/nav-link.html" (dict "key" "json" "label" "JSON 格式化" "path" "tools/json-formatter/" "standalone" $standalone "selected" .selected) }}
+    <div class="tools-nav-group">代码转换</div>
+    {{ partial "tools/nav-link.html" (dict "key" "curl" "label" "cURL 转 requests" "path" "tools/curl-to-requests/" "standalone" $standalone "selected" .selected) }}
+    {{ partial "tools/nav-link.html" (dict "key" "naming" "label" "下划线 ↔ 驼峰" "standalone" $standalone "selected" .selected) }}
+    <div class="tools-nav-group">安全</div>
+    {{ partial "tools/nav-link.html" (dict "key" "password" "label" "密码生成器" "standalone" $standalone "selected" .selected) }}
+    <div class="tools-nav-group">时间</div>
+    {{ partial "tools/nav-link.html" (dict "key" "timestamp" "label" "Unix 时间戳转换" "path" "tools/timestamp/" "standalone" $standalone "selected" .selected) }}
+    <div class="tools-nav-group">图片</div>
+    {{ partial "tools/nav-link.html" (dict "key" "images" "label" "批量图片预览" "standalone" $standalone "selected" .selected) }}
+    <div class="tools-nav-group">网络</div>
+    {{ partial "tools/nav-link.html" (dict "key" "proxy" "label" "批量代理检测" "standalone" $standalone "selected" .selected) }}
+  </nav>
+</aside>

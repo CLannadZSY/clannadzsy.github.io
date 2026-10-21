@@ -37,7 +37,7 @@
 | P1 摘要已完成 | 为全部 29 个独立博客页面填写准确摘要，并同步 HTML、Open Graph、Twitter 与 Article 描述 | 摘要非空且各不相同，元信息一致；正文与渲染后的文章区域不变 |
 | P1 | 修正 SSH、Python、MySQL 等文章的残缺示例，补充适用环境 | 示例经实际验证 |
 | P1 示例清理已完成 | 移除 9 个 Doks 示例文档及栏目页、Henk 示例作者页；保留真实作者与文章 | 10 个旧 URL 不再生成，根 Sitemap 剩余 34 个有效 URL；真实作者归档和 29 篇文章保留 |
-| P1 | 为 JSON、cURL 转 requests、时间戳工具建立独立页面并补充说明、示例和文章内链 | 每个工具有独立 URL、Title、H1 和有效输入输出示例 |
+| P1 工具拆页已完成 | 为 JSON、cURL 转 requests、时间戳工具建立独立页面，补充说明、示例和工具互链 | 三个独立 URL、Title、H1、description、可见说明与可验证示例；进入 Sitemap 和站内搜索 |
 | P2 | 修正文章日期、面包屑和作者结构化数据，以及中文页语言声明 | Rich Results Test 与生成 HTML 检查通过 |
 | P2 | 检查 www 证书和跳转，优化图片及广告占位、脚本加载 | 域名访问和跳转正常；移动端实测 LCP、INP、CLS |
 | 持续 | 用 Search Console 验证索引状态和实际搜索需求，再扩展技术或动漫专题 | 对比页面和查询的展示、点击、CTR、排名及索引状态 |
@@ -92,4 +92,29 @@ python3 tests/seo-blog-descriptions.py public --base-url https://clannad.icu/
 
 ```sh
 python3 tests/seo-published-content.py public --base-url https://clannad.icu/
+```
+
+## 三个工具独立页面记录
+
+- `/tools/json-formatter/`：格式化 JSON、JSON5 与常见 Python Dict，提供标准 JSON 和字典输入输出示例，说明数值精度及特殊值的序列化行为。
+- `/tools/curl-to-requests/`：把常见 cURL 命令转换为 Python requests 代码，提供 GET 和 JSON POST 示例，并说明支持的参数及文件上传等边界。
+- `/tools/timestamp/`：转换 Unix 秒、毫秒与日期时间，提供上海时区和 UTC 对照、批量转换示例及夏令时处理说明。
+
+三个页面有各自的 Title、H1、description、绝对 canonical 和分享 URL，默认可见的单个工具面板，以及无需 JavaScript 即可阅读的使用说明与示例。工具导航和相关工具使用实际链接互通；保留现有主题配色、布局、深色模式与首页动漫内容。
+
+时间戳工具在深色模式下的辅助标签与复制按钮沿用主题的浅灰和蓝色，提高文字可读性；其他配色和工具行为保留。
+
+`/tools/` 从叶子页面改为工具栏目，原 URL 保留，提供独立页面入口并保留原有七个工具。原交互代码改为仅初始化当前页面存在的面板，保留命名转换、密码生成、图片预览与代理检测，以及旧 hash 入口；代理服务健康检查仅在选中代理工具时发起。
+
+根 Sitemap 从 34 个 URL 增至 37 个，新增工具栏目 Sitemap 包含三个工具地址；站内搜索为 33 个唯一地址，覆盖 29 篇博客、工具箱及三个独立工具。29 篇既有文章的源码及本地渲染文章区域均未改变。
+
+完整 `npm test`、生产构建、五项 SEO 验收和六项工具函数测试通过。新增 `tests/seo-tools.py` 并加入部署工作流；旧构建环境继续使用 Node 15，工具函数测试单独使用具有 Web Crypto 的 Node 22，不修改旧依赖和锁文件。
+
+浏览器验收通过桌面、390 像素手机及手机深色模式，覆盖三个页面的转换与错误提示、复制、CSV 导出、旧工具入口及导航返回；禁用 JavaScript 后仍可阅读说明和示例。未发现横向溢出、JavaScript 运行错误或站内资源缺失。首页六组动漫内容保留，在同一首页中使用拆页前后 CSS 的三组截图像素完全一致。
+
+```sh
+python3 tests/seo-tools.py public --base-url https://clannad.icu/
+node tests/loose-json.mjs
+node tests/curl-to-requests.mjs
+node tests/timestamp-converter.mjs
 ```

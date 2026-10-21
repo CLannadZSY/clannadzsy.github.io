@@ -84,7 +84,8 @@ Source:
 
   var docs = [
     {{ $seen := newScratch -}}
-    {{ range $index, $page := (where .Site.RegularPages "Type" "in" (slice "blog" "tools")) -}}
+    {{ range $index, $page := (where .Site.Pages "Type" "in" (slice "blog" "tools")) -}}
+      {{ if or .IsPage (and (eq .Type "tools") (eq .Kind "section")) -}}
       {{ if not ($seen.Get .RelPermalink) -}}
       {{ $seen.Set .RelPermalink true -}}
       {
@@ -94,6 +95,7 @@ Source:
         description: {{ .Params.description | jsonify }},
         content: {{ .Plain | jsonify }}
       },
+      {{ end -}}
       {{ end -}}
     {{ end -}}
   ];

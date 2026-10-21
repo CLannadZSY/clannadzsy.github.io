@@ -1,0 +1,24 @@
+{{ $tool := .Params.tool | default "" -}}
+{{ $defaultTool := $tool | default "json" -}}
+<div class="tools-shell" data-json-tool data-default-tool="{{ $defaultTool }}"{{ with $tool }} data-tool-page="{{ . }}"{{ end }}>
+  {{ partial "tools/sidebar.html" (dict "page" . "tool" $tool "selected" $defaultTool) }}
+  <main class="tools-main">
+    <header class="tool-page-header">
+      <h1>{{ .Title }}</h1>
+      <p>{{ .Description }}</p>
+    </header>
+    {{ if not $tool -}}
+    <div class="tool-guide">{{ .Content }}</div>
+    {{ end -}}
+    {{ if $tool -}}
+      {{ partial (printf "tools/panels/%s.html" $tool) (dict "active" true) }}
+    {{ else -}}
+      {{ range (slice "json" "curl" "naming" "password" "timestamp" "images" "proxy") -}}
+        {{ partial (printf "tools/panels/%s.html" .) (dict "active" (eq . "json")) }}
+      {{ end -}}
+    {{ end -}}
+    {{ with $tool -}}
+    <div class="tool-guide">{{ $.Content }}</div>
+    {{ end -}}
+  </main>
+</div>
