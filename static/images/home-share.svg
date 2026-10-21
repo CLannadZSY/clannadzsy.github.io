@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="paper" x2="1" y2="1">
+      <stop stop-color="#fff8fb"/>
+      <stop offset="1" stop-color="#f1f0fb"/>
+    </linearGradient>
+    <g id="petal">
+      <path d="M0 0C-24-12-24-36-6-42L0-36L6-42C24-36 24-12 0 0Z" fill="#f2b8cd"/>
+    </g>
+  </defs>
+  <rect width="1200" height="630" fill="url(#paper)"/>
+  <circle cx="1100" cy="40" r="220" fill="#f9e1ec"/>
+  <circle cx="85" cy="650" r="180" fill="#e9e6f7"/>
+  <path d="M935 0Q954 92 1130 146M1002 75Q1050 33 1077 0M1040 111Q1082 89 1150 96" fill="none" stroke="#c79cad" stroke-width="7" stroke-linecap="round"/>
+  <g opacity=".8">
+    <use href="#petal" transform="translate(1002 80) rotate(-60) scale(.8)"/>
+    <use href="#petal" transform="translate(1002 80) rotate(12) scale(.8)"/>
+    <use href="#petal" transform="translate(1002 80) rotate(84) scale(.8)"/>
+    <use href="#petal" transform="translate(1002 80) rotate(156) scale(.8)"/>
+    <use href="#petal" transform="translate(1002 80) rotate(228) scale(.8)"/>
+    <use href="#petal" transform="translate(1110 138) rotate(-24) scale(.55)"/>
+    <use href="#petal" transform="translate(1110 138) rotate(48) scale(.55)"/>
+    <use href="#petal" transform="translate(1110 138) rotate(120) scale(.55)"/>
+    <use href="#petal" transform="translate(1110 138) rotate(192) scale(.55)"/>
+    <use href="#petal" transform="translate(1110 138) rotate(264) scale(.55)"/>
+  </g>
+  <g font-family="Microsoft YaHei, sans-serif" fill="#3e3552">
+    <text x="92" y="166" font-size="25" letter-spacing="4" fill="#85718b">CLANNAD.ICU</text>
+    <text x="88" y="280" font-size="66" font-weight="700">CLannadZSY 的小站</text>
+    <rect x="92" y="316" width="76" height="5" rx="2.5" fill="#c89bb9"/>
+    <text x="92" y="380" font-size="30">动漫收藏 · 技术笔记 · 在线工具</text>
+    <text x="92" y="444" font-size="23" fill="#80748a">收藏难忘的瞬间，记录日常的探索。</text>
+    <text x="92" y="548" font-size="23" fill="#85718b">https://clannad.icu</text>
+  </g>
+  <g transform="translate(1040 430) rotate(18)">
+    <path d="M0-18V150" stroke="#c7a77f" stroke-width="8" stroke-linecap="round"/>
+    <circle cy="81" r="36" fill="#c8dfc4" stroke="#aac9a7" stroke-width="2"/>
+    <circle cy="18" r="36" fill="#fff9ef" stroke="#e5daca" stroke-width="2"/>
+    <circle cy="-45" r="36" fill="#f0bfcf" stroke="#dca5b7" stroke-width="2"/>
+    <g fill="#776172">
+      <circle cx="-10" cy="-46" r="2.8"/><circle cx="10" cy="-46" r="2.8"/>
+      <circle cx="-10" cy="17" r="2.8"/><circle cx="10" cy="17" r="2.8"/>
+      <circle cx="-10" cy="80" r="2.8"/><circle cx="10" cy="80" r="2.8"/>
+    </g>
+  </g>
+</svg>

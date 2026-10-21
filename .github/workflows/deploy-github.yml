@@ -27,6 +27,11 @@ jobs:
       - name: Build production website
         run: npm run build
 
+      - name: Validate P0 SEO output
+        run: |
+          python3 tests/seo-sitemap.py public --base-url https://clannad.icu/
+          python3 tests/seo-homepage.py public --base-url https://clannad.icu/
+
       - name: Copy CNAME file to public
         run: cp ./CNAME ./public
 

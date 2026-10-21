@@ -11,7 +11,7 @@
 {{ end -}}
 
 {{ if .IsHome -}}
-  <title>{{ .Site.Params.title }} {{ .Site.Params.titleSeparator }} {{ .Site.Params.titleAddition }}</title>
+  <title>{{ .Title }}</title>
 {{ else -}}
   <title>{{ .Title }} {{ .Site.Params.titleSeparator }} {{ .Site.Params.title }}</title>
 {{ end -}}
@@ -35,13 +35,25 @@
 {{ end -}}
 
 {{ partial "head/twitter_cards.html" . }}
-<meta name="twitter:site" content="@{{ .Site.Params.twitterSite }}">
-<meta name="twitter:creator" content="@{{ .Site.Params.twitterCreator }}">
+{{ with .Site.Params.twitterSite -}}
+<meta name="twitter:site" content="@{{ . }}">
+{{ end -}}
+{{ with .Site.Params.twitterCreator -}}
+<meta name="twitter:creator" content="@{{ . }}">
+{{ end -}}
 
 {{ partial "head/opengraph.html" . }}
-<meta property="article:publisher" content="https://www.facebook.com/{{ .Site.Params.facebookPublisher }}">
-<meta property="article:author" content="https://www.facebook.com/{{ .Site.Params.facebookAuthor }}">
-<meta property="og:locale" content="{{ .Site.Params.ogLocale }}">
+{{ with .Site.Params.facebookPublisher -}}
+<meta property="article:publisher" content="https://www.facebook.com/{{ . }}">
+{{ end -}}
+{{ with .Site.Params.facebookAuthor -}}
+<meta property="article:author" content="https://www.facebook.com/{{ . }}">
+{{ end -}}
+{{ if not .Params.locale -}}
+{{ with .Site.Params.ogLocale -}}
+<meta property="og:locale" content="{{ . }}">
+{{ end -}}
+{{ end -}}
 
 {{ range .AlternativeOutputFormats -}}
   <link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .RelPermalink | safeURL }}">
