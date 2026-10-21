@@ -3,7 +3,7 @@ title: "[Go] Interface"
 description: "通过结构体与方法示例梳理 Go interface 的定义和赋值，介绍 fmt.Stringer、接口参数、类型判断与接口嵌入，理解接口如何承载不同类型的值。"
 lead: ""
 date: 2021-08-30T01:59:22Z
-lastmod: 2021-08-30T01:59:22Z
+lastmod: 2026-10-22T00:06:41+08:00
 draft: false
 weight: 50
 contributors: [clannadzsy]

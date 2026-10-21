@@ -3,7 +3,7 @@ title: "[Go] 中的陷阱"
 description: "整理 Go 中容易混淆的行为，比较 UTF-8 字节长度与 rune 数量、nil 的使用、浮点数计算，以及 string 转换和 strconv.Itoa 的区别。"
 lead: ""
 date: 2021-09-24T03:43:43Z
-lastmod: 2021-09-24T03:43:43Z
+lastmod: 2026-10-22T00:06:41+08:00
 draft: false
 weight: 50
 contributors: [clannadzsy]

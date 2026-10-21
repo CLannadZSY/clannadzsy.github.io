@@ -3,7 +3,7 @@ title: "使用 Hugo + Github + Doks 搭建个人网站"
 description: "记录使用 Hugo 和 Doks 搭建个人网站的步骤，涵盖主题安装、本地预览、博客文章创建及 GitHub Pages 自动部署，并整理模板定制和构建问题。"
 lead: ""
 date: 2021-04-10T17:09:32+08:00
-lastmod: 2021-04-10T17:09:32+08:00
+lastmod: 2026-10-22T00:06:41+08:00
 draft: false
 weight: 50
 contributors: [clannadzsy]

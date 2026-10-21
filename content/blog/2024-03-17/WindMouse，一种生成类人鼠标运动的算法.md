@@ -3,7 +3,7 @@ title: "WindMouse，一种生成类人鼠标运动的算法"
 description: "收录 WindMouse 算法的 Python 实现与 Matplotlib 绘图示例，展示鼠标移动轨迹，并比较风力、重力等参数对路径形态的影响。"
 lead: ""
 date: 2024-03-17T06:15:02Z
-lastmod: 2024-03-17T06:15:02Z
+lastmod: 2026-10-22T00:06:41+08:00
 draft: false
 weight: 50
 contributors: [clannadzsy]

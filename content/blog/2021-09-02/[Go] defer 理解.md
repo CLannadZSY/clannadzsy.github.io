@@ -3,7 +3,7 @@ title: "[Go] defer 理解"
 description: "结合三个命名返回值示例，梳理 Go defer 的后进先出执行顺序，以及闭包引用、参数传值和 return 赋值对最终返回结果的影响。"
 lead: ""
 date: 2021-09-02T06:22:13Z
-lastmod: 2021-09-02T06:22:13Z
+lastmod: 2026-10-22T00:06:41+08:00
 draft: false
 weight: 50
 contributors: [clannadzsy]

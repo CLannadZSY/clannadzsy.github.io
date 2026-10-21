@@ -1,0 +1,10 @@
+{{- $items := slice -}}
+{{- with .Parent -}}
+  {{- $items = partial "seo/breadcrumb-items.html" . -}}
+{{- end -}}
+{{- $name := .Title -}}
+{{- if .IsHome -}}
+  {{- $name = "首页" -}}
+{{- end -}}
+{{- $items = $items | append (dict "@type" "ListItem" "position" (add (len $items) 1) "name" $name "item" .Permalink) -}}
+{{- return $items -}}

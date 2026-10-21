@@ -3,7 +3,7 @@ title: "解决 Android 7 及以上的安卓系统模拟器, 无法抓包 https �
 description: "整理 Android 7 及以上系统和模拟器进行 HTTPS 抓包的证书配置笔记，涵盖 OpenSSL 证书格式处理、ADB 安装系统证书及 Charles 相关设置。"
 lead: ""
 date: 2023-05-06T02:09:38Z
-lastmod: 2023-05-06T02:09:38Z
+lastmod: 2026-10-22T00:06:41+08:00
 draft: false
 weight: 50
 contributors: [clannadzsy]

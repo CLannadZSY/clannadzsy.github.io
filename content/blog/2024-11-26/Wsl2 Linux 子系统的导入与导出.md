@@ -3,7 +3,7 @@ title: "Wsl2 Linux 子系统的导入与导出"
 description: "记录 WSL 2 中 Debian 的导出与异名导入流程，涵盖备份校验、恢复验证、导入发行版默认用户设置，以及核验后可选的旧实例注销。"
 lead: ""
 date: 2024-11-26T14:58:22Z
-lastmod: 2024-11-26T14:58:22Z
+lastmod: 2026-10-22T00:06:41+08:00
 draft: false
 weight: 50
 contributors: [clannadzsy]

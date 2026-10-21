@@ -49,11 +49,6 @@
 {{ with .Site.Params.facebookAuthor -}}
 <meta property="article:author" content="https://www.facebook.com/{{ . }}">
 {{ end -}}
-{{ if not .Params.locale -}}
-{{ with .Site.Params.ogLocale -}}
-<meta property="og:locale" content="{{ . }}">
-{{ end -}}
-{{ end -}}
 
 {{ range .AlternativeOutputFormats -}}
   <link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .RelPermalink | safeURL }}">

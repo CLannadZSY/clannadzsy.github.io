@@ -1,10 +1,10 @@
 <p>
-  <small>Posted {{ .PublishDate.Format "January 2, 2006" }} by {{ if .Params.contributors -}}{{ range $index,
+  <small>Posted <time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">{{ .PublishDate.Format "January 2, 2006" }}</time> by {{ if .Params.contributors -}}{{ range $index,
     $contributor := .Params.contributors }}{{ if gt $index 0 }} and {{ end }}
     <a class="stretched-link position-relative" href="{{ "/contributors/" | relURL }}{{ . | urlize }}/">{{ . }}</a>
-    {{ end -}}{{ end -}}&nbsp;&hyphen;&nbsp;
+    {{ end -}}{{ end -}}{{ if .Lastmod.After .PublishDate }}&nbsp;&hyphen;&nbsp;Updated <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Lastmod.Format "January 2, 2006" }}</time>{{ end }}&nbsp;&hyphen;&nbsp;
     <strong>
       {{ .ReadingTime -}}&nbsp;min read
     </strong>
   </small>
-<p>
+</p>

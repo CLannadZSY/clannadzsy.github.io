@@ -1,4 +1,5 @@
 ---
+content_language: "en"
 title: "The Golang Chronicles From Ai"
 description: "A fictional steampunk adventure in which Alaric, Elara and Thorne pursue the Golang Codex, face the Phantom Coder and uncover the Clockwork Conspiracy in Devoria."
 lead: ""

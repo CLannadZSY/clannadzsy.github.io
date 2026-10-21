@@ -3,7 +3,7 @@ title: "[Go] 字符串拼接性能"
 description: "对比 Go 中加号、fmt.Sprintf、strings.Builder、bytes.Buffer 与字节切片的拼接基准测试，讨论预分配容量和内存拷贝对性能的影响。"
 lead: ""
 date: 2021-08-24T02:39:37Z
-lastmod: 2021-08-24T02:39:37Z
+lastmod: 2026-10-22T00:06:41+08:00
 draft: false
 weight: 50
 contributors: [clannadzsy]

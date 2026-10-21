@@ -1,0 +1,8 @@
+{{- $person := dict -}}
+{{- with . -}}
+  {{- $person = dict "@type" "Person" "@id" (printf "%s#person" .Permalink) "name" .Title "url" .Permalink -}}
+  {{- with .Params.same_as -}}
+    {{- $person = merge $person (dict "sameAs" .) -}}
+  {{- end -}}
+{{- end -}}
+{{- return $person -}}

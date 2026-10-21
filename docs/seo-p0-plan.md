@@ -38,7 +38,7 @@
 | P1 文章示例已完成 | 修正 SSH、Python、MySQL、Go 等文章的残缺示例，补充适用环境与验证方法 | 可运行示例实际验证；系统及设备步骤明确验证边界；部署前执行 Python/Go 回归 |
 | P1 示例清理已完成 | 移除 9 个 Doks 示例文档及栏目页、Henk 示例作者页；保留真实作者与文章 | 10 个旧 URL 不再生成，根 Sitemap 剩余 34 个有效 URL；真实作者归档和 29 篇文章保留 |
 | P1 工具拆页已完成 | 为 JSON、cURL 转 requests、时间戳工具建立独立页面，补充说明、示例和工具互链 | 三个独立 URL、Title、H1、description、可见说明与可验证示例；进入 Sitemap 和站内搜索 |
-| P2 | 修正文章日期、面包屑和作者结构化数据，以及中文页语言声明 | Rich Results Test 与生成 HTML 检查通过 |
+| P2 结构化数据已修复 | 修正文章日期、面包屑和作者结构化数据，以及中文页语言声明 | 生成 HTML 与线上 JSON-LD、日期、作者及语言一致性检查；Google 富媒体测试单独记录 |
 | P2 | 检查 www 证书和跳转，优化图片及广告占位、脚本加载 | 域名访问和跳转正常；移动端实测 LCP、INP、CLS |
 | 持续 | 用 Search Console 验证索引状态和实际搜索需求，再扩展技术或动漫专题 | 对比页面和查询的展示、点击、CTR、排名及索引状态 |
 
@@ -144,3 +144,24 @@ CGO_ENABLED=1 python -B tests/article-examples.py --race
 ```
 
 上述为提交前验证；GitHub Actions、GitHub Pages 部署状态及线上响应需在推送后单独核验。
+
+## 日期、面包屑、作者及页面语言修复记录
+
+2026-10-22 修正公共 SEO 模板及必要元数据，文章正文、标题、description、原始发表日期、作者署名与 URL 保留。全部 39 份 Markdown 的正文和 29 篇博客的渲染正文均通过哈希比对，完全不变；首页、动漫内容、样式、交互脚本与图片源码未修改。
+
+- 日期取消字面量 `CET`，按原始时间输出带真实时区的 ISO 8601。26 篇文章上轮有实质内容修订，`lastmod` 补为对应提交 `01b9ea3` 已证实的 `2026-10-22T00:06:41+08:00`，其余不批量刷新。可见发表/更新日期使用 `time datetime`，与 Article、Open Graph 及 Sitemap 的时间一致。
+- 面包屑改为递归读取真实页面父级，使用页面标题、绝对规范地址和从 1 开始的连续位置。博客、工具与作者目录层级正确，数字 slug 不再充当文章名称；首页与 404 不输出面包屑。
+- 作者与发布者使用真实 `Person: clannadzsy`，共用现有作者页的绝对 URL、稳定 `#person` 标识及已公开 GitHub 链接。作者页增加 `ProfilePage`，首页使用真实 Person 与 WebSite，移除 Doks 默认组织、虚假 logo 和空社交地址。
+- JSON-LD 改用数据对象统一序列化，避免引号、中文或可选字段造成无效 JSON；文章的 `mainEntityOfPage` 使用绝对 canonical。
+- 中文页面默认 `lang=zh-CN`，三个现有英文独立博客按正文声明 `en`，两份共用故事 URL 的源文件保持一致。HTML、Article/WebSite/ProfilePage 的 `inLanguage` 与 OG locale 协调，英文 OG 使用 `en_US`、中文使用 `zh_CN`。Hugo minifier 输出的 `zh-cn` 与 `zh-CN` 为同一有效语言标签。
+
+新增 `tests/seo-structured-data.py` 并接入部署前工作流。提交前完整 `npm test`、生产构建、原五项 SEO 检查、新结构化数据检查通过；新检查覆盖 38 份 HTML、37 个规范页面、29 篇 Article，18 个错误夹具均被正确拦截。根 Sitemap 的 37 个 URL、三份 Sitemap 共 69 条记录及 33 个站内搜索地址保持不变。
+
+本地首页在桌面、手机和手机深色模式下使用旧/新 CSS 的截图像素差均为 0；五个代表页的 15 组排版、可见日期、语言和作者链接验收通过。未发现页面横向溢出、本站资源缺失或 JavaScript 错误。
+
+```sh
+python3 -B tests/seo-structured-data.py --self-test
+python3 -B tests/seo-structured-data.py public --base-url https://clannad.icu/
+```
+
+规范依据：[Article](https://developers.google.com/search/docs/appearance/structured-data/article)、[Breadcrumb](https://developers.google.com/search/docs/appearance/structured-data/breadcrumb)、[页面日期](https://developers.google.com/search/docs/appearance/publication-dates)。本轮 Google Rich Results Test 的浏览器连接超时，未取得 Google 的测试结论；不将本地结构化数据验收描述为该外部测试已通过。发布后另以实际线上 HTML 复核，搜索结果展示以 Google 后续抓取和处理为准。

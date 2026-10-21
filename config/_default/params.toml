@@ -15,8 +15,8 @@ description = "CLを書いて、人生を読みます。"
 #ogLocale = "en_US"
 
 ## JSON-LD
-schemaType = "Organization"
-schemaLogo = "logo-doks.png"
+schemaType = "Person"
+schemaAuthor = "clannadzsy"
 #schemaTwitter = "https://twitter.com/henkverlinde"
 #schemaLinkedIn = "https://www.linkedin.com/in/henkverlinde/"
 schemaGitHub = "https://github.com/CLannadZSY"

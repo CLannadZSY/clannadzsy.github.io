@@ -3,7 +3,7 @@ title: "Python 面试题(1)"
 description: "通过示例讨论 Python 闭包的后期绑定和可变默认参数，展示默认参数绑定、functools.partial 及使用 None 作为默认值的处理思路。"
 lead: ""
 date: 2021-06-02T06:40:12Z
-lastmod: 2021-06-02T06:40:12Z
+lastmod: 2026-10-22T00:06:41+08:00
 draft: false
 weight: 50
 contributors: [clannadzsy]

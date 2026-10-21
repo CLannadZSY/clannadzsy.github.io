@@ -38,7 +38,7 @@
 {{ end -}}
 
 {{ $iso8601 := "2006-01-02T15:04:05-07:00" -}}
-{{ if .IsPage -}}
+{{ if and .IsPage (eq .Section .Site.Params.schemaSection) -}}
   {{ if not .PublishDate.IsZero -}}
     <meta property="article:published_time" {{ .PublishDate.Format $iso8601 | printf "content=%q" | safeHTMLAttr }}>
   {{ else if not .Date.IsZero -}}
@@ -56,9 +56,10 @@
 {{ with .Params.audio -}}
   <meta property="og:audio" content="{{ . }}">
 {{ end -}}
-{{ with .Params.locale -}}
-  <meta property="og:locale" content="{{ . }}">
-{{ end -}}
+{{ $language := partial "seo/page-language.html" . -}}
+{{ $locale := replace $language "-" "_" -}}
+{{ if eq $language "en" }}{{ $locale = "en_US" }}{{ end -}}
+<meta property="og:locale" content="{{ .Params.locale | default $locale }}">
 {{ with .Site.Params.title -}}
   <meta property="og:site_name" content="{{ . }}">
 {{ end -}}

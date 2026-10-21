@@ -3,7 +3,7 @@ title: "MySQL8 InnoDB 数据恢复"
 description: "记录 MySQL 8 InnoDB 表空间恢复笔记，涉及重建表结构、处理 .ibd 文件、设置文件权限，以及丢弃和导入表空间等操作。"
 lead: ""
 date: 2024-04-30T08:51:56Z
-lastmod: 2024-04-30T08:51:56Z
+lastmod: 2026-10-22T00:06:41+08:00
 draft: false
 weight: 50
 contributors: [clannadzsy]

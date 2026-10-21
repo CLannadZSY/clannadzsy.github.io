@@ -3,7 +3,7 @@ title: "Golang并发时报错connection Reset by Peer"
 description: "区分 Go 并发请求中的连接重置与本地文件描述符耗尽，演示错误链分类，并说明 Linux 资源限制排查及验证边界。"
 lead: ""
 date: 2023-03-02T01:46:42Z
-lastmod: 2023-03-02T01:46:42Z
+lastmod: 2026-10-22T00:06:41+08:00
 draft: false
 weight: 50
 contributors: [clannadzsy]

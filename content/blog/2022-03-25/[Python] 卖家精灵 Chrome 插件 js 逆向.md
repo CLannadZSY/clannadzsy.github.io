@@ -3,7 +3,7 @@ title: "[Python] 卖家精灵 Chrome 插件 Js 逆向"
 description: "记录卖家精灵 Chrome 插件的 JavaScript 分析过程，从扩展目录和查询请求入手，追踪 tk 参数生成逻辑与版本号处理，并附 Python 调用相关函数的代码示例。"
 lead: ""
 date: 2022-03-25T02:05:38Z
-lastmod: 2022-03-25T02:05:38Z
+lastmod: 2026-10-22T00:06:41+08:00
 draft: false
 weight: 50
 contributors: [clannadzsy]

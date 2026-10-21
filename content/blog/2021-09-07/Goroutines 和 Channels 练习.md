@@ -3,7 +3,7 @@ title: "[Go] Goroutines 和 Channels 练习"
 description: "收集六个 Go 并发练习，涵盖奇偶分流、多协程写入通道、生成器、斐波那契数列、执行顺序和 WaitGroup 检查点同步。"
 lead: ""
 date: 2021-09-07T07:00:14Z
-lastmod: 2021-09-07T07:00:14Z
+lastmod: 2026-10-22T00:06:41+08:00
 draft: false
 weight: 50
 contributors: [clannadzsy]
