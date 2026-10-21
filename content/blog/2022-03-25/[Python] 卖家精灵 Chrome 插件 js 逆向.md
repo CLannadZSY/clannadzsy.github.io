@@ -9,7 +9,7 @@ weight: 50
 contributors: [clannadzsy]
 url: "/blog/2494707647/"
 ---
-1.  chrome://version, 查看 `个人资料路径`
+1. chrome://version, 查看 `个人资料路径`
 
    ```bash
    C:\Users\用户名\AppData\Local\Google\Chrome\User Data\Default
@@ -57,11 +57,11 @@ url: "/blog/2494707647/"
                          }))
                      }
          ```
-      
+
          调用 s2Tkk(t), 其中 t 参数和 asins: t, 为同一个, 因此得知, t: 为我们需要查询的 asin
-      
+
       3. 进入 `s2Tkk` 方法
-      
+
          ```js
                          static s2Tkk(e, t, s, a) {
                              let n = [],
@@ -75,13 +75,11 @@ url: "/blog/2494707647/"
                              return n.length < 1 ? "" : this._cal(n.join(""), this.EXT_VERSION)
                          }
          ```
-      
-         
-      
+
          重点在于 `this._cal()` 方法与 `this.EXT_VERSION`参数
-      
+
       4. Ctrl + F 查找 this._cal() 方法, 得到了我们需要的加密方法
-      
+
          ```js
                          static _cal(e, t) {
                              function s(e, t) {
@@ -103,39 +101,37 @@ url: "/blog/2494707647/"
                              }(e, t)
                          }
          ```
-      
+
          在 static _cal(e,t) 这行下面, 添加, alert(e), alert(t), 查看 e, t 参数分别是什么
-      
+
          ```bash
          e: "", # 为空
          t: B00DQFGJR4 # 为我们需要查询的 asin
          ```
-      
+
          进一步进行的确认参数位置, 到这里需要的参数就分析完成了
-      
-         
-      
+
       5. 同理可查找到, this.EXT_VERSION 参数
-      
+
          ```js
                          static init() {
                              this.EXT_VERSION = a.a.version().replace(/\./, "00").replace(/\./g, "0") + ".1364508470"
                          }
          ```
-      
+
          其中 `a.a.version()` 经过分析可以知道为, 卖家精灵的版本号: 3.1.4, 版本号会随时间而更新, 请注意
-      
+
       6. 将上面的 js 代码整理一下, 如下
-      
+
          ```js
          function extVersion() {
              // 就是插件的版本, 替换了 . 再拼接了一个字符串而成
              // 如果插件更新了版本, 手动更新一下插件的版本号即可
              chrome_ext_version = '3.1.4' //300104.1364508470
              return chrome_ext_version.replace(/\./, "00").replace(/\./g, "0") + ".1364508470"
-         
+
          }
-         
+
          function s2Tkk(e, t, s, a) {
              let n = [],
                  o = [e, t, s, a];
@@ -147,9 +143,9 @@ url: "/blog/2494707647/"
                  }
              return n.length < 1 ? "" : _cal(n.join(""), extVersion())
          }
-         
+
          function _cal(e, t) {
-         
+
              function s(e, t) {
                  for (var s = 0; s < t.length - 2; s += 3) {
                      var a = t.charAt(s + 2);
@@ -157,7 +153,7 @@ url: "/blog/2494707647/"
                  }
                  return e
              }
-         
+
              return function (e, t) {
                  var a = t.split(".");
                  t = Number(a[0]) || 0;
@@ -170,28 +166,27 @@ url: "/blog/2494707647/"
              }(e, t)
          }
          ```
-      
+
       7. 使用 Python 进行调用
-      
+
          ```python
          import execjs
-         
+
          node = execjs.get()
          file = './sellersprite.js'
          ctx = node.compile(open(file, 'r', encoding='utf8').read())
-         
+
          # 数据源的 tk
          e = ''
          t = 'B00DQFGJR4'
-         
+
          print(ctx.call('s2Tkk', e, t)) 
          # 得到结果, 与我们抓包请求中的 tk 参数结果一致
          # 58497.291017
          ```
-      
-      8. 插件登录过程中的参数, 也是同理, 大家可以自行实践
-      
-         如需要帮助, 可以通过 [Github](https://github.com/CLannadZSY) 联系我
-      
-         ![image-20220325110037709](image-20220325110037709.png)
 
+      8. 插件登录过程中的参数, 也是同理, 大家可以自行实践
+
+         如需要帮助, 可以通过 [Github](https://github.com/CLannadZSY) 联系我
+
+         ![image-20220325110037709](image-20220325110037709.png)

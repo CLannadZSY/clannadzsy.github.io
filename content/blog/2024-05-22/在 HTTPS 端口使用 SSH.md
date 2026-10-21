@@ -44,6 +44,7 @@ Host
     Port 443
     User git
 ```
+
 你可以通过再次连接到 GitHub.com 来测试这是否有效：
 
 ```bash
@@ -58,7 +59,7 @@ $ ssh -T git@
 > The authenticity of host '[ssh.github.com]:443 ([140.82.112.36]:443)' can't be established.
 > ED25519 key fingerprint is SHA256:+DiY3wvvV6TuJJhbpZisF/zLDA0zPMSvHdkr4UvCOqU.
 > This host key is known by the following other names/addresses:
->     ~/.ssh/known_hosts:32: github.com
+> ~/.ssh/known_hosts:32: github.com
 > Are you sure you want to continue connecting (yes/no/[fingerprint])?
 
 假设 SSH 指纹与 GitHub 发布的指纹之一匹配，那么可以针对这个问题安全地回答“是”。 有关指纹列表，请参阅“GitHub 的 SSH 密钥指纹”。

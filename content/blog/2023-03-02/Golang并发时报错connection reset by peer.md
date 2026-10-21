@@ -20,21 +20,21 @@ url: "/blog/630506263/"
 
 增加root用户可打开的文件数的方法如下：
 
-1.  打开`/etc/security/limits.conf`文件：
-    
+1. 打开`/etc/security/limits.conf`文件：
+
     ```shell
-    $ vi /etc/security/limits.conf
+    vi /etc/security/limits.conf
     ```
-    
-2.  在文件末尾添加以下两行：
-    
+
+2. 在文件末尾添加以下两行：
+
     ```bash
     root - nofile 65535
     root - nproc 30000
     ```
-    
-3.  让配置生效：
-    
+
+3. 让配置生效：
+
     ```bash
-    $ sysctl -p
+    sysctl -p
     ```

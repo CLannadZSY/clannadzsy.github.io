@@ -12,8 +12,6 @@ url: "/blog/4217449500/"
 
 来源: [Capacity and length of a slice in Go](https://gosamples.dev/capacity-and-length/)
 
-
-
 ### 数组
 
 数组是具有**`size`**相同值的某个对象的索引集合**`type`**，声明为：
@@ -27,15 +25,11 @@ url: "/blog/4217449500/"
 - 初始化一个数组，`var name [size]type`创建一个`size`类型元素的集合，`type`每个元素都是给定的[零值](https://golang.org/ref/spec#The_zero_value)`type`。
 - 数组**按值传递**。这意味着当您将一个数组分配给另一个数组时，您将制作其内容的新副本：
 
-
-
 ### 切片
 
-**var name []type**
+#### var name []type
 
 ![去切片](https://gosamples.dev/capacity-and-length/go_slice.png)
-
-
 
 #### 切片的属性
 

@@ -11,6 +11,7 @@ url: "/blog/452409391/"
 ---
 
 1. 装饰器的一个关键特性是, 它们在被装饰函数定义之后立即运行。这通常是在导入时(即Python加载模块时)
+
 ```python
 # decorator.py
 
@@ -60,8 +61,8 @@ running f2()
 running f3()
 ```
 
+2\. 当 `decorator.py` 被导入, 而不是作为脚本运行
 
-2. 当 `decorator.py` 被导入, 而不是作为脚本运行
 ```python
 import decorator
 

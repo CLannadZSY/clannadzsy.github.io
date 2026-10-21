@@ -1,0 +1,66 @@
+# clannad.icu SEO 修复计划
+
+日期：2026-10-21。源码：`clannadzsy.github.io`。生产域名：`https://clannad.icu/`，由 GitHub Actions 构建后发布到 GitHub Pages。
+
+## 目标与范围
+
+修复全站与栏目 Sitemap 的地址格式和重复记录，补全首页的标题、主标题、描述及分享卡片。保留首页六组动漫台词、现有排版、配色和深色模式。
+
+本次保留已有文章、路径和索引设置。文章摘要、模板示例清理、工具拆页及结构化数据的其他问题列入后续 P1/P2。
+
+## 实施步骤
+
+1. 将 Sitemap 的 `loc` 和多语言链接改为完整绝对 URL，按最终 URL 去重。全站和栏目共用输出逻辑，保留排除规则、更新时间及嵌套栏目。
+2. 将首页 Title 改为“CLannadZSY｜动漫收藏、技术笔记与在线工具”，补充可见 H1 和简介，并增加博客与工具入口。
+3. 统一首页 description、Open Graph 与 Twitter 的标题和描述；使用规范绝对分享 URL，增加 1200 × 630 PNG 分享图及替代文本；省略未配置的社交账号字段。
+4. 按 GitHub Pages 的生产配置构建，检查生成的 Sitemap、首页 HTML、分享图和其他页面的回归情况。
+5. 完成本地验收后形成可审阅的代码变更。推送后由现有 GitHub Actions 发布；发布后复查线上文件，并在 Search Console 重新提交 Sitemap。
+
+## 验收标准
+
+- 所有生成的 Sitemap XML 均可解析，`loc` 和多语言链接使用完整绝对地址。
+- 每个 Sitemap 内无重复 URL；原有有效地址和 `sitemap_exclude` 行为得到保留。
+- 首页 Title、description 和 H1 非空，且不再包含 Doks 默认介绍。
+- Open Graph 与 Twitter 标题、描述一致；分享 URL 与 canonical 一致，图片 URL 可用、图片尺寸正确。
+- 六组动漫台词仍完整显示，博客与工具入口可访问；桌面和手机宽度下无横向溢出，深色模式可读。
+- 生产构建和仓库规定检查通过；对既有错误单独记录，避免误报为本次引入。
+
+## 回退方式
+
+按本次变更文件恢复上一版本后重新构建和发布，无需迁移文章 URL。
+
+## 后续修复计划
+
+| 阶段 | 任务 | 验收方式 |
+| --- | --- | --- |
+| P1 已完成 | 处理现有文章的 Markdown 格式错误，恢复 GitHub Actions 的 `npm test` 检查 | 不绕过检查，完整 `npm test` 已通过 |
+| P1 | 为重点技术文章填写独立摘要，修正 SSH、Python、MySQL 等文章的残缺示例，补充适用环境 | 重点页面摘要各不相同，示例经实际验证 |
+| P1 | 清理确无保留价值的 Doks 示例文档和示例作者页 | Sitemap 与导航只保留目标内容；保留供阅读的示例使用 noindex |
+| P1 | 为 JSON、cURL 转 requests、时间戳工具建立独立页面并补充说明、示例和文章内链 | 每个工具有独立 URL、Title、H1 和有效输入输出示例 |
+| P2 | 修正文章日期、面包屑和作者结构化数据，以及中文页语言声明 | Rich Results Test 与生成 HTML 检查通过 |
+| P2 | 检查 www 证书和跳转，优化图片及广告占位、脚本加载 | 域名访问和跳转正常；移动端实测 LCP、INP、CLS |
+| 持续 | 用 Search Console 验证索引状态和实际搜索需求，再扩展技术或动漫专题 | 对比页面和查询的展示、点击、CTR、排名及索引状态 |
+
+## 本次执行结果
+
+已完成 P0 源码修改和本地验收，并清除了 Markdown 检查阻碍。下述为本次提交前的验收记录；推送后由现有 GitHub Actions 部署，线上状态以工作流和实际响应为准。
+
+- 根 Sitemap：原 45 条记录，修复后 44 条绝对地址、无重复；与原先的 44 个有效地址集合完全相同。
+- 共检查 5 份 Sitemap、87 条记录，XML 可解析，页面存在，canonical 与 Sitemap 一致。
+- 首页 Title、H1、description、Open Graph、Twitter 卡片及 1200 × 630 PNG 分享图检查通过。
+- 六组动漫内容和原有布局保留；1440 像素桌面、390 像素手机及手机深色模式检查通过，无横向溢出、无本地资源缺失。
+- 博客、工具和分享图片在本地生产产物预览中均可访问。
+- 完整 `npm run build` 通过；本机使用临时无空格路径，并仅在构建进程启用 `NODE_OPTIONS=--openssl-legacy-provider`，兼容旧版 Hugo/PostCSS 和 Webpack。依赖及锁文件未改动。
+- 两个 SEO 验收脚本、改动 Markdown 的格式检查、工作流 YAML 解析及 `git diff --check` 均通过。
+- 已将 SEO 输出检查加入 GitHub Pages 工作流的构建后步骤。
+
+已修复 27 份历史文章中的 645 处 Markdownlint 问题，完整 `npm test` 通过。修改仅涉及空白、标题层级、列表和代码围栏等格式，并为两张现有图片补充替代文本；文章文字、链接、元数据及代码逻辑保留。制表符按 4 列展开，保持原代码缩进结构；没有关闭检查规则。
+
+`lint:markdown` 的通配符已加引号，确保 Windows 与 GitHub Linux runner 检查相同的全部文章。两个工作流引用的 SEO 验收脚本及多语言 Sitemap fixture 测试会随本次修复一起提交。
+
+复核命令（生产构建完成后）：
+
+```sh
+python3 tests/seo-sitemap.py public --base-url https://clannad.icu/
+python3 tests/seo-homepage.py public --base-url https://clannad.icu/
+```

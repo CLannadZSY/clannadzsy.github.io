@@ -10,7 +10,7 @@ contributors: [clannadzsy]
 url: "/blog/2243409341/" 
 ---
 
- 
+
 
 ### Hugo 添加评论功能
 
@@ -32,7 +32,7 @@ url: "/blog/2243409341/"
        </article>
      </div>
    </div>
-   
+
    <!-- 添加评论 -->
    {{ if .Site.Params.utteranc.enable }}
    <script src="https://utteranc.es/client.js"
@@ -43,7 +43,7 @@ url: "/blog/2243409341/"
            async>
    </script>
    {{ end }}
-   
+
    {{ end }}
    ```
 
@@ -57,11 +57,3 @@ url: "/blog/2243409341/"
      issueTerm = "title"
      theme = "github-light"
    ```
-
-   
-
-
-
-
-
-

@@ -58,6 +58,7 @@ def wind_mouse(start_x, start_y, dest_x, dest_y, G_0=9, W_0=3, M_0=15, D_0=12, m
 ```
 
 ### Example
+
 ```python
 import matplotlib.pyplot as plt
 
@@ -72,10 +73,10 @@ plt.xlim(-50,550)
 plt.ylim(-250,250)
 ```
 
-![](./img/wind_mouse_examples.png)
+![WindMouse 示例轨迹](./img/wind_mouse_examples.png)
 
 WindMouse 示例可以与本文前面的人类示例进行比较。 正如您所看到的，这些相对有说服力，而且看起来并不是特别机器生成的。 这里使用了 WindMouse 的默认参数，同样，这些参数不一定适合每个用例，并且可以针对特定用例进行调整以获得不同的结果。 例如，将风参数设置为等于重力参数将生成更多的漫步路径。
 
-![](./img/wind_mouse_high_wind_examples.png)
+![WindMouse 示例轨迹对比](./img/wind_mouse_high_wind_examples.png)
 
 ## 转载: [WindMouse](https://ben.land/post/2021/04/25/windmouse-human-mouse-movement/)

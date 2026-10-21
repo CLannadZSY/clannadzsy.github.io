@@ -12,11 +12,11 @@ url: "blog/2726440838/"
 
 ### 使用 Hugo + Github + Doks 搭建个人网站
 
-##### 1. 安装 [Hugo](https://gohugo.io/getting-started/installing/), 参阅官方文档
+#### 1. 安装 [Hugo](https://gohugo.io/getting-started/installing/), 参阅官方文档
 
-##### 2. 选择合适的[主题](https://themes.gohugo.io/)
+#### 2. 选择合适的[主题](https://themes.gohugo.io/)
 
-##### 3. 安装主题,二选一即可
+#### 3. 安装主题,二选一即可
 
 1. Hugo网站的Doks主题: [Huog-Doks-Theme](https://themes.gohugo.io/doks/)
 
@@ -43,9 +43,9 @@ url: "blog/2726440838/"
    npm run start
    ```
 
-##### 4. 参照所选主题的文档, 自定义修改样式
+#### 4. 参照所选主题的文档, 自定义修改样式
 
-##### 5. 以 Doks 为例
+#### 5. 以 Doks 为例
 
 1. 添加 `blog` 文章
 
@@ -123,7 +123,8 @@ url: "blog/2726440838/"
           ```
 
 5. 打开 `https://{username}.github.io` 尽情欣赏吧
-##### 6. 个人修改项, 仅供参考
+
+#### 6. 个人修改项, 仅供参考
 
 1. 修改博客默认生成的模板, `archetypes/blog.md`
 
@@ -140,7 +141,8 @@ url: "blog/2726440838/"
    contributors: [作者名字]
    ---
    ```
-##### 7. 问题记录
+
+#### 7. 问题记录
 
 1. ```bash
    # rimraf not found
@@ -153,6 +155,3 @@ url: "blog/2726440838/"
    npm install autoprefixer
    npm audit fix
    ```
-
-
-

@@ -13,6 +13,7 @@ url: "/blog/3380200713/"
 
 
 在 `Scrapy.Spider` 中的使用
+
 ```python
 from scrapy import Request, Spider, signals
 from scrapy.exceptions import DontCloseSpider
@@ -48,7 +49,9 @@ class TestSpider(Spider):
         return spider
 
 ```
+
 输出日志
+
 ```bash
 
 [scrapy.core.engine] INFO: Spider opened
@@ -67,8 +70,8 @@ class TestSpider(Spider):
 [test] INFO: spider idled.
 ```
 
-
 在 `RedisSpider` 中使用
+
 ```python
 import time
 import scrapy

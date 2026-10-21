@@ -13,7 +13,7 @@ url: "/blog/3262080571/"
 
 1. 关闭 wsl
 
-   ```bash	
+   ```bash
    wsl --shutdown
    ```
 
@@ -22,7 +22,7 @@ url: "/blog/3262080571/"
    ```bash
    wsl -l -v
      NAME            STATE           VERSION
-   * Debian    	  Running         2
+   * Debian          Running         2
    ```
 
 3. 导出
@@ -48,5 +48,3 @@ url: "/blog/3262080571/"
    ```bash
    Debian config --default-user <用户名>
    ```
-
-   

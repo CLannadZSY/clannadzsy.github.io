@@ -17,11 +17,13 @@ url: "/blog/3640029440/"
 首先需要将证书生成在本地电脑上，可使用cer或pem格式。然后通过openssl计算证书hash值：
 
 ### cer格式证书
+
 ```bash
 openssl x509 -inform DER -subject_hash_old -in <证书文件.cer>
 ```
 
 ### pem格式证书
+
 ```bash
 openssl x509 -inform PEM -subject_hash_old -in  <证书文件.pem>
 ```
@@ -29,11 +31,13 @@ openssl x509 -inform PEM -subject_hash_old -in  <证书文件.pem>
 然后生成系统预设格式的证书文件（记得加上".0"），如果hash值一样，则另一个设置成.1：
 
 ### cer格式
+
 ```bash
 openssl x509 -inform DER -text -in xxx.cer > hash值.0
 ```
 
 ### pem格式
+
 ```bash
 openssl x509 -inform PEM -text -in xxx.pem > hash值.0
 ```
@@ -44,6 +48,7 @@ openssl x509 -inform PEM -text -in xxx.pem > hash值.0
 
 1. 手机连接电脑，使用adb命令将手机连接到电脑。
 2. 禁用系统验证：
+
     ```bash
     adb root
     adb disable-verity
@@ -51,49 +56,67 @@ openssl x509 -inform PEM -text -in xxx.pem > hash值.0
     adb root
     adb remount
     ```
+
 3. 将证书文件push到手机：
+
     ```bash
     adb push <证书文件hash.0> /system/etc/security/cacerts/
     ```
+
 4. 重启手机。
 
 如果在adb disable-verity这步出现失败，则需要进行提权：
 
 1. 进入adb shell：
+
     ```bash
     adb shell
     ```
+
 2. 切换为root用户：
+
     ```bash
     su
     ```
+
 3. 修改/system分区为可读写模式：
+
     ```bash
     mount -o rw,remount /system
     ```
+
 4. 进入证书目录：
+
     ```bash
     cd /system/etc/security/cacerts/
     ```
+
 5. 将分区改为可读写模式：
+
     ```bash
     mount -o rw,remount /
     ```
+
 6. 修改证书文件：
+
     ```bash
     vi <证书文件hash.0>
     ```
+
     将证书内容的`-----BEGIN CERTIFICATE-----`和`-----END CERTIFICATE-----`段落从文件末尾移动到文件开头，然后保存退出。
 7. 退出adb shell：
+
     ```bash
     exit
     ```
+
 8. 重新执行第3步及以后的步骤。
 
 ## 修改抓包软件设置
 
 如果在使用Charles进行HTTPS抓包时，发现证书无法生效，需要手动修改.0和.1文件，将证书内容的
-`
+
+```text
 -----BEGIN CERTIFICATE-----
 .
 .
@@ -102,11 +125,10 @@ openssl x509 -inform PEM -text -in xxx.pem > hash值.0
 .
 .
 -----END CERTIFICATE-----
-`
+```
 
 段落从文件末尾移动到文件开头。
 通过以上操作，就可以在Android 7及以上版本中使用抓包软件进行HTTPS抓包了。
-
 
 ## 参考链接
 

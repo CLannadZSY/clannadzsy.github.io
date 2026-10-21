@@ -14,7 +14,7 @@ url: "/blog/1745614505/"
 
     ```python
     def multipliers():
-	    return [lambda x: i * x for i in range(4)]
+        return [lambda x: i * x for i in range(4)]
 
     print([m(2) for m in multipliers()])
     ```
@@ -30,53 +30,49 @@ url: "/blog/1745614505/"
     ```python
     # 创建一个闭包，通过使用默认参数立即绑定它的参数
     def multipliers():
-	    return [lambda x, i=i : i * x for i in range(4)]
+        return [lambda x, i=i : i * x for i in range(4)]
 
     # 或者使用 functools.partial 函数
     from functools import partial
     from operator import mul
 
     def multipliers():
-	    return [partial(mul, i) for i in range(4)]
+        return [partial(mul, i) for i in range(4)]
     ```
 
-
-2.  默认参数值是可变的
+2. 默认参数值是可变的
 
     ```python
     def extendList(val, list_val=[]):
-	    list_val.append(val)
+        list_val.append(val)
     return list_val
-    
+
     list1 = extendList(10)
     list2 = extendList(123, [])
     list3 = extendList('a')
-    
+
     print("list1 = %s" % list1)
     print("list2 = %s" % list2)
     print("list3 = %s" % list3)
-    
+
     # 输出结果
     # list1 = [10, 'a']
     # list2 = [123]
     # list3 = [10, 'a']
     ```
-    
+
     新的默认列表仅仅只在函数被定义时创建一次。随后当 extendList 没有被指定的列表参数调用的时候，其使用的是同一个列表。这就是为什么当函数被定义的时候，表达式是用默认参数被计算，而不是它被调用的时候。
-    
+
     ```python
     # 修改如下
     def extendList(val, list_val=None):
         if list_val is None:
-    		list_val = []
+            list_val = []
         list_val.append(val)
-    	return list_val
-    
+        return list_val
+
     # 输出结果
     # list1 = [10]
     # list2 = [123]
     # list3 = ['a']
     ```
-
-   
-

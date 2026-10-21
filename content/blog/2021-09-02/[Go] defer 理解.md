@@ -17,8 +17,6 @@ defer 语句并不会马上执行，而是会进入一个栈，函数 return 前
 
 **先进后出的原因是后面定义的函数可能会依赖前面的资源，自然要先执行；否则，如果前面先执行，那后面函数的依赖就没有了**。
 
-
-
 #### 踩坑点
 
 使用 defer 最容易采坑的地方是和**带命名返回参数的函数**一起使用时。
@@ -27,8 +25,6 @@ defer 语句定义时, 对外部变量的引用有两种方式
 
 1. `函数参数`: 在 defer 定义时就把值传递给 defer, 并缓存起来
 2. `闭包引用`: 在 defer 函数被取出调用时根据整个上下文确定当前值
-
-
 
 #### 理解 `return` 语句
 
@@ -47,8 +43,6 @@ deferFunc
 return
 ```
 
-
-
 #### 实践检验
 
 ```go
@@ -57,76 +51,75 @@ package main
 import "fmt"
 
 func f1() (r int) {
-	defer func() {
-		r++
-	}()
-	return 0
+    defer func() {
+        r++
+    }()
+    return 0
 }
 
 // 拆分 f1
 //func f1() (r int) {
 //
-//	// 1.赋值
-//	r = 0
+//  // 1.赋值
+//  r = 0
 //
-//	// 2.闭包引用，返回值被修改
-//	defer func() {
-//		r++
-//	}()
+//  // 2.闭包引用，返回值被修改
+//  defer func() {
+//      r++
+//  }()
 //
-//	// 3.return
-//	return
+//  // 3.return
+//  return
 //}
 
 func f2() (r int) {
-	t := 1
-	defer func() {
-		t++
-	}()
-	return t
+    t := 1
+    defer func() {
+        t++
+    }()
+    return t
 }
 
 // 拆分 f2
 //func f2() (r int) {
-//	t := 1
-//	// 1.赋值
-//	r = t
+//  t := 1
+//  // 1.赋值
+//  r = t
 //
-//	// 2.闭包引用，但是没有修改返回值 r
-//	defer func() {
-//		t++
-//	}()
+//  // 2.闭包引用，但是没有修改返回值 r
+//  defer func() {
+//      t++
+//  }()
 //
-//	// 3.return
-//	return
+//  // 3.return
+//  return
 //}
 
 func f3() (r int) {
-	defer func(r int) {
-		r++
-	}(r)
-	return 1
+    defer func(r int) {
+        r++
+    }(r)
+    return 1
 }
 
 // 拆分 f3
 //func f3() (r int) {
 //
-//	// 1.赋值
-//	r = 1
+//  // 1.赋值
+//  r = 1
 //
-//	// 2.r 作为函数参数，不会修改要返回的那个 r 值
-//	defer func(r int) {
-//		r++
-//	}(r)
+//  // 2.r 作为函数参数，不会修改要返回的那个 r 值
+//  defer func(r int) {
+//      r++
+//  }(r)
 //
-//	// 3.return
-//	return
+//  // 3.return
+//  return
 //}
 
 func main() {
-	fmt.Println(f1())
-	fmt.Println(f2())
-	fmt.Println(f3())
+    fmt.Println(f1())
+    fmt.Println(f2())
+    fmt.Println(f3())
 }
 ```
-
