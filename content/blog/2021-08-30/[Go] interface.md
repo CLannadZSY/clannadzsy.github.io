@@ -12,7 +12,9 @@ url: "/blog/4229706688/"
 
 #### interface类型
 
-interface类型定义了一组方法，如果某个对象实现了某个接口的所有方法，则此对象就实现了此接口
+本文使用普通方法接口，示例只依赖标准库。各个完整 `package main` 程序分别保存为 `main.go` 后执行 `go run main.go`；接口嵌入末尾的类型定义是局部片段，不能单独运行。已在 Go 1.23.3、Windows/amd64 验证。
+
+interface 类型定义了一组方法，某个类型的方法集满足接口要求时就实现该接口。`T` 与 `*T` 的方法集不同：本节接收者使用指针，因此示例通过 `*Student`、`*Employee` 赋给接口，不能由可寻址值能直接调用方法推断该值类型满足接口。
 
 ```go
 package main
@@ -77,6 +79,13 @@ type Jerry interface {
     SayHi()
     Sing(song string)
     SpendSalary(amount float32)
+}
+
+func main() {
+    var person Men = &Student{Human: Human{name: "Mike", phone: "222-222-XXX"}}
+    person.SayHi()
+    person.Sing("November rain")
+    person.Guzzle("one glass")
 }
 ```
 
@@ -213,7 +222,7 @@ func main() {
                 case Person:
                     fmt.Printf("list[%d] is a Person and its value is %s\n", index, value)
                 default:
-                    fmt.Println("list[%d] is of a different type", index)
+                    fmt.Printf("list[%d] is of a different type\n", index)
             }
         }
     }
@@ -225,13 +234,13 @@ func main() {
 
 ```go
 type Interface interface {
-    sort.Interface //嵌入字段sort.Interface
+    sort.Interface // 嵌入接口的方法集
     Push(x interface{}) //a Push method to push elements into the heap
     Pop() interface{} //a Pop elements that pops elements from the heap
 }
 ```
 
-我们看到sort.Interface其实就是嵌入字段，把sort.Interface的所有method给隐式的包含进来了。也就是下面三个方法：
+嵌入 `sort.Interface` 会包含它的方法集，不是结构体中的嵌入字段；调用者仍需实现 `Len`、`Less`、`Swap` 三个方法：
 
 ```go
 type Interface interface {
@@ -254,3 +263,5 @@ type ReadWriter interface {
     Writer
 }
 ```
+
+验证：四个完整程序分别应输出问候语、不同具体类型的方法调用、`Human.String()` 格式化结果和列表的类型判断结果；可另运行 `go vet main.go` 检查格式化参数。方法集和接口嵌入规则见 [Go 语言规范](https://go.dev/ref/spec#Method_sets)。

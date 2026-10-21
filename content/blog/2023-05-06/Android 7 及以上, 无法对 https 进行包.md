@@ -10,127 +10,81 @@ contributors: [clannadzsy]
 url: "/blog/3640029440/"
 ---
 
-在Android 7及以上版本中，由于系统对证书的限制，使用抓包软件（如Fiddler、Charles）进行HTTPS抓包会遇到困难。下面介绍一种解决方案。
+Android 7.0+ 上，`targetSdkVersion` 为 24 及以上的应用默认只信任系统 CA，不再默认信任用户安装的 CA；旧 target 的默认策略不同，应用也可以自行配置。因而把 Charles、Fiddler 的 CA 装入“用户证书”后，部分应用仍会拒绝 HTTPS 连接。规则见 [Android 官方 Network Security Configuration](https://developer.android.com/privacy-and-security/security-config)。
 
-## 生成证书
+本文保留系统 CA 的处理思路，只适用于自己控制的可 root 测试镜像；普通量产设备不保证支持 `adb root`。Android 14 起信任库还涉及 Conscrypt APEX，不能把向旧系统目录复制文件的步骤推广到所有 Android 版本。安装 CA 也不保证绕过应用或网络库自行实现的 TLS pinning。
 
-首先需要将证书生成在本地电脑上，可使用cer或pem格式。然后通过openssl计算证书hash值：
+## 导出并转换代理 CA
 
-### cer格式证书
+从实际使用的抓包代理导出其 CA 证书。`.cer` 后缀并不能证明内容是 DER，要按文件实际格式选择下面一组命令；两组是替代方案。本次仅在 Windows、OpenSSL 1.1.1l 验证格式转换，不是建议继续使用这个旧版本部署生产服务。
 
-```bash
-openssl x509 -inform DER -subject_hash_old -in <证书文件.cer>
-```
-
-### pem格式证书
+### DER 格式证书
 
 ```bash
-openssl x509 -inform PEM -subject_hash_old -in  <证书文件.pem>
+openssl x509 -inform DER -in proxy-ca.cer -subject_hash_old -noout
+openssl x509 -inform DER -in proxy-ca.cer -outform PEM -out hash.0
 ```
 
-然后生成系统预设格式的证书文件（记得加上".0"），如果hash值一样，则另一个设置成.1：
-
-### cer格式
+### PEM 格式证书
 
 ```bash
-openssl x509 -inform DER -text -in xxx.cer > hash值.0
+openssl x509 -inform PEM -in proxy-ca.pem -subject_hash_old -noout
+openssl x509 -inform PEM -in proxy-ca.pem -outform PEM -out hash.0
 ```
 
-### pem格式
+把文件名中的 `hash` 换成第一条命令输出的八位哈希值。例如输出 `abcd1234` 时，文件名为 `abcd1234.0`；如果目标目录存在同名文件，先比较证书，不要直接覆盖，不同证书发生名称冲突时需按该信任库规则使用后续序号。
+
+输出应是纯 PEM，不加 `-text`，也不需要手工移动证书文本。可在本地检查其信息：
 
 ```bash
-openssl x509 -inform PEM -text -in xxx.pem > hash值.0
+openssl x509 -inform PEM -in hash.0 -noout -subject -issuer -fingerprint -sha256
 ```
 
-## 安装证书
+确认代理导出的证书与转换后的 SHA-256 指纹相同。`subject_hash_old` 是用于命名的旧 subject 哈希，不是证书的安全指纹。参数说明见 [OpenSSL x509 文档](https://docs.openssl.org/1.1.1/man1/x509/)。
 
-将证书安装到系统中：
+## 旧系统目录：仅限已确认可写的测试镜像
 
-1. 手机连接电脑，使用adb命令将手机连接到电脑。
-2. 禁用系统验证：
+在一些较旧的可 root 测试镜像中，系统 CA 位于 `/system/etc/security/cacerts/`。下面是该前提成立时的操作示意，执行前需自行核对镜像版本、目录及同名文件；不是普通手机的通用步骤：
 
-    ```bash
-    adb root
-    adb disable-verity
-    adb reboot
-    adb root
-    adb remount
-    ```
-
-3. 将证书文件push到手机：
-
-    ```bash
-    adb push <证书文件hash.0> /system/etc/security/cacerts/
-    ```
-
-4. 重启手机。
-
-如果在adb disable-verity这步出现失败，则需要进行提权：
-
-1. 进入adb shell：
-
-    ```bash
-    adb shell
-    ```
-
-2. 切换为root用户：
-
-    ```bash
-    su
-    ```
-
-3. 修改/system分区为可读写模式：
-
-    ```bash
-    mount -o rw,remount /system
-    ```
-
-4. 进入证书目录：
-
-    ```bash
-    cd /system/etc/security/cacerts/
-    ```
-
-5. 将分区改为可读写模式：
-
-    ```bash
-    mount -o rw,remount /
-    ```
-
-6. 修改证书文件：
-
-    ```bash
-    vi <证书文件hash.0>
-    ```
-
-    将证书内容的`-----BEGIN CERTIFICATE-----`和`-----END CERTIFICATE-----`段落从文件末尾移动到文件开头，然后保存退出。
-7. 退出adb shell：
-
-    ```bash
-    exit
-    ```
-
-8. 重新执行第3步及以后的步骤。
-
-## 修改抓包软件设置
-
-如果在使用Charles进行HTTPS抓包时，发现证书无法生效，需要手动修改.0和.1文件，将证书内容的
-
-```text
------BEGIN CERTIFICATE-----
-.
-.
-.
-.
-.
-.
------END CERTIFICATE-----
+```bash
+adb root
+adb remount
+adb push hash.0 /system/etc/security/cacerts/hash.0
+adb shell chown root:root /system/etc/security/cacerts/hash.0
+adb shell chmod 0644 /system/etc/security/cacerts/hash.0
+adb reboot
 ```
 
-段落从文件末尾移动到文件开头。
-通过以上操作，就可以在Android 7及以上版本中使用抓包软件进行HTTPS抓包了。
+这些设备命令未在本次环境执行。若镜像不支持 root、remount 或目录不可写，应停止并查该镜像的说明；不能假设执行 `su` 或随意禁用验证就会成功。新镜像的分区、SELinux 与信任库实现也可能要求不同的安装方式。
 
-## 参考链接
+[Android 官方 Conscrypt 说明](https://source.android.com/docs/core/ota/modular-system/conscrypt)指出 Android 14 起根信任证书同时存于 Conscrypt APEX 和系统分区，因此仅修改旧路径不构成已验证的 Android 14+ 方案。测试结束后应按测试镜像的恢复方式撤销更改。
 
-- [Stack Overflow: adb-remount-permission-denied-but-able-to-access-super-user-in-shell-android](https://stackoverflow.com/questions/13089694/adb-remount-permission-denied-but-able-to-access-super-user-in-shell-android)
-- [Stack Overflow: adb-remount-fails-mount-system-not-in-proc-mounts](https://stackoverflow.com/questions/55030788/adb-remount-fails-mount-system-not-in-proc-mounts)
+## 自有应用可以使用仅调试生效的信任配置
+
+能修改自己 APK 时，可在 debug 变体中声明代理 CA，避免依赖系统目录。把纯 PEM 证书放到 `src/debug/res/raw/proxy_ca.pem`，在 `src/debug/res/xml/debug_network_security_config.xml` 写入：
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="@raw/proxy_ca" />
+        </trust-anchors>
+    </debug-overrides>
+</network-security-config>
+```
+
+在 `src/debug/AndroidManifest.xml` 中引用它；已有网络配置时需结合项目合并，不要覆盖正式版本的配置：
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application android:networkSecurityConfig="@xml/debug_network_security_config" />
+</manifest>
+```
+
+`debug-overrides` 仅在应用 `android:debuggable` 为 true 时生效，通常由 debug 构建设置。平台网络安全配置会对使用这些调试信任锚的证书链按其调试规则处理 pinning；这不等同于能绕过任意应用自定义的校验。这里仅静态解析了 XML，未构建 APK、安装证书或在 Android 设备上验证。
+
+## 抓包验证
+
+在 Charles 或 Fiddler 中启用目标域名的 HTTPS/SSL Proxying，确认应用实际经过该代理，并检查握手错误、证书链与目标域名是否匹配。若仍失败，应区分代理连通性、应用信任配置和自定义证书校验，而不是继续手工改写 PEM 文件内容。本次只验证了临时 CA 的 DER/PEM 转换、哈希及证书往返一致性。

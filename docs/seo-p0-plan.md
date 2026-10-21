@@ -35,7 +35,7 @@
 | --- | --- | --- |
 | P1 已完成 | 处理现有文章的 Markdown 格式错误，恢复 GitHub Actions 的 `npm test` 检查 | 不绕过检查，完整 `npm test` 已通过 |
 | P1 摘要已完成 | 为全部 29 个独立博客页面填写准确摘要，并同步 HTML、Open Graph、Twitter 与 Article 描述 | 摘要非空且各不相同，元信息一致；正文与渲染后的文章区域不变 |
-| P1 | 修正 SSH、Python、MySQL 等文章的残缺示例，补充适用环境 | 示例经实际验证 |
+| P1 文章示例已完成 | 修正 SSH、Python、MySQL、Go 等文章的残缺示例，补充适用环境与验证方法 | 可运行示例实际验证；系统及设备步骤明确验证边界；部署前执行 Python/Go 回归 |
 | P1 示例清理已完成 | 移除 9 个 Doks 示例文档及栏目页、Henk 示例作者页；保留真实作者与文章 | 10 个旧 URL 不再生成，根 Sitemap 剩余 34 个有效 URL；真实作者归档和 29 篇文章保留 |
 | P1 工具拆页已完成 | 为 JSON、cURL 转 requests、时间戳工具建立独立页面，补充说明、示例和工具互链 | 三个独立 URL、Title、H1、description、可见说明与可验证示例；进入 Sitemap 和站内搜索 |
 | P2 | 修正文章日期、面包屑和作者结构化数据，以及中文页语言声明 | Rich Results Test 与生成 HTML 检查通过 |
@@ -118,3 +118,29 @@ node tests/loose-json.mjs
 node tests/curl-to-requests.mjs
 node tests/timestamp-converter.mjs
 ```
+
+## 文章示例修复记录
+
+2026-10-22 修订 26 篇技术文章，保留原主题、文章地址、标题、日期、作者和图片。补齐 SSH 主机名、配置和认证验证；按“空表 DISCARD、复制、IMPORT”的顺序重写 MySQL 8.0 表空间恢复示例；修正 Python 的导入、缩进、输出和参数示例，以及 Go 的格式化、切片、通道和条件变量示例。Scrapy、WindMouse、历史 JavaScript 分析、Shadow DOM、Android 证书、WSL 和 Hugo 建站文章补充依赖、操作环境及验证步骤。
+
+WSL 改为先异名导入并验证恢复结果，最后才可选注销原实例；Go 网络错误文章区分连接重置与文件描述符耗尽。这两篇的 description 随准确性修订更新，其余文章元数据保持不变。29 篇独立博客的摘要仍各不相同，HTML、Open Graph、Twitter 和 Article 描述一致。
+
+提交前的验证结果：
+
+- Python 7 篇文章的 24 个代码块均可编译，22 个独立执行进程通过；Go 9 篇文章共验证 28 个案例，包含声明片段编译及明确预期的错误，并额外执行 60 次有限的条件变量调度。
+- Scrapy 使用本地响应、模拟 Redis 与时钟验证队列和关闭条件；WindMouse 使用固定随机种子验证路径；历史 JavaScript 示例仅做离线复现，不调用第三方业务接口。
+- Windows MySQL 8.0.44 独立实例验证了普通演练表带 `.cfg` 与不带 `.cfg` 的恢复，核对数据、恢复后写入和逻辑导出均通过，测试实例已停止。不将正常文件演练描述为损坏磁盘恢复保证。
+- Windows OpenSSH 9.5p2 使用独立配置及官方指纹严格校验，通过 GitHub 443 端口认证并读取本站仓库 HEAD，未改动已有 SSH 配置。
+- Chrome 实测 Shadow DOM 示例；OpenSSL 核对 Android 证书转换和配置文件语法。Android 设备操作、WSL 导入/注销、Linux 文件权限命令未在本机执行，正文明确适用环境和验证边界。
+- 新增 `tests/article-examples.py`，直接从文章提取 Python/Go 示例；GitHub Actions 构建前运行，并在 Linux 上强制对两个条件变量程序执行竞态检查。本机 Go 未启用 CGO，未宣称本机通过竞态检查。
+- 完整 `npm test`、生产构建、五项 SEO 检查及六项工具函数测试通过。根 Sitemap 的 37 个 URL、三份 Sitemap 共 69 条记录及 33 个搜索地址保持不变。
+- 首页、主题和图片等 196 份受保护文件逐字节未变；首页桌面、手机及手机深色模式截图无像素差异。26 篇文章区域按预期变化，其他三个独立博客页面的文章区域保持一致。
+
+```sh
+python -m pip install -r tests/article-examples-requirements.txt
+python -B tests/article-examples.py
+# Linux CI 另启用 CGO 和竞态检查：
+CGO_ENABLED=1 python -B tests/article-examples.py --race
+```
+
+上述为提交前验证；GitHub Actions、GitHub Pages 部署状态及线上响应需在推送后单独核验。

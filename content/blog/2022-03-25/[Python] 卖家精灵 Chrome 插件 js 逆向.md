@@ -9,6 +9,11 @@ weight: 50
 contributors: [clannadzsy]
 url: "/blog/2494707647/"
 ---
+
+本文保留 2022 年对卖家精灵 Chrome 扩展 3.1.4 的分析过程。扩展 ID、截图、接口字段和版本派生常量均属于当时样本；整理后的代码只用于离线复现参数计算，不表示当前扩展、登录流程或第三方服务仍采用相同实现。文中的 `e`、`t` 是不同函数各自的局部形参，含义需要结合调用位置判断。
+
+以下 `static` 方法和接口调用是从扩展摘录的分析片段，不能单独作为脚本运行；第 6 步的三个普通函数才是可保存执行的 `sellersprite.js`。路径中的“用户名”为占位值，`B00DQFGJR4` 是当时分析用的固定 ASIN 样本，无需请求产品或私有接口即可验证计算结果。
+
 1. chrome://version, 查看 `个人资料路径`
 
    ```bash
@@ -78,7 +83,7 @@ url: "/blog/2494707647/"
 
          重点在于 `this._cal()` 方法与 `this.EXT_VERSION`参数
 
-      4. Ctrl + F 查找 this._cal() 方法, 得到了我们需要的加密方法
+      4. Ctrl + F 查找 this._cal() 方法, 得到了参数计算方法（这里不能据此将它视为安全的加密或身份认证）
 
          ```js
                          static _cal(e, t) {
@@ -102,14 +107,14 @@ url: "/blog/2494707647/"
                          }
          ```
 
-         在 static _cal(e,t) 这行下面, 添加, alert(e), alert(t), 查看 e, t 参数分别是什么
+         根据 `this._cal(n.join(""), this.EXT_VERSION)` 的调用位置，可以明确 `_cal(e, t)` 的两个参数：
 
-         ```bash
-         e: "", # 为空
-         t: B00DQFGJR4 # 为我们需要查询的 asin
+         ```text
+         e: "B00DQFGJR4"        # s2Tkk 汇总后的 ASIN 字符串
+         t: "300104.1364508470" # 下文 3.1.4 样本派生的 EXT_VERSION
          ```
 
-         进一步进行的确认参数位置, 到这里需要的参数就分析完成了
+         原先调用 `s2Tkk('', 'B00DQFGJR4')` 时的空值会被过滤，不能把那里的第一个空参数误认为 `_cal` 的输入。
 
       5. 同理可查找到, this.EXT_VERSION 参数
 
@@ -119,15 +124,15 @@ url: "/blog/2494707647/"
                          }
          ```
 
-         其中 `a.a.version()` 经过分析可以知道为, 卖家精灵的版本号: 3.1.4, 版本号会随时间而更新, 请注意
+         其中 `a.a.version()` 在当时样本中为扩展版本号 `3.1.4`，经这里的替换得到 `300104.1364508470`。这是历史样本常量；新版实现需要重新分析，不能保证只改版本号就能适配。
 
       6. 将上面的 js 代码整理一下, 如下
 
          ```js
          function extVersion() {
              // 就是插件的版本, 替换了 . 再拼接了一个字符串而成
-             // 如果插件更新了版本, 手动更新一下插件的版本号即可
-             chrome_ext_version = '3.1.4' //300104.1364508470
+             // 固定 2022 年样本，不代表当前扩展实现
+             const chrome_ext_version = '3.1.4' //300104.1364508470
              return chrome_ext_version.replace(/\./, "00").replace(/\./g, "0") + ".1364508470"
 
          }
@@ -167,25 +172,33 @@ url: "/blog/2494707647/"
          }
          ```
 
-      7. 使用 Python 进行调用
+      7. 使用 Python 进行离线调用
+
+         本次在 Python 3.12.14、Node.js 24.21.0、PyExecJS 1.5.1 下验证。先确保 `node --version` 可运行，再在隔离环境执行 `python -m pip install "PyExecJS==1.5.1"`。这里保留原文的调用方式；[PyExecJS 已停止维护](https://pypi.org/project/PyExecJS/)，不应将其作为持续维护的依赖推荐。
+
+         将第 6 步保存为 `sellersprite.js`，下面保存为同目录下的 `verify_sellersprite.py`，运行 `python verify_sellersprite.py`。它只在本机执行 JavaScript，不联网。
 
          ```python
+         from pathlib import Path
+
          import execjs
 
-         node = execjs.get()
-         file = './sellersprite.js'
-         ctx = node.compile(open(file, 'r', encoding='utf8').read())
+         node = execjs.get('Node')
+         file = Path(__file__).with_name('sellersprite.js')
+         ctx = node.compile(file.read_text(encoding='utf-8'))
 
-         # 数据源的 tk
-         e = ''
-         t = 'B00DQFGJR4'
-
-         print(ctx.call('s2Tkk', e, t)) 
-         # 得到结果, 与我们抓包请求中的 tk 参数结果一致
-         # 58497.291017
+         asin = 'B00DQFGJR4'
+         token = ctx.call('s2Tkk', asin)
+         assert ctx.call('extVersion') == '300104.1364508470'
+         assert ctx.call('s2Tkk', '', asin) == token
+         assert ctx.call('s2Tkk') == ''
+         assert token == '58497.291017'
+         print(token)  # 固定 3.1.4 样本的离线计算值
          ```
 
-      8. 插件登录过程中的参数, 也是同理, 大家可以自行实践
+         这个结果复现了文中样本的参数计算，没有验证真实服务是否接受该值。扩展权限、登录凭据、网络接口和新版算法均不在本次验证范围。
+
+      8. 当时对插件登录参数也采用了类似的定位方法，下图仅保留为历史分析记录；这里未提供或验证可运行的登录流程。
 
          如需要帮助, 可以通过 [Github](https://github.com/CLannadZSY) 联系我
 

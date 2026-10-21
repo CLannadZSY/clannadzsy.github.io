@@ -1,0 +1,2 @@
+# The seven Python articles use the standard library plus this bounded scheduler demo.
+schedule==1.2.2

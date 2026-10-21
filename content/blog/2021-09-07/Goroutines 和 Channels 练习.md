@@ -10,6 +10,8 @@ contributors: [clannadzsy]
 url: "/blog/1624364114/"
 ---
 
+适用环境：各个 `package main` 代码块是独立程序，分别保存为 `main.go`，在 Go 1.23.3、Windows/amd64 运行 `go run main.go` 验证。所有示例均有结束条件；除明确给出的数值集合外，不保证 goroutine 间的输出顺序。
+
 1. 查找奇数和偶数
 
    ```go
@@ -20,13 +22,23 @@ url: "/blog/1624364114/"
    */
    package main
 
+   import "sync"
+
    func main() {
        nums := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 0}
        chOdd := make(chan int)
        chEven := make(chan int)
+       var wg sync.WaitGroup
 
-       go odd(chOdd)
-       go even(chEven)
+       wg.Add(2)
+       go func() {
+           defer wg.Done()
+           odd(chOdd)
+       }()
+       go func() {
+           defer wg.Done()
+           even(chEven)
+       }()
 
        for _, v := range nums {
            if v%2 == 0 {
@@ -35,6 +47,9 @@ url: "/blog/1624364114/"
                chOdd <- v
            }
        }
+       close(chOdd)
+       close(chEven)
+       wg.Wait()
    }
 
    func even(ch chan int) {
@@ -162,7 +177,7 @@ url: "/blog/1624364114/"
    ```go
    /*
    Goroutines 通道执行顺序
-   您正在代码中调用 go 例程，并且无法判断例程何时结束以及值将传递到缓冲通道。由于此代码是异步的，因此每当例程完成时，它都会将数据写入通道并在另一端读取。在上面的示例中，您只调用了两个 go 例程，因此行为是确定的，并且在大多数情况下会以某种方式生成相同的输出，但是当您增加 go 例程时，输出将不相同并且顺序将不同，除非您使它是同步的。
+   本例创建四个 goroutine，使用无缓冲通道返回四组求和结果。收到的顺序由调度决定，即使只有两个 goroutine 也不保证固定顺序。结果集合是 80、268、112、296；接收完成后由接收方关闭通道在这里是安全的，因为发送次数已知且全部完成。
    */
    package main
 
@@ -183,7 +198,7 @@ url: "/blog/1624364114/"
        for i := 0; i < len(a); i = i + 5 {
            go sum(a[i:i+5], c)
        }
-       output := make([]int, 5)
+       output := make([]int, 4)
        for i := 0; i < 4; i++ {
            output[i] = <-c
        }
@@ -237,3 +252,5 @@ url: "/blog/1624364114/"
    ```
 
 ##### 来源: https://www.golangprograms.com/goroutines-and-channels-example.html
+
+验证要点：第 1 个程序应完整输出 10 个数后退出，关闭通道结束 `range`，`WaitGroup` 等待消费者结束；第 2、3、4 个程序分别接收 100、10、10 个值；第 5 个程序仅输出四个和而不附带多余的零；第 6 个程序的每轮 `complete` 必须位于该轮四个 worker 完成之后。`WaitGroup.Add` 在启动对应 goroutine 前调用。参考 [Go 官方 WaitGroup 文档](https://pkg.go.dev/sync@go1.23.3#WaitGroup)和[通道语义](https://go.dev/ref/spec#Channel_types)。

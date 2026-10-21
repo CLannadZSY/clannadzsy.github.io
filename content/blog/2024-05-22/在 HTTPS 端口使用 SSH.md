@@ -10,58 +10,68 @@ contributors: [clannadzsy]
 url: "/blog/532834567/"
 ---
 
-在 HTTPS 端口使用 SSH
-有时，防火墙会完全拒绝允许 SSH 连接。 如果无法选择使用具有凭据缓存的 HTTPS 克隆，可以尝试使用通过 HTTPS 端口建立的 SSH 连接克隆。 大多数防火墙规则应允许此操作，但代理服务器可能会干扰
+当网络阻断默认的 SSH 22 端口时，可以尝试 GitHub.com 提供的 443 端口 SSH 服务。这里传输的仍是 SSH 协议，使用的主机名是 `ssh.github.com`；它不是把 SSH 请求转换成 HTTPS，强制使用 HTTP 代理的网络仍可能无法连接。
 
-GitHub Enterprise Server 用户：目前不支持经 SSH 通过 HTTPS 端口访问 GitHub Enterprise Server。
+## 适用环境
 
-要测试通过 HTTPS 端口的 SSH 是否可行，请运行以下 SSH 命令：
+适用于安装了 Git 和 OpenSSH 客户端的 Linux、macOS 或 Windows，且已经把对应公钥添加到 GitHub 账户。以下命令可在终端或 PowerShell 中执行；Windows OpenSSH 的配置文件通常为 `%USERPROFILE%\.ssh\config`，Linux/macOS 为 `~/.ssh/config`。
+
+本文针对 GitHub.com。GitHub Enterprise Server，以及具有数据驻留功能的 Enterprise Cloud，不应直接套用这个入口；以 [GitHub 当前支持范围](https://docs.github.com/en/authentication/troubleshooting-ssh/using-ssh-over-the-https-port)为准。
+
+## 先测试 443 端口
 
 ```bash
-$ ssh -T -p 443 git@ssh.github.com
-> Hi USERNAME! You've successfully authenticated, but GitHub does not
-> provide shell access.
+ssh -T -p 443 git@ssh.github.com
 ```
 
-注意：端口 443 的主机名为 ssh.，而不是 ``。
+首次连接时，先把主机指纹与 [GitHub 官方指纹列表](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints)核对，再决定是否信任。不要通过关闭 `StrictHostKeyChecking` 绕过核验，也不要仅凭 IP 地址判断主机身份。
 
-如果这样有效，万事大吉！ 否则，可能需要遵循我们的故障排除指南。
+认证成功时会看到包含下列内容的提示，`USERNAME` 是实际认证的账户名：
 
-现在，若要克隆存储库，可以运行以下命令：
-
-```bash
-git clone ssh://git@ssh.:443/YOUR-USERNAME/YOUR-REPOSITORY.git
+```text
+You've successfully authenticated, but GitHub does not provide shell access.
 ```
 
-启用通过 HTTPS 的 SSH 连接
-如果你能在端口 443 上通过 SSH 连接到 git@ssh.，则可覆盖你的 SSH 设置来强制与 GitHub.com 的任何连接均通过该服务器和端口运行。
+GitHub 不提供交互式 shell，因此这个测试即使认证成功也可能返回退出码 `1`。连接超时通常需要检查网络、代理或防火墙；`Permission denied (publickey)` 则表示应检查 SSH 密钥和账户授权，不能只靠切换端口解决。
 
-要在 SSH 配置文件中设置此行为，请在 ~/.ssh/config 编辑该文件，并添加以下部分：
+## 显式使用 443 克隆
+
+将 `OWNER` 和 `REPOSITORY` 替换为实际仓库拥有者和名称：
 
 ```bash
-Host 
-    Hostname ssh.
+git clone ssh://git@ssh.github.com:443/OWNER/REPOSITORY.git
+```
+
+注意主机名必须完整写为 `ssh.github.com`，而不是 `ssh.` 或端口 443 上的 `github.com`。
+
+## 为 github.com 配置默认入口
+
+编辑已有的 SSH 配置文件，合并以下配置段；不要覆盖文件里的其他主机设置。如果已有匹配 `github.com` 的配置，应检查顺序，避免先出现的选项覆盖预期行为。
+
+```sshconfig
+Host github.com
+    HostName ssh.github.com
     Port 443
     User git
 ```
 
-你可以通过再次连接到 GitHub.com 来测试这是否有效：
+之后可以继续使用常见的 `git@github.com:OWNER/REPOSITORY.git` 地址。
+
+## 验证配置与仓库访问
+
+先检查 OpenSSH 实际解析的配置，这一步不建立网络连接：
 
 ```bash
-$ ssh -T git@
-> Hi USERNAME! You've successfully authenticated, but GitHub does not
-> provide shell access.
+ssh -G github.com
 ```
 
-更新已知主机
-在切换到端口 443 后第一次与 GitHub 交互时，你可能会收到一条警告消息，指出在 known_hosts 中找不到主机，或者该主机由其他名称找到。
+输出中应包含 `hostname ssh.github.com`、`port 443` 和 `user git`。再测试认证和仓库读取：
 
-> The authenticity of host '[ssh.github.com]:443 ([140.82.112.36]:443)' can't be established.
-> ED25519 key fingerprint is SHA256:+DiY3wvvV6TuJJhbpZisF/zLDA0zPMSvHdkr4UvCOqU.
-> This host key is known by the following other names/addresses:
-> ~/.ssh/known_hosts:32: github.com
-> Are you sure you want to continue connecting (yes/no/[fingerprint])?
+```bash
+ssh -T git@github.com
+git ls-remote git@github.com:OWNER/REPOSITORY.git HEAD
+```
 
-假设 SSH 指纹与 GitHub 发布的指纹之一匹配，那么可以针对这个问题安全地回答“是”。 有关指纹列表，请参阅“GitHub 的 SSH 密钥指纹”。
+第二条命令应返回仓库 HEAD 的提交 ID 与引用名，且无需创建本地克隆。如果 `ssh` 测试正常但 Git 仍失败，检查 Git 是否通过 `core.sshCommand`、`GIT_SSH_COMMAND` 或另一个 SSH 客户端使用了不同配置。
 
-来源: [在 HTTPS 端口使用 SSH](https://docs.github.com/zh/authentication/troubleshooting-ssh/using-ssh-over-the-https-port)
+本次维护使用 Windows OpenSSH 9.5p2 和独立测试配置，核对官方 Ed25519 指纹后启用严格主机检查，成功通过 443 端口认证，并用 `git ls-remote` 读取本站仓库的 HEAD。未修改已有 SSH 配置；这个结果不代表任意网络、代理和账户都能直接连通。

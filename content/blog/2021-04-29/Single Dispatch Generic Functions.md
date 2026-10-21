@@ -10,6 +10,10 @@ contributors: [clannadzsy]
 url: "/blog/404388560/"
 ---
 
+Environment: CPython 3.12.14, standard library only. Save the block as `htmlize_demo.py` and run `python htmlize_demo.py`; the commented output shows the expected handlers. Set element order and object representations may vary, so compare the rendered structure rather than relying on their exact printed order.
+
+[`singledispatch`](https://docs.python.org/3.12/library/functools.html#functools.singledispatch) chooses an implementation from the first argument's runtime type, not from every argument or from a sequence's item types. Type-annotation registration needs Python 3.7 or newer. The `abc.Sequence` below comes from `collections.abc`; it does not use the old `collections.Sequence` alias, which was removed in [Python 3.10](https://docs.python.org/3.10/whatsnew/3.10.html#removed).
+
 ```python
 
 """
@@ -125,4 +129,15 @@ if __name__ == '__main__':
 # 0.123456
 # <pre>0.123456 (1929/15625)</pre>
 
+```
+
+For a quick check, append the following to the same file. It verifies escaping, recursive list dispatch and the separate `bool` handler (`bool` is a subclass of `int`). The decimal/float handler deliberately uses `limit_denominator()`, so its fraction may be an approximation and need not expose the exact binary representation of a float.
+
+```python
+assert htmlize('<&>') == '<p>&lt;&amp;&gt;</p>'
+assert htmlize(True) == '<pre>True</pre>'
+assert htmlize(123) == '<pre>123 (0x7b)</pre>'
+assert htmlize(['linux', 1]) == (
+    '<ul>\n<li><p>linux</p></li>\n<li><pre>1 (0x1)</pre></li>\n</ul>'
+)
 ```

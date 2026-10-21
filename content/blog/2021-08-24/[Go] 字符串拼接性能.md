@@ -12,9 +12,21 @@ url: "/blog/3239669741/"
 
 #### 1. 字符串高效拼接
 
+适用环境：标准库基准示例在 Go 1.23.3、Windows/amd64 验证。将随机字符串、拼接函数、benchmark 和末尾的 `builderGrowConcat` 四个 Go 代码块合并保存为 `concat_test.go`。在空目录执行 `go mod init example/concat`，再运行 `go test -run '^$' -bench . -benchmem -benchtime=1x -count=1` 做一次有界检查；正式比较可增加运行次数并记录工具链及机器信息。
+
 #### 1.1 为了避免编译器的优化， 首先实现一个生成长度为 n 的随机字符串的函数。
 
 ```go
+package concat
+
+import (
+    "bytes"
+    "fmt"
+    "math/rand"
+    "strings"
+    "testing"
+)
+
 const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 func randomString(n int) string {
     b := make([]byte, n)
@@ -88,10 +100,14 @@ func preByteConcat(n int, str string) string {
 每个 benchmark 用例中，生成了一个长度为 10 的字符串，并拼接 1w 次。
 
 ```go
+var result string // 保留结果，避免只测到可被消除的无用计算。
+
 func benchmark(b *testing.B, f func(int, string) string) {
     var str = randomString(10)
+    b.ReportAllocs()
+    b.ResetTimer()
     for i := 0; i < b.N; i++ {
-        f(10000, str)
+        result = f(10000, str)
     }
 }
 
@@ -101,11 +117,12 @@ func BenchmarkBuilderConcat(b *testing.B) { benchmark(b, builderConcat) }
 func BenchmarkBufferConcat(b *testing.B)  { benchmark(b, bufferConcat) }
 func BenchmarkByteConcat(b *testing.B)    { benchmark(b, byteConcat) }
 func BenchmarkPreByteConcat(b *testing.B) { benchmark(b, preByteConcat) }
+func BenchmarkBuilderGrowConcat(b *testing.B) { benchmark(b, builderGrowConcat) }
 ```
 
-测试结果
+历史测试结果（原记录未注明 Go 版本与内存统计，仅保留为该机器上的一次时间观测）：
 
-```go
+```text
 goos: windows
 goarch: amd64
 pkg: example/charpter-1
@@ -124,9 +141,9 @@ BenchmarkPreByteConcat-6       24522         48754 ns/op
 PASS
 ```
 
-从基准测试的结果来看，使用 `+` 和 `fmt.Sprintf` 的效率是最低的，和其余的方式相比，性能相差约 1000 倍，而且消耗了超过 1000 倍的内存。当然 `fmt.Sprintf` 通常是用来格式化字符串的，一般不会用来拼接字符串。
+上述循环反复累积长字符串时，`+` 和 `fmt.Sprintf` 的历史耗时较高；这不能推广成少量固定字符串相加一定慢。原输出没有 `B/op`、`allocs/op`，无法据此断言内存差多少倍；应使用 `-benchmem` 在相同输入及环境下比较。
 
-`strings.Builder`、`bytes.Buffer` 和 `[]byte` 的性能差距不大，而且消耗的内存也十分接近，性能最好且消耗内存最小的是 `preByteConcat`，这种方式预分配了内存，在字符串拼接的过程中，不需要进行字符串的拷贝，也不需要分配新的内存，因此性能最好，且内存消耗最小。
+预分配 `[]byte` 容量可以避免容量足够时的扩容与旧缓冲区搬迁，但每次 `append` 仍需把输入复制进缓冲区，最终 `string(buf)` 通常还要复制并分配字符串。它不是零拷贝方案，也不能保证在所有版本中都最快或内存最少。
 
 #### 1.3 建议
 
@@ -136,10 +153,10 @@ PASS
 
 > A Builder is used to efficiently build a string using Write methods. It minimizes memory copying.
 
-`string.Builder` 也提供了预分配内存的方式 `Grow`：
+`strings.Builder` 也提供了预分配容量的方式 `Grow`，这里使用不同函数名，避免与前面的未预分配版本重复定义：
 
 ```go
-func builderConcat(n int, str string) string {
+func builderGrowConcat(n int, str string) string {
     var builder strings.Builder
     builder.Grow(n * len(str))
     for i := 0; i < n; i++ {
@@ -149,7 +166,7 @@ func builderConcat(n int, str string) string {
 }
 ```
 
-与预分配内存的 `[]byte` 相比，因为省去了 `[]byte` 和字符串(string) 之间的转换，内存分配次数还减少了 1 次，内存消耗减半。
+`Builder` 可减少额外复制，但实际分配次数与字节数以基准输出为准，不保证恒定减半。`Grow` 的大小需非负且避免整数溢出；非零 `Builder` 不可复制使用。验证时所有函数应产生长度为 `10000*10` 的相同字符串，性能数字之外也要检查结果。参考 [Go 官方 strings.Builder](https://pkg.go.dev/strings@go1.23.3#Builder)与 [testing 基准文档](https://pkg.go.dev/testing@go1.23.3#hdr-Benchmarks)。
 
 ### 文章来源
 
