@@ -9,6 +9,7 @@
     {{ partial "tools/nav-link.html" (dict "key" "naming" "label" "下划线 ↔ 驼峰" "standalone" $standalone "selected" .selected) }}
     <div class="tools-nav-group">安全</div>
     {{ partial "tools/nav-link.html" (dict "key" "password" "label" "密码生成器" "standalone" $standalone "selected" .selected) }}
+    {{ partial "tools/nav-link.html" (dict "key" "totp" "label" "TOTP 验证码" "path" "tools/totp/" "standalone" $standalone "selected" .selected) }}
     <div class="tools-nav-group">时间</div>
     {{ partial "tools/nav-link.html" (dict "key" "timestamp" "label" "Unix 时间戳转换" "path" "tools/timestamp/" "standalone" $standalone "selected" .selected) }}
     <div class="tools-nav-group">图片</div>

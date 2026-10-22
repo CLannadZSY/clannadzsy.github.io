@@ -44,6 +44,9 @@
   {{- if in (slice "" "timestamp") $tool -}}
     {{- $tools = $tools | append (resources.Get "js/timestamp-converter.js") -}}
   {{- end -}}
+  {{- if in (slice "" "totp") $tool -}}
+    {{- $tools = $tools | append (resources.Get "js/totp.js") -}}
+  {{- end -}}
   {{- if not $tool -}}
     {{- range slice "naming-converter" "password-generator" "image-list" "proxy-check" -}}
       {{- $tools = $tools | append (resources.Get (printf "js/%s.js" .)) -}}

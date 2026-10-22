@@ -13,7 +13,7 @@
     {{ if $tool -}}
       {{ partial (printf "tools/panels/%s.html" $tool) (dict "active" true) }}
     {{ else -}}
-      {{ range (slice "json" "curl" "naming" "password" "timestamp" "images" "proxy") -}}
+      {{ range (slice "json" "curl" "naming" "password" "totp" "timestamp" "images" "proxy") -}}
         {{ partial (printf "tools/panels/%s.html" .) (dict "active" (eq . "json")) }}
       {{ end -}}
     {{ end -}}

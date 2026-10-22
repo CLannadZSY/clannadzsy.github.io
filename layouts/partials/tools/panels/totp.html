@@ -1,0 +1,25 @@
+<div class="totp-tool" id="totp-tool" data-tool-panel="totp"{{ if not .active }} hidden{{ end }}>
+  <section class="password-card" aria-label="TOTP 验证码生成器">
+    <div class="password-section">
+      <label class="password-section-title d-block" for="totp-secret">Base32 密钥</label>
+      <div class="input-group">
+        <input class="form-control" id="totp-secret" type="password" maxlength="256" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="totp-help totp-message" placeholder="输入密钥以生成验证码">
+        <button class="btn btn-outline-primary" id="totp-toggle" type="button" aria-controls="totp-secret" aria-pressed="false">显示密钥</button>
+      </div>
+      <p class="form-text" id="totp-help">仅在当前浏览器中计算，不上传、不保存密钥。</p>
+    </div>
+    <div class="password-section">
+      <label class="password-section-title d-block" for="totp-output">当前验证码</label>
+      <output class="password-result totp-code" id="totp-output" for="totp-secret" aria-live="polite" aria-atomic="true">------</output>
+      <div class="totp-countdown">
+        <span id="totp-countdown">输入密钥后自动生成</span>
+        <progress id="totp-progress" max="30" value="0" aria-label="当前验证码剩余有效秒数"></progress>
+      </div>
+      <div class="password-actions">
+        <button class="btn btn-primary" id="totp-copy" type="button" disabled>复制验证码</button>
+        <button class="btn btn-outline-primary" id="totp-clear" type="button">清空</button>
+      </div>
+      <p class="password-message" id="totp-message" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+</div>

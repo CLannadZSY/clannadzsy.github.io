@@ -230,7 +230,7 @@ def validate(output, base_url, source, now=None):
     root_entries = locations.get('sitemap.xml', {})
     require(set(articles) == set(locations.get('blog/sitemap.xml', {})), 'Blog Sitemap does not match source article URLs')
     required = set(articles) | {'/', '/blog/', '/tools/', '/tools/json-formatter/',
-                              '/tools/curl-to-requests/', '/tools/timestamp/', '/contributors/', PROFILE}
+                              '/tools/curl-to-requests/', '/tools/timestamp/', '/tools/totp/', '/contributors/', PROFILE}
     require(required.issubset(root_entries), f'Root Sitemap lost pages: {sorted(required - root_entries.keys())}')
     owner = None
     home = pages.get('/')
@@ -338,7 +338,7 @@ def self_test():
                       'lastmod': modified, 'url': path, 'content_language': language}
             content = '\n'.join(f'{key}: {json.dumps(value, ensure_ascii=False)}' for key, value in fields.items())
             (source / 'blog' / f'{index}.md').write_text('---\n' + content + '\ncontributors: [clannadzsy]\n---\n', encoding='utf-8')
-        for tool in ('json-formatter', 'curl-to-requests', 'timestamp'):
+        for tool in ('json-formatter', 'curl-to-requests', 'timestamp', 'totp'):
             names[f'/tools/{tool}/'] = tool
         documents = {}
         for path, name in names.items():

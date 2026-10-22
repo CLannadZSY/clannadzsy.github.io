@@ -105,7 +105,7 @@ def validate(output, base_url, check_assets):
     output = output.resolve()
     base = urlsplit(base_url)
     urls = [node.text for node in ET.parse(output / 'sitemap.xml').findall('.//{*}loc')]
-    require(len(urls) == len(set(urls)) == 37, 'Canonical URL set changed')
+    require(len(urls) == len(set(urls)) == 38, 'Canonical URL set changed')
     errors, originals, image_count = [], set(), 0
 
     def local_file(url):

@@ -30,6 +30,7 @@ if (jsonTool) {
   const panels = jsonTool.querySelectorAll('[data-tool-panel]');
   const defaultTool = jsonTool.dataset.defaultTool || (panels.length ? panels[0].dataset.toolPanel : '');
   let refreshProxyService = null;
+  let resetTotp = null;
 
   const selectTool = (toolName) => {
     const activePanel = Array.from(panels).find((panel) => panel.dataset.toolPanel === toolName);
@@ -42,6 +43,7 @@ if (jsonTool) {
       else item.removeAttribute('aria-current');
     });
     panels.forEach((panel) => { panel.hidden = panel !== activePanel; });
+    if (toolName !== 'totp' && resetTotp) resetTotp();
     if (toolName === 'proxy' && refreshProxyService) refreshProxyService();
     return true;
   };
@@ -188,6 +190,113 @@ if (jsonTool) {
         namingMessage.textContent = '复制失败，请手动选择结果复制。';
       }
     });
+  };
+
+  const initializeTotp = () => {
+    const panel = document.getElementById('totp-tool');
+    const secret = document.getElementById('totp-secret');
+    const toggle = document.getElementById('totp-toggle');
+    const output = document.getElementById('totp-output');
+    const countdown = document.getElementById('totp-countdown');
+    const progress = document.getElementById('totp-progress');
+    const copy = document.getElementById('totp-copy');
+    const clear = document.getElementById('totp-clear');
+    const message = document.getElementById('totp-message');
+    let key = null;
+    let timer = null;
+    let revision = 0;
+    let lastStep = -1;
+
+    const stop = () => {
+      revision += 1;
+      clearInterval(timer);
+      timer = null;
+      key = null;
+      lastStep = -1;
+      output.textContent = '------';
+      countdown.textContent = '输入密钥后自动生成';
+      progress.value = 0;
+      copy.disabled = true;
+      message.classList.remove('success');
+    };
+
+    const update = async () => {
+      if (!key || panel.hidden) return;
+      const now = Date.now();
+      const step = Math.floor(now / 30000);
+      const remaining = 30 - Math.floor(now / 1000) % 30;
+      countdown.textContent = `${remaining} 秒后更新`;
+      progress.value = remaining;
+      if (step === lastStep) return;
+      lastStep = step;
+      copy.disabled = true;
+      const current = revision;
+      try {
+        const code = await window.totpGenerator.generate(key, now);
+        if (current !== revision || step !== lastStep) return;
+        output.textContent = code;
+        copy.disabled = false;
+      } catch (error) {
+        if (current !== revision) return;
+        stop();
+        message.textContent = '无法生成验证码，请检查密钥和浏览器是否支持安全计算。';
+      }
+    };
+
+    resetTotp = () => {
+      stop();
+      secret.value = '';
+      secret.type = 'password';
+      toggle.textContent = '显示密钥';
+      toggle.setAttribute('aria-pressed', 'false');
+      message.textContent = '';
+    };
+
+    secret.addEventListener('input', async () => {
+      stop();
+      message.textContent = '';
+      if (!secret.value.trim()) return;
+      const current = revision;
+      try {
+        const imported = await window.totpGenerator.importSecret(secret.value);
+        if (current !== revision) return;
+        key = imported;
+        await update();
+        if (key && current === revision) timer = setInterval(update, 1000);
+      } catch (error) {
+        if (current === revision) message.textContent = error.message;
+      }
+    });
+    toggle.addEventListener('click', () => {
+      const visible = secret.type === 'password';
+      secret.type = visible ? 'text' : 'password';
+      toggle.textContent = visible ? '隐藏密钥' : '显示密钥';
+      toggle.setAttribute('aria-pressed', String(visible));
+    });
+    clear.addEventListener('click', () => {
+      resetTotp();
+      secret.focus();
+    });
+    copy.addEventListener('click', async () => {
+      if (!key) return;
+      const current = revision;
+      try {
+        const code = await window.totpGenerator.generate(key);
+        if (current !== revision) return;
+        await navigator.clipboard.writeText(code);
+        if (current === revision) {
+          message.classList.add('success');
+          message.textContent = '验证码已复制';
+        }
+      } catch (error) {
+        if (current === revision) {
+          message.classList.remove('success');
+          message.textContent = '复制失败，请手动选择验证码复制。';
+        }
+      }
+    });
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) update(); });
+    window.addEventListener('pagehide', resetTotp);
   };
 
   const initializePassword = () => {
@@ -787,6 +896,7 @@ if (jsonTool) {
     curl: initializeCurl,
     naming: initializeNaming,
     password: initializePassword,
+    totp: initializeTotp,
     images: initializeImages,
     timestamp: initializeTimestamp,
     proxy: initializeProxy,

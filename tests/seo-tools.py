@@ -18,10 +18,12 @@ TOOLS = {
     '/tools/json-formatter/': 'json',
     '/tools/curl-to-requests/': 'curl',
     '/tools/timestamp/': 'timestamp',
+    '/tools/totp/': 'totp',
 }
 VOID = set('area base br col embed hr img input link meta param source track wbr'.split())
 JAVASCRIPT_TOKEN = re.compile(
     r'"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\''
+    r'|`(?:\\[\s\S]|[^`\\])*`'
     r'|/\*[\s\S]*?\*/|//[^\r\n]*|[$A-Z_a-z][$\w]*|[^\s]',
 )
 
@@ -120,6 +122,8 @@ def topic_matches(tool, heading):
         return 'json' in heading and bool(re.search(r'格式|美化|format|pretty', heading))
     if tool == 'curl':
         return 'curl' in heading and 'requests' in heading
+    if tool == 'totp':
+        return 'totp' in heading and bool(re.search(r'验证码|动态码|otp|code', heading))
     return bool(re.search(r'时间戳|timestamp|unix', heading) and re.search(r'转换|日期|convert|date', heading))
 
 
@@ -235,6 +239,9 @@ def validate(output, base_url):
 
 
 def main():
+    sample = r'''const docs=[{href:"/one/",content:`You've seen "href:" here.
+Escaped \` and \${example}; href:"/fake/"`},{href:"/two/"}];'''
+    assert search_hrefs(sample) == ['/one/', '/two/'], 'Tutorial strings must not hide or fabricate search links'
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('output', nargs='?', type=Path, default=Path('public'))
     parser.add_argument('--base-url', default='https://clannad.icu/')

@@ -84,6 +84,7 @@ jobs:
           node tests/timestamp-converter.mjs
           node tests/password-generator.mjs
           node tests/naming-converter.mjs
+          node tests/totp.mjs
           node tests/image-list.mjs
           node tests/deferred-embeds.mjs
           node tests/output-highlight.mjs

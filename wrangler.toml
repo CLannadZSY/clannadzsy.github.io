@@ -1,0 +1,4 @@
+name = "clannad-proxy-check"
+main = "workers/proxy-check.js"
+compatibility_date = "2026-08-06"
+routes = [{ pattern = "proxy-check.clannad.icu", custom_domain = true }]
