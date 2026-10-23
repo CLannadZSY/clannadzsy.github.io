@@ -3,8 +3,21 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 
 const source = fs.readFileSync(new URL('../assets/js/deferred-embeds.js', import.meta.url), 'utf8');
+const adMarkup = fs.readFileSync(new URL('../layouts/partials/main/ad-slot.html', import.meta.url), 'utf8');
+const [, initializeAd] = adMarkup.match(/<script>([\s\S]*?)<\/script>/);
 
-function environment({ ads = 2, comments = true, observers = true, idle = true, complete = false } = {}) {
+// Manual ads queue immediately, before the async library or any scrolling.
+const pending = {};
+vm.runInNewContext(initializeAd, { window: pending });
+assert.equal(pending.adsbygoogle.length, 1);
+vm.runInNewContext(initializeAd, { window: pending });
+assert.equal(pending.adsbygoogle.length, 2, 'Each rendered unit must queue once');
+let requests = 0;
+const loadedLibrary = { push: () => { requests += 1; } };
+vm.runInNewContext(initializeAd, { window: { adsbygoogle: loadedLibrary } });
+assert.equal(requests, 1, 'An already loaded library must receive the unit request');
+
+function environment({ comments = true, observers = true, idle = true, complete = false } = {}) {
   const scripts = [];
   const observersCreated = [];
   const idleTasks = [];
@@ -13,22 +26,16 @@ function environment({ ads = 2, comments = true, observers = true, idle = true, 
   const element = () => ({
     dataset: {}, attributes: {}, events: {},
     setAttribute(name, value) { this.attributes[name] = value; },
-    hasAttribute(name) { return Object.hasOwn(this.attributes, name); },
     addEventListener(name, callback) { this.events[name] = callback; },
     appendChild(child) { scripts.push(child); },
-  });
-  const adSlots = Array.from({ length: ads }, () => {
-    const unit = element();
-    return { dataset: {}, querySelector: () => unit };
   });
   const commentMount = element();
   commentMount.dataset = { repo: 'CLannadZSY/clannadzsy.github.io', issueTerm: 'title', theme: 'github-light' };
   const commentSlots = comments ? [{ dataset: {}, querySelector: () => commentMount }] : [];
   const document = {
     readyState: complete ? 'complete' : 'loading',
-    querySelectorAll: (selector) => selector === '[data-ad-container]' ? adSlots : commentSlots,
+    querySelectorAll: () => commentSlots,
     createElement: element,
-    head: { appendChild: (script) => { scripts.push(script); } },
   };
   const window = {
     addEventListener: (name, callback) => { windowEvents.set(name, callback); },
@@ -43,13 +50,11 @@ function environment({ ads = 2, comments = true, observers = true, idle = true, 
   if (observers) window.IntersectionObserver = Observer;
   if (idle) window.requestIdleCallback = (callback) => { idleTasks.push(callback); };
   vm.runInNewContext(source, { window, document, IntersectionObserver: observers ? Observer : undefined });
-  return { scripts, observersCreated, idleTasks, timers, windowEvents, adSlots, commentSlots, window };
+  return { scripts, observersCreated, idleTasks, timers, windowEvents, commentSlots };
 }
 
-const settle = async () => { for (let index = 0; index < 5; index += 1) await Promise.resolve(); };
-
-// No ad or comment on a page means no observers, handlers or third-party requests.
-const empty = environment({ ads: 0, comments: false });
+// Pages without comments need no deferred loader; ads use the separate head tag.
+const empty = environment({ comments: false });
 assert.equal(empty.windowEvents.size, 0);
 assert.equal(empty.scripts.length, 0);
 
@@ -61,30 +66,18 @@ deferred.windowEvents.get('load')();
 assert.equal(deferred.scripts.length, 0);
 assert.equal(deferred.idleTasks.length, 1);
 deferred.idleTasks.shift()();
-assert.equal(deferred.observersCreated.length, 2);
-const [adObserver, commentObserver] = deferred.observersCreated;
-adObserver.notify(deferred.adSlots[0], false);
+assert.equal(deferred.observersCreated.length, 1);
+const [commentObserver] = deferred.observersCreated;
+commentObserver.notify(deferred.commentSlots[0], false);
 assert.equal(deferred.scripts.length, 0);
-adObserver.notify(deferred.adSlots[0]);
-adObserver.notify(deferred.adSlots[1]);
-adObserver.notify(deferred.adSlots[0]);
-assert.equal(deferred.scripts.length, 1, 'Concurrent ad slots must share one library request');
-const adLibrary = deferred.scripts[0];
-assert.match(adLibrary.src, /^https:\/\/pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js\?client=ca-pub-7158791715796373$/);
-assert.equal(adLibrary.async, true);
-assert.equal(adLibrary.crossOrigin, 'anonymous');
-adLibrary.events.load();
-await settle();
-assert.equal(deferred.window.adsbygoogle.length, 2, 'Each visible slot queues exactly one request');
-adObserver.notify(deferred.adSlots[1]);
-await settle();
-assert.equal(deferred.window.adsbygoogle.length, 2);
 assert.equal(deferred.commentSlots[0].dataset.embedState, undefined);
 commentObserver.notify(deferred.commentSlots[0]);
 commentObserver.notify(deferred.commentSlots[0]);
-assert.equal(deferred.scripts.length, 2);
-const commentScript = deferred.scripts[1];
+assert.equal(deferred.scripts.length, 1);
+const commentScript = deferred.scripts[0];
 assert.equal(commentScript.src, 'https://utteranc.es/client.js');
+assert.equal(commentScript.async, true);
+assert.equal(commentScript.crossOrigin, 'anonymous');
 assert.equal(commentScript.attributes.repo, 'CLannadZSY/clannadzsy.github.io');
 assert.equal(commentScript.attributes['issue-term'], 'title');
 assert.equal(commentScript.attributes.theme, 'github-light');
@@ -95,19 +88,14 @@ assert.equal(deferred.commentSlots[0].dataset.embedState, 'loaded');
 const fallback = environment({ observers: false, idle: false, complete: true });
 assert.equal(fallback.scripts.length, 0);
 fallback.timers.shift()();
-assert.equal(fallback.scripts.length, 2);
-fallback.scripts.find((script) => script.src.includes('adsbygoogle')).events.load();
-await settle();
-assert.equal(fallback.window.adsbygoogle.length, 2);
+assert.equal(fallback.scripts.length, 1);
+fallback.scripts[0].events.load();
+assert.equal(fallback.commentSlots[0].dataset.embedState, 'loaded');
 
 // Blocked libraries leave a stable container and no unhandled rejected promise.
 const blocked = environment({ observers: false, idle: false, complete: true });
 blocked.timers.shift()();
-blocked.scripts.find((script) => script.src.includes('adsbygoogle')).events.error(new Error('blocked'));
-blocked.scripts.find((script) => script.src.includes('utteranc')).events.error(new Error('blocked'));
-await settle();
-assert.equal(blocked.window.adsbygoogle, undefined);
-assert.ok(blocked.adSlots.every((slot) => slot.dataset.embedState === 'unavailable'));
+blocked.scripts[0].events.error(new Error('blocked'));
 assert.equal(blocked.commentSlots[0].dataset.embedState, 'unavailable');
 
-console.log('Deferred embed checks passed: visibility/load/idle, deduplication, original comment settings, API fallback and blocked services.');
+console.log('Embed checks passed: immediate ad queue, existing ad library, deferred comments, deduplication, API fallback and blocked services.');

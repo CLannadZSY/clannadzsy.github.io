@@ -57,7 +57,7 @@
   {{- $scripts = $scripts | append $tools -}}
 {{- end -}}
 
-{{- if or .IsHome (eq .Section "blog") -}}
+{{- if and .IsPage (eq .Section "blog") -}}
   {{- with resources.Get "js/deferred-embeds.js" -}}
     {{- $scripts = $scripts | append (. | js.Build) -}}
   {{- end -}}

@@ -17,6 +17,8 @@ ORIGINAL_IMAGES = {
     '/blog/2024-03-17/img/wind_mouse_examples.png',
     '/blog/2024-03-17/img/wind_mouse_high_wind_examples.png',
 }
+ADSENSE_URL = ('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'
+               '?client=ca-pub-7158791715796373')
 
 
 class Page(HTMLParser):
@@ -24,11 +26,19 @@ class Page(HTMLParser):
         super().__init__()
         self.scripts, self.images, self.ads, self.units, self.comments, self.mounts = [], [], [], [], [], []
         self.pre = 0
+        self.in_head = False
+        self.inline_script = None
+        self.inline_scripts = []
         self.feed(html)
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
+        if tag == 'head':
+            self.in_head = True
+        if tag == 'script' and not attrs.get('src'):
+            self.inline_script = []
         if tag == 'script' and attrs.get('src'):
+            attrs['_in_head'] = self.in_head
             self.scripts.append(attrs)
         if tag == 'img':
             self.images.append(attrs)
@@ -43,6 +53,17 @@ class Page(HTMLParser):
         if 'data-comments-mount' in attrs:
             self.mounts.append(attrs)
 
+    def handle_data(self, data):
+        if self.inline_script is not None:
+            self.inline_script.append(data)
+
+    def handle_endtag(self, tag):
+        if tag == 'head':
+            self.in_head = False
+        if tag == 'script' and self.inline_script is not None:
+            self.inline_scripts.append(''.join(self.inline_script))
+            self.inline_script = None
+
 
 def require(condition, message):
     if not condition:
@@ -54,11 +75,19 @@ def check_page(page, route, base_url):
     tools = route.startswith('/tools/')
     blog = route.startswith('/blog/')
     article = blog and route != '/blog/'
+    expected_adsense = route not in ('/tools/', '/tools/totp/', '/404.html')
+    libraries = [script for script in page.scripts if script['src'] == ADSENSE_URL]
+    require(len(libraries) == int(expected_adsense), 'Missing or duplicate head AdSense library')
     names = []
     for script in page.scripts:
+        if script['src'] == ADSENSE_URL:
+            require(script['_in_head'] and 'async' in script and 'defer' not in script
+                    and script.get('crossorigin') == 'anonymous',
+                    'AdSense must load once, asynchronously in head, without visibility/idle gating')
+            continue
         parsed = urlsplit(urljoin(base_url, script['src']))
         require((parsed.scheme, parsed.netloc) == (base.scheme, base.netloc),
-                'Third-party script must be loaded through the deferred embed lifecycle')
+                'Unexpected third-party script outside the AdSense allowlist')
         require('defer' in script and 'async' not in script, 'First-party script must preserve deferred order')
         require(script.get('crossorigin') == 'anonymous', 'Missing SRI crossorigin')
         integrity = script.get('integrity', '')
@@ -75,13 +104,15 @@ def check_page(page, route, base_url):
             'Syntax highlighting must match pages with code blocks')
     expected_ad = route == '/' or blog
     require(len(page.ads) == len(page.units) == int(expected_ad), 'Missing or duplicate manual ad placement')
-    require(sum(name.startswith('deferred-embeds') for name in names) == int(expected_ad),
-            'Embed loader must load only on pages with ad/comment placements')
+    require(sum(name.startswith('deferred-embeds') for name in names) == int(article),
+            'Deferred embed loader must load only on article pages with comments')
+    require(sum('window.adsbygoogle' in script for script in page.inline_scripts) == int(expected_ad),
+            'Each manual ad must be queued immediately, once')
     for unit in page.units:
         style = unit.get('style', '').replace(' ', '').lower()
-        require('width:100%' in style and 'height:100px' in style, 'Ad unit must reserve the approved fixed height')
-        require('data-ad-format' not in unit and 'data-full-width-responsive' not in unit,
-                'Automatic ad expansion must not override fixed dimensions')
+        require('display:block' in style and 'height:' not in style, 'Ad unit must retain responsive sizing')
+        require(unit.get('data-ad-format') == 'auto' and unit.get('data-full-width-responsive') == 'true',
+                'Responsive ad format must not be restricted for performance')
         require(unit.get('data-ad-client') == 'ca-pub-7158791715796373'
                 and unit.get('data-ad-slot') == '4686887066', 'Ad identity changed')
     require(len(page.comments) == len(page.mounts) == int(article), 'Article comments placement is missing or duplicated')
@@ -145,31 +176,49 @@ def validate(output, base_url, check_assets):
                         require(len(resized) < len(data), 'Derivative should reduce transfer bytes')
         except (ValueError, OSError, KeyError, TypeError) as error:
             errors.append(f'{url}: {error}')
+    try:
+        check_page(Page((output / '404.html').read_text(encoding='utf-8')), '/404.html', base_url)
+    except (ValueError, OSError) as error:
+        errors.append(f'404.html: {error}')
     require(originals == ORIGINAL_IMAGES, f'Original article image set changed: {originals ^ ORIGINAL_IMAGES}')
     require(image_count == 7, f'Expected all seven existing article images, found {image_count}')
     require(not errors, '\n'.join(errors))
     print(f'Performance markup checks passed: {len(urls)} pages, {image_count} original images, '
-          f'fixed ad placements and page-specific deferred scripts; asset bytes checked={check_assets}.')
+          f'async AdSense, responsive ad placements and page-specific deferred scripts; asset bytes checked={check_assets}.')
 
 
 def self_test():
     sri = 'sha512-' + base64.b64encode(bytes(64)).decode()
     script = lambda name: f'<script src="/{name}.min.test.js" integrity="{sri}" crossorigin="anonymous" defer></script>'
-    good = (script('core') + script('deferred-embeds') + script('index').replace(' defer', ' fetchpriority="low" defer')
-            + '<aside data-ad-container><ins class="adsbygoogle" style="width:100%;height:100px" '
-            'data-ad-client="ca-pub-7158791715796373" data-ad-slot="4686887066"></ins></aside>')
+    adsense = f'<script async src="{ADSENSE_URL}" crossorigin="anonymous"></script>'
+    queue = '<script>(window.adsbygoogle = window.adsbygoogle || []).push({});</script>'
+    good = ('<head>' + adsense + '</head>' + script('core')
+            + script('index').replace(' defer', ' fetchpriority="low" defer')
+            + '<aside data-ad-container><ins class="adsbygoogle" style="display:block" '
+            'data-ad-client="ca-pub-7158791715796373" data-ad-slot="4686887066" '
+            'data-ad-format="auto" data-full-width-responsive="true"></ins>' + queue + '</aside>')
     check_page(Page(good), '/', 'https://clannad.icu/')
-    mutations = [good.replace(' defer', ''), good.replace('height:100px', ''), good + script('tools'),
+    mutations = [good.replace(' defer', ''), good.replace('display:block', 'display:block;height:100px'), good + script('tools'),
                  good + script('highlight'), good + '<script src="https://utteranc.es/client.js"></script>',
                  good + '<aside data-ad-container></aside>', good.replace('fetchpriority="low"', ''),
-                 good.replace('class="adsbygoogle"', 'class="adsbygoogle" data-ad-format="auto"')]
+                 good.replace('data-ad-format="auto"', ''), good.replace(adsense, ''), good + adsense,
+                 good.replace(' async', ' defer'), good.replace(queue, ''), good + queue,
+                 good.replace(adsense, '').replace('</head>', '</head>' + adsense)]
     for bad in mutations:
         try:
             check_page(Page(bad), '/', 'https://clannad.icu/')
         except ValueError:
             continue
         raise ValueError('Performance regression fixture was accepted')
-    print('Performance fixtures passed: eight script/embed regressions rejected.')
+    for route in ('/tools/', '/tools/totp/'):
+        tool = script('core') + script('tools') + script('index').replace(' defer', ' fetchpriority="low" defer')
+        check_page(Page(tool), route, 'https://clannad.icu/')
+        try:
+            check_page(Page('<head>' + adsense + '</head>' + tool), route, 'https://clannad.icu/')
+        except ValueError:
+            continue
+        raise ValueError('Sensitive tool page allowed third-party AdSense code')
+    print(f'Performance fixtures passed: {len(mutations)} script/ad regressions rejected; TOTP isolation preserved.')
 
 
 if __name__ == '__main__':
